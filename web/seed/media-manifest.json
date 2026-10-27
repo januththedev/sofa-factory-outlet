@@ -16,7 +16,8 @@
       "blur": "data:image/webp;base64,UklGRkIAAABXRUJQVlA4IDYAAACwAQCdASoQAAYAA4BaJQAAW8fGGImAAP72CfSXpJgDDwFFGZ9pljFN/Acyv+bqKiUDsqVuAAA=",
       "dominant": "#E8E8E8",
       "flag": null,
-      "source": "2025/09/1-scaled.jpg"
+      "source": "2025/09/1-scaled.jpg",
+      "cutout": false
     },
     "2025/09/1.png": {
       "key": "categories/sofas/ffd38a4a",
@@ -31,7 +32,8 @@
       "blur": "data:image/webp;base64,UklGRkwBAABXRUJQVlA4WAoAAAAQAAAADwAADwAAQUxQSKYAAAABgFvbtmplXcHd3QogJSdzdxrw2DN6oAFtwAsg9hoIP5ndMe67O3mPGiJiAgBDvqFwbG9za3N3pRIDOOaUkhR1ggM8BwoxxqCrgn1FSVGXBUcF1zllHPzDg2HkUVmRgRUpSVKmj8lWDOcKys/00ginCllKKcYYVOqFoU9lSpKS4iHWMPz09f1ber45W9iwgKWvY3SzrQLwDsBa6tox3jlLrrHWWEM+VlA4IIAAAAAwAgCdASoQABAAA4BaJaACdAYtLyoh3g1kAAD+8wDljSOgfdAxGCeJy6B2ESzwt/P4BNWauBvuCkIIi3f7vzzi21a2rVen1Iu/9uB7FanSD7OGF541o732febR845HzbA3e4U+KHCW82eoK5uXJf6rg1EvVfaCMRJIo0mCdy94AA==",
       "dominant": "#486848",
       "flag": null,
-      "source": "2025/09/1.png"
+      "source": "2025/09/1.png",
+      "cutout": true
     },
     "2025/09/2-scaled.jpg": {
       "key": "site/banner-2/f114d550",
@@ -47,7 +49,8 @@
       "blur": "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAADQAQCdASoQAAYAA4BaJZQCdAELWWYpIAD+t3DIhdmdWNyFDXyoJaKDjuk9+jes9E31V0gA",
       "dominant": "#E8E8E8",
       "flag": null,
-      "source": "2025/09/2-scaled.jpg"
+      "source": "2025/09/2-scaled.jpg",
+      "cutout": true
     },
     "2025/09/2.png": {
       "key": "categories/tables/cca2323b",
@@ -62,7 +65,8 @@
       "blur": "data:image/webp;base64,UklGRlIBAABXRUJQVlA4WAoAAAAQAAAADwAADwAAQUxQSLMAAAABgGPb2rHnfIxtlVmpbKuybRul+wxCHapkHOyTCaSy8et94mQIETEBgMb3Gj9Wzk5MTsy0e6MBBo2ilIhbVjEAk0VxuN1uh+z8sCBuEXHL9g+LP+z+g/knAzDWr0Qpj8ch+8GxFtB24hAlIkpeTovQCNq7eLw9Pzs4XttKBI3kxvnGzmLdatSGTdApTu2JSC8npphuny9NUf12Ug3+gdT5fqmIqSEoGzRyfQE0vwQ0vuoaAABWUDggeAAAAHACAJ0BKhAAEAADgFolsAJ0ME3IigrXKXnys9AA/vQ3KW3GY3VYXd7MOk59mo6kh4J3vf79R4TlcbdK6mcfIg/8vrMb1qxEpvbArfkWr+UtCRqLw2MWlxo3/PMDGi6UcMxASNEPXJm62gQZaHxG2WHpM8ycxAAAAA==",
       "dominant": "#486848",
       "flag": null,
-      "source": "2025/09/2.png"
+      "source": "2025/09/2.png",
+      "cutout": true
     },
     "2025/09/3-scaled.jpg": {
       "key": "site/banner-3/40e86621",
@@ -78,7 +82,8 @@
       "blur": "data:image/webp;base64,UklGRkIAAABXRUJQVlA4IDYAAADQAQCdASoQAAYAA4BaJaQAAutdCxuCAAD+9gfyEIgU/V8FUuV+2lJZxbvbNApQq+P/YFrAAAA=",
       "dominant": "#E8E8E8",
       "flag": null,
-      "source": "2025/09/3-scaled.jpg"
+      "source": "2025/09/3-scaled.jpg",
+      "cutout": false
     },
     "2025/09/3.png": {
       "key": "categories/chairs/417448b9",
@@ -93,7 +98,8 @@
       "blur": "data:image/webp;base64,UklGRloBAABXRUJQVlA4WAoAAAAQAAAADwAADwAAQUxQSJ4AAAABgFvbtmplnfv+RyJ318whctfQInenCsog0gZowTWlBSIKsPvvs8OrISImgIQi6EL/yf7+cTeiGDq/fef8r3pMzGPe/7X21x/E0+b8jO87v/e/ee06D0n2WY5JYv1bBGVRO8PTNrU9ReDc/7Y2Y3swSumH75z1n1IIgGH0+ebl/fkUQVsqY3ayc6gXEyNrJTu7eGgi1YsoudUYWloxAFZQOCCWAAAA8AIAnQEqEAAQAAOAWiWwAnQwRMiDi3xBNuHDqu6kUIAA/vE8nE8lA0AmIogt8UYtZv3YL/sHr8BF2Rlik3Kv51DbfdbCo5zvsqQiN7DeO0w+ltK8tXR+Tdu/05Sp6tJMt924HhDjlu+WqXCF1Pwv+veToRLPAfs+spFZDK+XRQAEGMr7EQ+C5uMjyv36phSXiG0IwAAA",
       "dominant": "#486848",
       "flag": null,
-      "source": "2025/09/3.png"
+      "source": "2025/09/3.png",
+      "cutout": true
     },
     "2025/09/4.png": {
       "key": "categories/ottomans/23627463",
@@ -108,7 +114,8 @@
       "blur": "data:image/webp;base64,UklGRjIBAABXRUJQVlA4WAoAAAAQAAAADwAADwAAQUxQSJcAAAABgFtte+vk/X/dyrF25xF83KUl4gyB0FHSQ5tWyGEAlmAJWvoo6SPId4aImABqmlE2Jgfr9f4QKziDD+Wstz7+LzDXV4zfGhFKMyUp15n/S3UWpemueWlE9c85VpSyznoYmPGsL0lRNxUGgXt9pxTTu04I4KweXpWlqEsqAKN9+nL4dHW0wv95oNGm26amuwX34LswwwwAAFZQOCB0AAAAMAIAnQEqEAAQAAOAWiWwAnQBH2/WZD0e+oAA/vK9m9p+mWXYaSjpp4aZqJWf5ksVMXEVr08EdSLANaVMcPI5HfBfyA+EXG5c/tDIiBzhVxftMBXCKr8YPWfRHv98Uj/VCYWbdzslXlmRfG8gf5zPtDAAAAA=",
       "dominant": "#486848",
       "flag": null,
-      "source": "2025/09/4.png"
+      "source": "2025/09/4.png",
+      "cutout": true
     },
     "2025/09/5.png": {
       "key": "categories/pillows/061402a9",
@@ -123,7 +130,8 @@
       "blur": "data:image/webp;base64,UklGRlABAABXRUJQVlA4WAoAAAAQAAAADwAADwAAQUxQSJ4AAAABgB3ZtmlrrL3vfe/X/7ZtJeCXgRUHE7CScEy29lnrYdeJISImgJQixIX+tcXF1TYk4mj5MFW7KcH980zZVwjf1ouPTVpipmmm/iXWF8swE+snBxDPVGwUD1DYf2r672iwOw/GblTNNISQ2GsddCb6HYKaWbADPFzZt9rD9dn2zs0gLsOaPV3OlgpQnAtC1XoT4Lx3CHHnHYDwXzKOtFZQOCCMAAAAcAIAnQEqEAAQAAOAWiWwAnQwUAiNi3wC3gM4AAD+8v5T20n2wfajHFa8Ysm8hiNlVrlRga83MUam/jrxwFZegWLFN/Myl8E60fcNWXssyemBvJZGiFjN8Su0q8y3hbgD3hVi+q5mOf3Y2d8dFue1KTiXITJIxMr7E9w+ZIWzI/UrpF2vh32Z3u9nQAA=",
       "dominant": "#486848",
       "flag": null,
-      "source": "2025/09/5.png"
+      "source": "2025/09/5.png",
+      "cutout": true
     },
     "2025/09/6.png": {
       "key": "categories/beds/a19be04a",
@@ -138,7 +146,8 @@
       "blur": "data:image/webp;base64,UklGRjYBAABXRUJQVlA4WAoAAAAQAAAADwAADwAAQUxQSJ4AAAANgFtt2/Lkfr5Il+DQa+nuO7gMQOUdG1BRMwA7MAKl01O6u3zf98azQkRMABUKo6RsvPef5NGxrMiFnj2S0Ll65SIga+U/QWxJX8soNiWoXACmaiARSshMJWRF7m9mCIHYPbhw0fmObaIz5KdX1iIuzuPTAI6x10vnG9o+Q5DMm2/c2f8gsXGYCQBKvHbV/nH3yR9mFD8AEpVGMKsIAFZQOCByAAAAUAIAnQEqEAAQAAOAWiWgAnQGL4cqads4+E5gAP7xPIse04vN7Q5Zcesi/c0lcnx9TQdyyZ5z0ME/QfsTvw28TX7AwPOksiS9e3hXqUMWPp3OdzVpR5MIGoG+wTWtvghIcdIWMHlA2TdW1ipNVMys4AAA",
       "dominant": "#486848",
       "flag": null,
-      "source": "2025/09/6.png"
+      "source": "2025/09/6.png",
+      "cutout": true
     },
     "2025/09/7.png": {
       "key": "categories/coffee/b080986c",
@@ -153,7 +162,8 @@
       "blur": "data:image/webp;base64,UklGRiIBAABXRUJQVlA4WAoAAAAQAAAADwAADwAAQUxQSH0AAAABgJtt25rq/f7MgDutu0PFArCEL6AttZawIQPYn/yWBM6ZICImAD6J4E7orabTZRXkwlB+CscRjzSYYWEi3px/RAeWly2EI7peY8MWHTeGq3hy/hQHNwtHwYWwvQjV0f5+Ww9zILdMAAAiUTeAZRuNRiMFv0RE8EsAQH7+NQBWUDggfgAAAHACAJ0BKhAAEAADgFoliAJ0Bir+rpYH+VO/8AAA/sDVIp3njneX7NwfuqQFR7ozl5djzdFI+5vUbyoEAcUq+n85TtOQXtxkVdhwUxT8J/IY+G58/+C7gUHaXAvJhy0GZWWRgXo4wlVDmWSYAtGD+279S/MEfGmkWO2797UAAA==",
       "dominant": "#486848",
       "flag": null,
-      "source": "2025/09/7.png"
+      "source": "2025/09/7.png",
+      "cutout": true
     },
     "2025/09/Slider_0_131267_bebitalia_table_Allure-O_09_3.jpg": {
       "key": "products/348/e31af2ff",
@@ -167,7 +177,8 @@
       "blur": "data:image/webp;base64,UklGRjIAAABXRUJQVlA4ICYAAACQAQCdASoQAAkAA4BaJaQAAudFrAAA/vivogSaKPiw7XAAmXgAAA==",
       "dominant": "#F8F8F8",
       "flag": "borrowed",
-      "source": "2025/09/Slider_0_131267_bebitalia_table_Allure-O_09_3.jpg"
+      "source": "2025/09/Slider_0_131267_bebitalia_table_Allure-O_09_3.jpg",
+      "cutout": true
     },
     "2025/09/Slider_0_145_project_office_AC-Executive_03_5.jpg": {
       "key": "products/357/7eafc0e1",
@@ -181,7 +192,8 @@
       "blur": "data:image/webp;base64,UklGRj4AAABXRUJQVlA4IDIAAACwAQCdASoQAAkAA4BaJaQAAudViRLgAP74r8Z9x76MuivHE5VBdu4D798j+el6FpQAAA==",
       "dominant": "#F8F8F8",
       "flag": "borrowed",
-      "source": "2025/09/Slider_0_145_project_office_AC-Executive_03_5.jpg"
+      "source": "2025/09/Slider_0_145_project_office_AC-Executive_03_5.jpg",
+      "cutout": true
     },
     "2025/09/Slider_0_235335_bebitalia_sofa_Le-Bambole-22_32_1.jpg": {
       "key": "products/312/0f970636",
@@ -195,7 +207,8 @@
       "blur": "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAACwAQCdASoQAAkAA4BaJZQAAuIytQAAAP74srx3zXEtb/PZzZ3SiaKMgRgF+r+H7XzsWTtuLhy92kAA",
       "dominant": "#F8F8F8",
       "flag": "borrowed",
-      "source": "2025/09/Slider_0_235335_bebitalia_sofa_Le-Bambole-22_32_1.jpg"
+      "source": "2025/09/Slider_0_235335_bebitalia_sofa_Le-Bambole-22_32_1.jpg",
+      "cutout": true
     },
     "2025/09/Slider_0_308_bebitalia_sofa_Diesis-2024_01.jpg": {
       "key": "products/309/b944b540",
@@ -209,7 +222,8 @@
       "blur": "data:image/webp;base64,UklGRj4AAABXRUJQVlA4IDIAAACwAQCdASoQAAkAA4BaJaQAAucLBM8AAP74sAu5HzlMPmE2NNhTfj59ZwzoYsbiTwPAAA==",
       "dominant": "#F8F8F8",
       "flag": "borrowed",
-      "source": "2025/09/Slider_0_308_bebitalia_sofa_Diesis-2024_01.jpg"
+      "source": "2025/09/Slider_0_308_bebitalia_sofa_Diesis-2024_01.jpg",
+      "cutout": true
     },
     "2025/09/Slider_0_322_bebitalia_chair_El_05_3.jpg": {
       "key": "products/333/1ee12287",
@@ -223,7 +237,8 @@
       "blur": "data:image/webp;base64,UklGRjgAAABXRUJQVlA4ICwAAACQAQCdASoQAAkAA4BaJaQAAudUwMAA/viyuGp2tnCoQC++uyQVV8Nz6AAAAA==",
       "dominant": "#F8F8F8",
       "flag": "borrowed",
-      "source": "2025/09/Slider_0_322_bebitalia_chair_El_05_3.jpg"
+      "source": "2025/09/Slider_0_322_bebitalia_chair_El_05_3.jpg",
+      "cutout": true
     },
     "2025/09/Slider_0_339_bebitalia_complement_Harry-Large_01_2.jpg": {
       "key": "products/342/4cdc724e",
@@ -237,7 +252,8 @@
       "blur": "data:image/webp;base64,UklGRj4AAABXRUJQVlA4IDIAAACwAQCdASoQAAkAA4BaJaQAAudVi6wgAP74ri/oHIK7mD2tJPoz+Kp/l2bgRlEIAAAAAA==",
       "dominant": "#F8F8F8",
       "flag": "borrowed",
-      "source": "2025/09/Slider_0_339_bebitalia_complement_Harry-Large_01_2.jpg"
+      "source": "2025/09/Slider_0_339_bebitalia_complement_Harry-Large_01_2.jpg",
+      "cutout": true
     },
     "2025/09/Slider_0_347_bebitalia_chair_Iuta-14_01_1.jpg": {
       "key": "products/336/559c7e85",
@@ -250,7 +266,8 @@
       "blur": "data:image/webp;base64,UklGRiYAAABXRUJQVlA4IBoAAAAwAQCdASoQABAAA4BaJaQAA3AA/vPHQAAAAA==",
       "dominant": "#F8F8F8",
       "flag": "borrowed",
-      "source": "2025/09/Slider_0_347_bebitalia_chair_Iuta-14_01_1.jpg"
+      "source": "2025/09/Slider_0_347_bebitalia_chair_Iuta-14_01_1.jpg",
+      "cutout": true
     },
     "2025/09/Slider_0_378_bebitalia_sofa_Naviglio_01_1.jpg": {
       "key": "products/318/6c0595cd",
@@ -264,7 +281,8 @@
       "blur": "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAADwAQCdASoQAAkAA4BaJaQAD4Twa7LxEAAA/viwalA//SjY57fGZql6ItoMdEz0UDf/NA+tLiAAAA==",
       "dominant": "#F8F8F8",
       "flag": "borrowed",
-      "source": "2025/09/Slider_0_378_bebitalia_sofa_Naviglio_01_1.jpg"
+      "source": "2025/09/Slider_0_378_bebitalia_sofa_Naviglio_01_1.jpg",
+      "cutout": true
     },
     "2025/09/Slider_0_380_bebitalia_table_Oskar_01_3.jpg": {
       "key": "products/351/445d5921",
@@ -278,7 +296,8 @@
       "blur": "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAACQAQCdASoQAAkAA4BaJaQAAuVaEAAA/vi3NGb2NyX1Ni8Ok+dqbGbrH+R5QWRlvXrEMtll7hmYAAAA",
       "dominant": "#F8F8F8",
       "flag": "borrowed",
-      "source": "2025/09/Slider_0_380_bebitalia_table_Oskar_01_3.jpg"
+      "source": "2025/09/Slider_0_380_bebitalia_table_Oskar_01_3.jpg",
+      "cutout": true
     },
     "2025/09/Slider_0_384_bebitalia_complement_P60_02_4.jpg": {
       "key": "products/345/559c7e85",
@@ -291,7 +310,8 @@
       "blur": "data:image/webp;base64,UklGRiYAAABXRUJQVlA4IBoAAAAwAQCdASoQABAAA4BaJaQAA3AA/vPHQAAAAA==",
       "dominant": "#F8F8F8",
       "flag": "borrowed",
-      "source": "2025/09/Slider_0_384_bebitalia_complement_P60_02_4.jpg"
+      "source": "2025/09/Slider_0_384_bebitalia_complement_P60_02_4.jpg",
+      "cutout": true
     },
     "2025/09/Slider_0_401_bebitalia_table_Seven_01.jpg": {
       "key": "products/354/bdd49b59",
@@ -305,7 +325,8 @@
       "blur": "data:image/webp;base64,UklGRkIAAABXRUJQVlA4IDYAAACwAQCdASoQAAkAA4BaJaQAAuQXxiPgAP738F+zZAfw45yW0kr6nJ25u6mTEAelBnmwonAAAAA=",
       "dominant": "#F8F8F8",
       "flag": "borrowed",
-      "source": "2025/09/Slider_0_401_bebitalia_table_Seven_01.jpg"
+      "source": "2025/09/Slider_0_401_bebitalia_table_Seven_01.jpg",
+      "cutout": true
     },
     "2025/09/Slider_0_418_bebitalia_sofa_Tufty-Too_01_4.jpg": {
       "key": "products/324/559c7e85",
@@ -318,7 +339,8 @@
       "blur": "data:image/webp;base64,UklGRiYAAABXRUJQVlA4IBoAAAAwAQCdASoQABAAA4BaJaQAA3AA/vPHQAAAAA==",
       "dominant": "#F8F8F8",
       "flag": "borrowed",
-      "source": "2025/09/Slider_0_418_bebitalia_sofa_Tufty-Too_01_4.jpg"
+      "source": "2025/09/Slider_0_418_bebitalia_sofa_Tufty-Too_01_4.jpg",
+      "cutout": true
     },
     "2025/09/Slider_0_444887_bebitalia_chair_Heri-O_06.jpg": {
       "key": "products/327/e8d9408e",
@@ -332,7 +354,8 @@
       "blur": "data:image/webp;base64,UklGRjgAAABXRUJQVlA4ICwAAACwAQCdASoQAAkAA4BaJZwAAudgPMAAAP74ri7ozQSGojxJH8+kNq5ntDgAAA==",
       "dominant": "#F8F8F8",
       "flag": "borrowed",
-      "source": "2025/09/Slider_0_444887_bebitalia_chair_Heri-O_06.jpg"
+      "source": "2025/09/Slider_0_444887_bebitalia_chair_Heri-O_06.jpg",
+      "cutout": true
     },
     "2025/09/Slider_0_444888_bebitalia_chair_Flair-O-Couture_04_1.jpg": {
       "key": "products/330/d9808c56",
@@ -346,7 +369,8 @@
       "blur": "data:image/webp;base64,UklGRjwAAABXRUJQVlA4IDAAAADQAQCdASoQAAkAA4BaJaQAAuQp5oZgAAD++Lhi2Fa5TquA6k23+6dQfQl909IAAAA=",
       "dominant": "#F8F8F8",
       "flag": "borrowed",
-      "source": "2025/09/Slider_0_444888_bebitalia_chair_Flair-O-Couture_04_1.jpg"
+      "source": "2025/09/Slider_0_444888_bebitalia_chair_Flair-O-Couture_04_1.jpg",
+      "cutout": true
     },
     "2025/09/Slider_0_53068_project_sofa_AC-Lounge_01_3.jpg": {
       "key": "products/321/39b26d73",
@@ -360,7 +384,8 @@
       "blur": "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACwAQCdASoQAAkAA4BaJaQAAudcX9CAAP74sC2zy5SSDfpOznRgkD/l3QtxUAAA",
       "dominant": "#F8F8F8",
       "flag": "borrowed",
-      "source": "2025/09/Slider_0_53068_project_sofa_AC-Lounge_01_3.jpg"
+      "source": "2025/09/Slider_0_53068_project_sofa_AC-Lounge_01_3.jpg",
+      "cutout": true
     },
     "2025/09/Slider_0_630677_bebitalia_modular-sofa_Dambodue_01_4.jpg": {
       "key": "products/315/276c78e0",
@@ -374,7 +399,8 @@
       "blur": "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAACwAQCdASoQAAkAA4BaJZwAAuZV644AAP74rzXfkOM2losHAZi+ijSe7tI7Q0gg7p5Z4AAA",
       "dominant": "#F8F8F8",
       "flag": "borrowed",
-      "source": "2025/09/Slider_0_630677_bebitalia_modular-sofa_Dambodue_01_4.jpg"
+      "source": "2025/09/Slider_0_630677_bebitalia_modular-sofa_Dambodue_01_4.jpg",
+      "cutout": true
     },
     "2025/09/Slider_1_141_outdoor_complement_Tramae_02_1.jpg": {
       "key": "products/360/6b0ddf50",
@@ -388,7 +414,8 @@
       "blur": "data:image/webp;base64,UklGRjwAAABXRUJQVlA4IDAAAADQAQCdASoQAAkAA4BaJZwAAudgRRSuAAD++LK4anffxheN9ZPgzmoNtS5T3+AAAAA=",
       "dominant": "#F8F8F8",
       "flag": "borrowed",
-      "source": "2025/09/Slider_1_141_outdoor_complement_Tramae_02_1.jpg"
+      "source": "2025/09/Slider_1_141_outdoor_complement_Tramae_02_1.jpg",
+      "cutout": true
     },
     "2025/09/Slider_1_53135_bebitalia_complement_Mirto-Indoor-1_01_1.jpg": {
       "key": "products/339/2fd99980",
@@ -402,7 +429,8 @@
       "blur": "data:image/webp;base64,UklGRjQAAABXRUJQVlA4ICgAAACQAQCdASoQAAkAA4BaJaQAAudPjMAA/viuKJ9HRqyEpMChx4HSAAAA",
       "dominant": "#F8F8F8",
       "flag": "borrowed",
-      "source": "2025/09/Slider_1_53135_bebitalia_complement_Mirto-Indoor-1_01_1.jpg"
+      "source": "2025/09/Slider_1_53135_bebitalia_complement_Mirto-Indoor-1_01_1.jpg",
+      "cutout": true
     },
     "2025/09/Slider_2_299_bebitalia_sofa_Charles_09_5_6.jpg": {
       "key": "products/303/8205051c",
@@ -416,7 +444,8 @@
       "blur": "data:image/webp;base64,UklGRkIAAABXRUJQVlA4IDYAAACwAQCdASoQAAkAA4BaJaQAAucK9kQAAP74sAu5Hzl2537r+WFCZvR3FhW/vshTzek8S+gAAAA=",
       "dominant": "#F8F8F8",
       "flag": "borrowed",
-      "source": "2025/09/Slider_2_299_bebitalia_sofa_Charles_09_5_6.jpg"
+      "source": "2025/09/Slider_2_299_bebitalia_sofa_Charles_09_5_6.jpg",
+      "cutout": true
     },
     "2025/09/Slider_4_298_bebitalia_sofa_Camaleonda_11_1.jpg": {
       "key": "products/306/d1e8e74a",
@@ -430,7 +459,8 @@
       "blur": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAAAwAgCdASoQAAkAA4BaJYwCdH8AGBuzrOsAAAD++LAL+EYq/C0bxNvppHe53TfvlPjaQu8e53W+ZJ+5d4TPoKdAJdILIAAA",
       "dominant": "#F8F8F8",
       "flag": "borrowed",
-      "source": "2025/09/Slider_4_298_bebitalia_sofa_Camaleonda_11_1.jpg"
+      "source": "2025/09/Slider_4_298_bebitalia_sofa_Camaleonda_11_1.jpg",
+      "cutout": true
     },
     "2025/11/1_57362730-7d6a-437c-a365-19aeb0f84362.webp": {
       "key": "products/410/7ec67409",
@@ -445,7 +475,8 @@
       "blur": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAQAgCdASoQABAAA4BaJQBdgCP6Sdjm98AAAP7mCuTV8o0ylMrALIGu0AKOor9foDuIGO+3d2AZj28Cre/1F9nLLcB1bRrq7xaABnquwgDKro7ShN+7gAAA",
       "dominant": "#888888",
       "flag": "licence",
-      "source": "2025/11/1_57362730-7d6a-437c-a365-19aeb0f84362.webp"
+      "source": "2025/11/1_57362730-7d6a-437c-a365-19aeb0f84362.webp",
+      "cutout": false
     },
     "2025/11/10_f49e7f19-338a-44d2-8241-028e3d547384.webp": {
       "key": "products/410/634c40da",
@@ -460,7 +491,8 @@
       "blur": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAAAwAgCdASoQABAAA4BaJYgCdAYvW9OMzA3GMAD+hB7V9k2hBzvZCQ04FBXDswl/9/Jcd7O7l8qvzJF27AQ0rBpPtn7q94+/fXkno3nQQ77X2SpO5Vjthp10fHStpOBPJnD7oAAA",
       "dominant": "#D8B8A8",
       "flag": "licence",
-      "source": "2025/11/10_f49e7f19-338a-44d2-8241-028e3d547384.webp"
+      "source": "2025/11/10_f49e7f19-338a-44d2-8241-028e3d547384.webp",
+      "cutout": false
     },
     "2025/11/15_5d45b1ef-e68f-484e-a739-5f8921881b9a.webp": {
       "key": "products/410/a21cd24f",
@@ -475,7 +507,8 @@
       "blur": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAwAgCdASoQABAAA4BaJQBOgCP6xz2hv7/7sAD+8SMJ5BtWgGavIazPrmv/U1Tyknh/Q5og549ioZtgSue0xR2f7A5SOXLxV9TnSoGfizF0KY9zGU47t5a4HYJsqh4QAAA=",
       "dominant": "#080808",
       "flag": "licence",
-      "source": "2025/11/15_5d45b1ef-e68f-484e-a739-5f8921881b9a.webp"
+      "source": "2025/11/15_5d45b1ef-e68f-484e-a739-5f8921881b9a.webp",
+      "cutout": false
     },
     "2025/11/20241203-113830-1.webp": {
       "key": "products/410/49e8acc5",
@@ -490,7 +523,8 @@
       "blur": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAQAgCdASoQABAAA4BaJQBOgCBj9Tk0cLx0AP5KJ+Z5j3qkjPIQuQwIqs7bYTYR+z7u2Pzt8CX3DO2ZW9f2O+WMRRMc5Gqupr3ZkP1MgrKqbAMWuLTctVGPQ5OErxYAAAA=",
       "dominant": "#E8D8C8",
       "flag": "licence",
-      "source": "2025/11/20241203-113830-1.webp"
+      "source": "2025/11/20241203-113830-1.webp",
+      "cutout": false
     },
     "2025/11/20241203-113830.webp": {
       "key": "products/410/49e8acc5",
@@ -505,7 +539,8 @@
       "blur": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAQAgCdASoQABAAA4BaJQBOgCBj9Tk0cLx0AP5KJ+Z5j3qkjPIQuQwIqs7bYTYR+z7u2Pzt8CX3DO2ZW9f2O+WMRRMc5Gqupr3ZkP1MgrKqbAMWuLTctVGPQ5OErxYAAAA=",
       "dominant": "#E8D8C8",
       "flag": "licence",
-      "source": "2025/11/20241203-113830.webp"
+      "source": "2025/11/20241203-113830.webp",
+      "cutout": false
     },
     "2025/11/Fabric-Leather-Sofas.png": {
       "key": "categories/leather/b6e575d5",
@@ -521,7 +556,8 @@
       "blur": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADQAQCdASoQAA0AA4BaJbACdADc5tYOgAD+ySwsPpPOvsEc2tcgqvoRZBfOjnUrRH19SXgH/jaCoIB8I5IjU3lzOsklNif0m2S6Z1y/X07PbsuBrPGEpjIe81+dMswswAA=",
       "dominant": "#F8F8F8",
       "flag": null,
-      "source": "2025/11/Fabric-Leather-Sofas.png"
+      "source": "2025/11/Fabric-Leather-Sofas.png",
+      "cutout": false
     },
     "2025/11/L-Shape-Sofas.png": {
       "key": "categories/l-shape/45a969a7",
@@ -537,7 +573,8 @@
       "blur": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADQAQCdASoQAAsAA4BaJZACdADvcE/mQAD+yEGrYQfbkC17LAHp87NL6mVSMvU7H3ALWp9FWf3ZJcr7ci4n9v0XL0o4nrg35BGn1zzSFg4sAA==",
       "dominant": "#C8C8C8",
       "flag": null,
-      "source": "2025/11/L-Shape-Sofas.png"
+      "source": "2025/11/L-Shape-Sofas.png",
+      "cutout": false
     },
     "2025/11/Recliner-Sofas.png": {
       "key": "categories/recliners/6604cfc5",
@@ -553,7 +590,8 @@
       "blur": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAABwAgCdASoQAAsAA4BaJbACdAYq/nlPObsiOeR4AP5fZ1ALSZh/gW2l83V6LFgINtqRJfxBlDDKkgsP/tz2XJMabaiaW74h/y3eptsYL7GG/AM9UPkSqA06YoTNbZ73kfxsMWzxAAA=",
       "dominant": "#E8E8D8",
       "flag": null,
-      "source": "2025/11/Recliner-Sofas.png"
+      "source": "2025/11/Recliner-Sofas.png",
+      "cutout": false
     },
     "2025/11/shoplook01-scaled.jpg": {
       "key": "site/hero-living-room/9549ff79",
@@ -569,7 +607,8 @@
       "blur": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADwAQCdASoQAAkAA4BaJYwCdAC9u75DmgAA/mddgYVX8PvU2zFPIkmmj6YyIy4o4sBFfeJgfo6kqfK5JfVorNHAzzfYv4SIgAA=",
       "dominant": "#B8B8A8",
       "flag": null,
-      "source": "2025/11/shoplook01-scaled.jpg"
+      "source": "2025/11/shoplook01-scaled.jpg",
+      "cutout": false
     },
     "2025/11/shoplook03-scaled.jpg": {
       "key": "site/living-room-2/dd924c86",
@@ -585,7 +624,8 @@
       "blur": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAQAgCdASoQAAwAA4BaJQBOgMW0tSdKkRkAAP5hXvgUYiW0dIkDHa6Za6Y6ESRpS7XfngW9r6/Lssk7QgJ610plZuB7cdrPDV0OUWjyOmrppjlN7IAaEco4jCFkwg+LNe8IAA==",
       "dominant": "#F8F8F8",
       "flag": null,
-      "source": "2025/11/shoplook03-scaled.jpg"
+      "source": "2025/11/shoplook03-scaled.jpg",
+      "cutout": false
     },
     "2025/11/SKU-17_459fa133-14c0-4146-9788-6ff75a12a196-1.webp": {
       "key": "products/410/7a9e13ea",
@@ -600,7 +640,8 @@
       "blur": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAQAgCdASoQABAAA4BaJQAAYugaqqZBWLQAAP7xIM6IZneGyohq+AV7lCT0rXeW9YGmMIHQYi7lzo7wApWb085jCFHVMNYmtRUc3wrgBVajb5YcabrL5+j4RqXEDeo2sQ1n/R8ffjQAAA==",
       "dominant": "#181818",
       "flag": "licence",
-      "source": "2025/11/SKU-17_459fa133-14c0-4146-9788-6ff75a12a196-1.webp"
+      "source": "2025/11/SKU-17_459fa133-14c0-4146-9788-6ff75a12a196-1.webp",
+      "cutout": false
     },
     "2025/11/SKU-17_459fa133-14c0-4146-9788-6ff75a12a196.webp": {
       "key": "products/410/7a9e13ea",
@@ -615,7 +656,8 @@
       "blur": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAQAgCdASoQABAAA4BaJQAAYugaqqZBWLQAAP7xIM6IZneGyohq+AV7lCT0rXeW9YGmMIHQYi7lzo7wApWb085jCFHVMNYmtRUc3wrgBVajb5YcabrL5+j4RqXEDeo2sQ1n/R8ffjQAAA==",
       "dominant": "#181818",
       "flag": "licence",
-      "source": "2025/11/SKU-17_459fa133-14c0-4146-9788-6ff75a12a196.webp"
+      "source": "2025/11/SKU-17_459fa133-14c0-4146-9788-6ff75a12a196.webp",
+      "cutout": false
     },
     "2025/11/sofa_factory_outlet_image_01.jpg": {
       "key": "site/about-banner/aba98298",
@@ -629,7 +671,8 @@
       "blur": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADQAQCdASoQAAYAA4BaJZwAAxcrphSJWAD+6uZ3u78z4KsSvcSbdKeail5MzIKf7EphvQhDBzL1SDyceMz6b2ZOONWhy9FJSn89cLz+NcIAAA==",
       "dominant": "#F8F8F8",
       "flag": null,
-      "source": "2025/11/sofa_factory_outlet_image_01.jpg"
+      "source": "2025/11/sofa_factory_outlet_image_01.jpg",
+      "cutout": false
     },
     "2025/11/sofa-premium-quality-materials-cover-images.jpg": {
       "key": "site/materials/8abd31bd",
@@ -645,7 +688,8 @@
       "blur": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAACwAQCdASoQAAkAA4BaJYwCdADIgacQAP7vZHUVE3nai/3B8BwdbN5NtZlkGiq5m1qTV2lXtA0eANsNsxXCBF0zJQQk4IkcdRa3frK5QAA=",
       "dominant": "#382818",
       "flag": null,
-      "source": "2025/11/sofa-premium-quality-materials-cover-images.jpg"
+      "source": "2025/11/sofa-premium-quality-materials-cover-images.jpg",
+      "cutout": false
     },
     "2025/11/Sofa-Sets.png": {
       "key": "categories/sets/4fc27e06",
@@ -659,7 +703,8 @@
       "blur": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAAAwAgCdASoQAAwAA4BaJYgCdAYuvaxiRfZAAAD+a/YyFNJ/MN8ts1Vzc+HRrI10x+xTHZC52f+Ke0obZDC8YZ4VSIErdCtSx8Hcz8XstLnwMxgv7hPXDsEOBjlMzvTW9pToNlnEpy73xkJODVLggo89wAA=",
       "dominant": "#F8F8F8",
       "flag": null,
-      "source": "2025/11/Sofa-Sets.png"
+      "source": "2025/11/Sofa-Sets.png",
+      "cutout": false
     },
     "2026/06/Beige-Corduroy-L-Shape-Sofa-with-Ottoman-Furniture-Colombo.webp": {
       "key": "products/656/1e891224",
@@ -674,7 +719,8 @@
       "blur": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADwAQCdASoQABAAA4BaJZwAAudrlf/NkAAA/viwM0NR4BRjwOnwxOBPlFt6cNvpt9cVZcAs2/nocsr5sMW1sON7D3aUTq0DybkOAAAA",
       "dominant": "#F8F8F8",
       "flag": null,
-      "source": "2026/06/Beige-Corduroy-L-Shape-Sofa-with-Ottoman-Furniture-Colombo.webp"
+      "source": "2026/06/Beige-Corduroy-L-Shape-Sofa-with-Ottoman-Furniture-Colombo.webp",
+      "cutout": true
     },
     "2026/06/Beige-Fabric-Sofa-Set-with-Ottomans-Living-Room-Furniture-Sri-Lanka.webp": {
       "key": "products/649/29611958",
@@ -689,7 +735,8 @@
       "blur": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAABQAgCdASoQABAAA4BaJYwBTAFul77X+0LGngAA/vis23tQKB0RnqONtJ1xGh+AckPwoc+yG0kT2sTvURQ3t5ydwElPgAAA",
       "dominant": "#F8F8F8",
       "flag": null,
-      "source": "2026/06/Beige-Fabric-Sofa-Set-with-Ottomans-Living-Room-Furniture-Sri-Lanka.webp"
+      "source": "2026/06/Beige-Fabric-Sofa-Set-with-Ottomans-Living-Room-Furniture-Sri-Lanka.webp",
+      "cutout": true
     },
     "2026/06/Chesterfield-L-Shape-Sofa-Set-with-Wing-Chair-Colombo.webp": {
       "key": "products/659/991e53a1",
@@ -704,7 +751,8 @@
       "blur": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAACwAQCdASoQABAAA4BaJZwAAua00E1AAP74sGRkDYEKcReenVqwoJ2KwI/yTlR8qa5Lbtqo+3SJiTE+HpDUR6Wj6Bqiv1dFxXmzQAAA",
       "dominant": "#F8F8F8",
       "flag": null,
-      "source": "2026/06/Chesterfield-L-Shape-Sofa-Set-with-Wing-Chair-Colombo.webp"
+      "source": "2026/06/Chesterfield-L-Shape-Sofa-Set-with-Wing-Chair-Colombo.webp",
+      "cutout": true
     },
     "2026/06/Cream-L-Shape-Sectional-Sofa-Modern-Luxury-Furniture-Colombo.webp": {
       "key": "products/653/3df1ebde",
@@ -719,7 +767,8 @@
       "blur": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAAAQAgCdASoQABAAA4BaJZQBTAA9EEnMeIAAAP74r8rgZSUrgICegXP5H9PE5ufChSWP4IsIobb9rc6G+AzaCa404KRIUmHAAAA=",
       "dominant": "#F8F8F8",
       "flag": null,
-      "source": "2026/06/Cream-L-Shape-Sectional-Sofa-Modern-Luxury-Furniture-Colombo.webp"
+      "source": "2026/06/Cream-L-Shape-Sectional-Sofa-Modern-Luxury-Furniture-Colombo.webp",
+      "cutout": true
     },
     "2026/06/Dual-Tone-Velvet-Sofa-Set-Modern-Living-Room-Furniture-Colombo.webp": {
       "key": "products/646/fea317fc",
@@ -734,7 +783,8 @@
       "blur": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAAAQAgCdASoQABAAA4BaJaQAD4hQbD0Woe/AAP74sFk7g2yj/526coiWJoVYACz7/7zZ4PkmgmOlUKFrkB06hq51xS6uk+DIsLFofrXH8qaEzgAA",
       "dominant": "#F8F8F8",
       "flag": null,
-      "source": "2026/06/Dual-Tone-Velvet-Sofa-Set-Modern-Living-Room-Furniture-Colombo.webp"
+      "source": "2026/06/Dual-Tone-Velvet-Sofa-Set-Modern-Living-Room-Furniture-Colombo.webp",
+      "cutout": true
     },
     "2026/06/dusty-pink-velvet-L-shape-sectional-by-Sofa-Factory-Outlet.webp": {
       "key": "products/679/f92ef6a5",
@@ -750,7 +800,8 @@
       "blur": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAQCdASoQABAAA4BaJZwAAudnI4mCAAD++K/Kfm5KG3UernYB3U9bF3tPRRbLAQiGXUJ7+iJ19o9te+cHVsxJ3K83sZ4AAAA=",
       "dominant": "#F8F8F8",
       "flag": null,
-      "source": "2026/06/dusty-pink-velvet-L-shape-sectional-by-Sofa-Factory-Outlet.webp"
+      "source": "2026/06/dusty-pink-velvet-L-shape-sectional-by-Sofa-Factory-Outlet.webp",
+      "cutout": true
     },
     "2026/06/grey-fabric-sofa-set-3-2-1-with-coffee-table-colombo-sri-lanka.webp": {
       "key": "products/666/6575b713",
@@ -765,7 +816,8 @@
       "blur": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAQAgCdASoQABAAA4BaJZQAD4lwb+d6dowAAP74sFL7Pac4Qz9NMjvdEwwT3bJbuBXkglB2IyEyxpOoSgZOkUK7LWBkDM3sU8+Ez3VMEzRPc0/jgtgwmgAA",
       "dominant": "#F8F8F8",
       "flag": null,
-      "source": "2026/06/grey-fabric-sofa-set-3-2-1-with-coffee-table-colombo-sri-lanka.webp"
+      "source": "2026/06/grey-fabric-sofa-set-3-2-1-with-coffee-table-colombo-sri-lanka.webp",
+      "cutout": true
     },
     "2026/06/Maroon-Leather-Sofa-Set-321-Premium-Furniture-Colombo.webp": {
       "key": "products/663/75d2a2f9",
@@ -780,7 +832,8 @@
       "blur": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAAAwAgCdASoQABAAA4BaJZQAD4AQZumUSyQcAAD++LBZO4SwGWqQLrEGr7YryfUvv38DLmTlaRg+5l8qlLkdczENanrzGyUyyynDY77oedJ8XodFQAA=",
       "dominant": "#F8F8F8",
       "flag": null,
-      "source": "2026/06/Maroon-Leather-Sofa-Set-321-Premium-Furniture-Colombo.webp"
+      "source": "2026/06/Maroon-Leather-Sofa-Set-321-Premium-Furniture-Colombo.webp",
+      "cutout": true
     },
     "2026/06/Premium-Modular-U-Shape-Sofa-in-Burnt-Orange-Velvet-by-Sofa-Factory-Outlet.webp": {
       "key": "products/682/b2d55d60",
@@ -796,7 +849,8 @@
       "blur": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAABQAgCdASoQABAAA4BaJZQC7IExgoC/rUF1G2AA/viwaJg/GPVwPTLD8VOMyK7U3VbzfL1DxJHsE/20ogjY9dokP3t6BOV5s53NLlr6AAA=",
       "dominant": "#F8F8F8",
       "flag": null,
-      "source": "2026/06/Premium-Modular-U-Shape-Sofa-in-Burnt-Orange-Velvet-by-Sofa-Factory-Outlet.webp"
+      "source": "2026/06/Premium-Modular-U-Shape-Sofa-in-Burnt-Orange-Velvet-by-Sofa-Factory-Outlet.webp",
+      "cutout": true
     },
     "2026/06/premium-Sofa-Collection-—-Royal-Blue-Velvet-Set-with-Wing-Chairs-by-Sofa-Factory-Outlet.webp": {
       "key": "products/685/adff2b3c",
@@ -812,7 +866,8 @@
       "blur": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADwAQCdASoQABAAA4BaJZwAAudTOpmIuGQA/vivyuBl6ehunOBlNcl2v6vH/z5I+ql50EVPTUg2wYJhcnz+DGbC7PpTyxIh9XqFF4TYngTBtLtRvAQAAA==",
       "dominant": "#F8F8F8",
       "flag": null,
-      "source": "2026/06/premium-Sofa-Collection-—-Royal-Blue-Velvet-Set-with-Wing-Chairs-by-Sofa-Factory-Outlet.webp"
+      "source": "2026/06/premium-Sofa-Collection-—-Royal-Blue-Velvet-Set-with-Wing-Chairs-by-Sofa-Factory-Outlet.webp",
+      "cutout": true
     },
     "2026/06/sofafactoryoutlet-1.webp": {
       "key": "products/673/c17d1d49",
@@ -827,7 +882,8 @@
       "blur": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADwAQCdASoQABAAA4BaJZwAAuda8yPGswAA/vivyuBxoIS1A1NHKrDVn3ExzYKAMvjg+8HlpnSJ4L1Gw6WnX9JiCR4ugAAA",
       "dominant": "#F8F8F8",
       "flag": null,
-      "source": "2026/06/sofafactoryoutlet-1.webp"
+      "source": "2026/06/sofafactoryoutlet-1.webp",
+      "cutout": true
     },
     "2026/06/sofafactoryoutlet.webp": {
       "key": "products/669/25191b12",
@@ -842,7 +898,8 @@
       "blur": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAQAgCdASoQABAAA4BaJZwAD43wbD25QdQAAP74rzU4X1vkXwFpcUVSpM+C6pfz9jUYJ1dYCQ9Z8Qf4m4Uc6DY97v/01qFI7PYBuA8AAAA=",
       "dominant": "#F8F8F8",
       "flag": null,
-      "source": "2026/06/sofafactoryoutlet.webp"
+      "source": "2026/06/sofafactoryoutlet.webp",
+      "cutout": true
     },
     "2026/06/vibrant-Lime-Green-Striped-L-Shape-Sofa-by-Sofa-Factory-Outlet.webp": {
       "key": "products/676/799a7851",
@@ -858,7 +915,8 @@
       "blur": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAABQAgCdASoQABAAA4BaJYgC7B2gDZLQavtT8aAA/viwPFRhGESutpJY+cOROMwoHaJtJlRi8J0BNCGCDmBcy7hAHuyUMiZ1EfBZYBiRoG3zQNvgtb6JBseygwQoSjRGANR4AA==",
       "dominant": "#F8F8F8",
       "flag": null,
-      "source": "2026/06/vibrant-Lime-Green-Striped-L-Shape-Sofa-by-Sofa-Factory-Outlet.webp"
+      "source": "2026/06/vibrant-Lime-Green-Striped-L-Shape-Sofa-by-Sofa-Factory-Outlet.webp",
+      "cutout": true
     },
     "2026/07/Emerald-Green-Velvet-L-Shape-Chaise-Sectional-by-Sofa-Factory-Outlet-🛋️💚.jpeg": {
       "key": "products/688/4aea041b",
@@ -874,7 +932,8 @@
       "blur": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADwAQCdASoQABAAA4BaJQBOgBZReU69HgAAzbj+dJSOLpbaB/wv/zu12OqWnz+sojb0s+dt9R5AJQbxGcfLqWBXyQ4/kTJ++1e0VtkmSckEMxjIMuI++gAA",
       "dominant": "#786858",
       "flag": null,
-      "source": "2026/07/Emerald-Green-Velvet-L-Shape-Chaise-Sectional-by-Sofa-Factory-Outlet-🛋️💚.jpeg"
+      "source": "2026/07/Emerald-Green-Velvet-L-Shape-Chaise-Sectional-by-Sofa-Factory-Outlet-🛋️💚.jpeg",
+      "cutout": false
     }
   }
 }

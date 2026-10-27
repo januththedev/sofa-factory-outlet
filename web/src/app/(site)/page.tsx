@@ -1,38 +1,52 @@
-import { Picture } from '@/components/picture';
-import { listPublishedProducts } from '@/lib/catalogue/queries';
-import { formatLkr } from '@/lib/money';
+import type { Metadata } from 'next';
+import { Collections } from '@/components/landing/collections';
+import { ColourExplorer } from '@/components/landing/colour-explorer';
+import { FactoryStory } from '@/components/landing/factory-story';
+import { Featured } from '@/components/landing/featured';
+import { Hero } from '@/components/landing/hero';
+import { Marquee } from '@/components/landing/marquee';
+import { Proof } from '@/components/landing/proof';
+import { Visit } from '@/components/landing/visit';
+import { getApprovedReviews, getCollectionTiles, getColourSwatches, getFeaturedCards } from '@/lib/catalogue/cached';
+import { siteImage, siteImageUrl } from '@/lib/images/site';
+import { getSettings, mapsDirectionsUrl, mapsEmbedUrl, whatsappLink } from '@/lib/settings/get';
+import { formatHours } from '@/lib/settings/hours';
 
-// Phase 1 placeholder: proves the database, seed and image pipeline end to end.
-// Replaced by the landing page in Phase 2.
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+};
+
 export default async function HomePage() {
-  const products = await listPublishedProducts();
+  const [settings, tiles, swatches, featured, reviews] = await Promise.all([
+    getSettings(),
+    getCollectionTiles(),
+    getColourSwatches(),
+    getFeaturedCards(6),
+    getApprovedReviews(),
+  ]);
+  const { business, hours, proof } = settings;
+
+  const hero = siteImage('hero', 'A bright living room with a cream L-shaped sofa, an armchair and a round wooden coffee table');
+  const heroTexture = siteImageUrl('hero', 1920);
+  const showroom = siteImage('showroom');
+
   return (
-    <main className="site-container py-16">
-      <p className="eyebrow">Rebuild in progress</p>
-      <h1 className="mt-3 text-5xl sm:text-7xl">Sofa Factory Outlet</h1>
-      <p className="mt-4 max-w-xl text-mute">{products.length} published pieces from the site capture.</p>
-      <ul className="mt-12 grid grid-cols-2 gap-6 lg:grid-cols-4">
-        {products.map((p, index) => (
-          <li key={p.id}>
-            <a href={p.href} className="group block">
-              <div className="aspect-square overflow-hidden rounded-[var(--radius-card)] bg-bone-2">
-                {p.image ? (
-                  <Picture
-                    data={p.image}
-                    sizes="(min-width: 1024px) 25vw, 50vw"
-                    priority={index < 4}
-                    imgClassName="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                ) : null}
-              </div>
-              <p className="mt-3 font-medium">{p.name}</p>
-              <p className="text-sm text-mute">
-                {p.colours[0]?.name} · {p.priceMinor ? `${p.priceFrom ? 'From ' : ''}${formatLkr(p.priceMinor)}` : 'Price on request'}
-              </p>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </main>
+    <>
+      {hero && heroTexture ? <Hero picture={hero} textureUrl={heroTexture} /> : null}
+      <Marquee />
+      <FactoryStory />
+      <Collections tiles={tiles} />
+      <ColourExplorer swatches={swatches} />
+      <Featured products={featured} />
+      <Proof proof={proof} reviews={reviews} />
+      <Visit
+        picture={showroom}
+        address={business.address}
+        hoursLines={hours.confirmed ? formatHours(hours) : null}
+        mapSrc={mapsEmbedUrl(business.address)}
+        directionsUrl={mapsDirectionsUrl(business.address)}
+        whatsappUrl={whatsappLink(business.whatsapp.number, 'Hi, I would like to visit the showroom.')}
+      />
+    </>
   );
 }

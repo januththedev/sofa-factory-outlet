@@ -27,3 +27,6 @@ web/.lighthouse/
 *.log
 .DS_Store
 Thumbs.db
+
+# Heavy-command queue lock files (scripts/gate.mjs)
+.gate/

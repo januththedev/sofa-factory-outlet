@@ -10,6 +10,8 @@ export type PictureData = {
   alt: string;
   blur?: string;
   dominant?: string;
+  /** White-background product cut-out: render with object-contain + mix-blend-multiply. */
+  cutout: boolean;
 };
 
 export function imageUrl(ref: Pick<ImageRef, 'key' | 'widths'>, width: number, format: 'avif' | 'webp' = 'webp'): string {
@@ -32,5 +34,6 @@ export function pictureData(ref: ImageRef, fallbackWidth = 960): PictureData {
     alt: ref.alt,
     blur: ref.blur,
     dominant: ref.dominant,
+    cutout: ref.cutout ?? false,
   };
 }

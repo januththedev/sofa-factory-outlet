@@ -12,7 +12,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 import type { ImageRef } from '../src/lib/db/schema/types';
-import { processImage } from '../src/lib/images/process';
+import { detectCutout, processImage } from '../src/lib/images/process';
 import { BORROWED_IMAGE, CATEGORY_SEEDS, loadCapture, relPath, SUPPLIER_IMAGE } from '../src/lib/seed/capture';
 import { storage } from '../src/lib/storage';
 
@@ -190,8 +190,29 @@ async function buildBrand() {
   console.log('brand: public/brand/{mark,wordmark,wordmark-light,logo}.png and src/app/{icon,apple-icon}.png written');
 }
 
+/** Recompute per-image flags (cut-out detection) from the originals without reprocessing any files. */
+async function refreshFlags() {
+  const manifest = JSON.parse(fs.readFileSync(manifestFile, 'utf8')) as { items: Record<string, ImageRef> };
+  let changed = 0;
+  for (const [rel, ref] of Object.entries(manifest.items)) {
+    const file = path.join(uploadsDir, ...rel.split('/'));
+    if (!fs.existsSync(file)) continue;
+    const cutout = await detectCutout(fs.readFileSync(file));
+    if (ref.cutout !== cutout) {
+      ref.cutout = cutout;
+      changed += 1;
+    }
+  }
+  fs.writeFileSync(manifestFile, `${JSON.stringify(manifest, null, 2)}\n`);
+  console.log(`media: flags refreshed, ${changed} changed`);
+}
+
 async function main() {
   console.log(`media: originals from ${uploadsDir}, storage = ${storage().kind}`);
+  if (process.argv.includes('--flags-only')) {
+    await refreshFlags();
+    return;
+  }
   await importPhotos();
   await buildBrand();
 }

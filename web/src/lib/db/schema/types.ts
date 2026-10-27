@@ -17,6 +17,8 @@ export type ImageRef = {
   dominant?: string;
   /** borrowed = looks like another brand's catalogue photo; licence = supplier photo to check */
   flag?: 'borrowed' | 'licence' | null;
+  /** Product cut-out on a plain white background (blends into the page with CSS multiply). */
+  cutout?: boolean;
   source?: string;
 };
 

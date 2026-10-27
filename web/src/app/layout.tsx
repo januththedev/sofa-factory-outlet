@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Fraunces, Inter_Tight } from 'next/font/google';
 import { siteUrl } from '@/lib/env';
+import { preloaderBootScript } from '@/lib/motion/boot';
 import './globals.css';
 
 const fraunces = Fraunces({
@@ -36,7 +37,10 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-LK" className={`${fraunces.variable} ${interTight.variable}`}>
+    <html lang="en-LK" className={`${fraunces.variable} ${interTight.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: preloaderBootScript }} />
+      </head>
       <body>{children}</body>
     </html>
   );

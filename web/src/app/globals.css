@@ -43,6 +43,7 @@
   h3 {
     @apply font-display tracking-tight;
     font-variation-settings: "SOFT" 50, "WONK" 0;
+    text-wrap: balance;
   }
   ::selection {
     background: var(--color-maroon);
@@ -79,7 +80,274 @@
   @apply btn border border-ink/20 text-ink hover:border-ink hover:bg-ink hover:text-bone;
 }
 
+/* ---- Site chrome ------------------------------------------------------------ */
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  z-index: 300;
+  padding: 0.75rem 1rem;
+  background: var(--color-ink);
+  color: var(--color-bone);
+  border-radius: 0 0 0.5rem 0;
+}
+.skip-link:focus {
+  left: 0;
+}
+
+.link-underline {
+  position: relative;
+  display: inline-block;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -3px 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.45s var(--ease-out-expo);
+}
+.link-underline:hover::after,
+.link-underline[aria-current="page"]::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Preloader: hidden for returning visitors (head script), reduced motion and no-JS. */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  animation: hide-failsafe 0.01s 7s forwards;
+}
+.preloader-panel {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+.preloader-count {
+  position: absolute;
+  left: clamp(1.25rem, 4vw, 3rem);
+  bottom: clamp(0.5rem, 2vw, 2rem);
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 18vw, 14rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink);
+}
+html[data-preloaded] .preloader {
+  display: none;
+}
 @media (prefers-reduced-motion: reduce) {
+  .preloader {
+    display: none;
+  }
+}
+@media (scripting: none) {
+  .preloader {
+    display: none;
+  }
+}
+@keyframes hide-failsafe {
+  to {
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+.page-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 180;
+  background: var(--color-maroon);
+  transform: translateY(100%);
+  pointer-events: none;
+}
+
+.cursor-ring,
+.cursor-dot {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 150;
+  pointer-events: none;
+}
+.cursor-ring {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(20, 18, 17, 0.55);
+  border-radius: 9999px;
+}
+.cursor-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--color-bone);
+  opacity: 0;
+}
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--color-maroon);
+}
+html.has-cursor,
+html.has-cursor a,
+html.has-cursor button,
+html.has-cursor [role="button"],
+html.has-cursor label {
+  cursor: none;
+}
+
+/* Subtle moving film grain over everything; ignores the pointer. */
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 120;
+  pointer-events: none;
+  opacity: 0.07;
+  will-change: transform;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: grain-shift 1.4s steps(7) infinite;
+}
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-4%, 3%); }
+  40% { transform: translate(3%, -5%); }
+  60% { transform: translate(-6%, -2%); }
+  80% { transform: translate(5%, 4%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Headline animation: hidden only when JS runs (class added in <head>); failsafe shows it anyway. */
+.js .reveal-title {
+  opacity: 0;
+  animation: show-failsafe 0.01s 3.5s forwards;
+}
+@keyframes show-failsafe {
+  to {
+    opacity: 1;
+  }
+}
+.split-line {
+  overflow: clip;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+
+/* ---- Pinned factory story ---------------------------------------------------- */
+/* Small screens and reduced motion: four stacked cards. Desktop with motion: pinned, steps crossfade. */
+.factory {
+  padding-block: 5rem;
+}
+.factory-pin {
+  display: grid;
+  gap: 3rem;
+}
+.factory-steps {
+  margin-top: 3.5rem;
+  display: grid;
+  gap: 4.5rem;
+}
+.factory-art {
+  position: relative;
+  display: grid;
+  gap: 1.5rem;
+}
+.factory-art-layer {
+  aspect-ratio: 4 / 3;
+  border: 1px solid rgb(243 239 232 / 0.12);
+  border-radius: var(--radius-card);
+  background: rgb(243 239 232 / 0.03);
+  padding: 1.25rem;
+}
+.factory-progress {
+  display: none;
+}
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .factory {
+    padding-block: 0;
+  }
+  .factory-pin {
+    min-height: 100svh;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: center;
+    gap: 1.5rem;
+    padding-block: 6rem 3rem;
+  }
+  .factory-copy {
+    grid-column: span 6;
+    position: relative;
+    min-height: 34rem;
+  }
+  .factory-steps {
+    position: relative;
+    display: block;
+    margin-top: 2.5rem;
+    min-height: 22rem;
+  }
+  .factory-step {
+    position: absolute;
+    inset: 0;
+  }
+  .factory-note {
+    margin-top: 1.5rem;
+  }
+  .factory-art {
+    grid-column: 8 / span 5;
+    display: block;
+    aspect-ratio: 4 / 3.4;
+  }
+  .factory-art-layer {
+    position: absolute;
+    inset: 0;
+    aspect-ratio: auto;
+    padding: 2rem;
+  }
+  .factory-progress {
+    display: block;
+    position: absolute;
+    right: -1.75rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgb(243 239 232 / 0.15);
+  }
+}
+
+/* Horizontal scroll rail: native swipe by default, pinned scrub on desktop with motion. */
+.rail {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.rail::-webkit-scrollbar {
+  display: none;
+}
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .collections {
+    display: flex;
+    min-height: 100svh;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .rail {
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain {
+    animation: none;
+  }
   *,
   *::before,
   *::after {
