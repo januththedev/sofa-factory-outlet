@@ -1,5 +1,7 @@
 ﻿# Downloads every original image from sofafactoryoutlet.lk into .\assets\uploads
 # Run: right-click > Run with PowerShell  (or: powershell -ExecutionPolicy Bypass -File .\download-images.ps1)
+# Add -NoPause to skip the closing prompt when running from a terminal or script.
+param([switch]$NoPause)
 $ErrorActionPreference = 'Continue'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $base = 'https://www.sofafactoryoutlet.lk/wp-content/uploads/'
@@ -95,10 +97,11 @@ foreach ($f in $files) {
   $dest = Join-Path $root ($f -replace '/','\')
   New-Item -ItemType Directory -Force -Path (Split-Path $dest) | Out-Null
   if (Test-Path $dest) { $ok++; continue }
-  $url = $base + (($f -split '/') | ForEach-Object { [Uri]::EscapeDataString($_) }) -join '/'
+  # -join binds looser than +, so the joined path needs its own parentheses
+  $url = $base + ((($f -split '/') | ForEach-Object { [Uri]::EscapeDataString($_) }) -join '/')
   try { Invoke-WebRequest -Uri $url -OutFile $dest -UseBasicParsing; $ok++; Write-Host "OK   $f" }
   catch { $fail += $f; Write-Host "FAIL $f" -ForegroundColor Red }
 }
 Write-Host "`nDone: $ok of $($files.Count) downloaded." -ForegroundColor Green
 if ($fail.Count) { Write-Host 'Failed:' -ForegroundColor Red; $fail }
-Read-Host 'Press Enter to close'
+if (-not $NoPause) { Read-Host 'Press Enter to close' }
