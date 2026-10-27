@@ -1,0 +1,91 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Design tokens (Plan.md): bone background, ink text, the existing brand
+   maroon as the single accent, clay for warm details. Cocoa is the logo's
+   brown, used only next to the logo. */
+@theme inline {
+  --color-bone: #f3efe8;
+  --color-bone-2: #eae3d8;
+  --color-paper: #fbf9f5;
+  --color-ink: #141211;
+  --color-ink-2: #3a3532;
+  --color-mute: #6f6862;
+  --color-line: #ddd5c8;
+  --color-maroon: #842323;
+  --color-maroon-deep: #5e1717;
+  --color-clay: #c9a88a;
+  --color-clay-soft: #e8d9c8;
+  --color-cocoa: #53352a;
+  --color-good: #2e6b4f;
+  --color-warn: #a86414;
+  --color-bad: #a33a2c;
+
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 12px;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-bone text-ink font-sans antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-display tracking-tight;
+    font-variation-settings: "SOFT" 50, "WONK" 0;
+  }
+  ::selection {
+    background: var(--color-maroon);
+    color: var(--color-bone);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-maroon);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  img {
+    color: transparent;
+  }
+}
+
+/* Tailwind v4: shared component classes are utilities, so they can be
+   combined with @apply and take variants (e.g. lg:eyebrow). */
+@utility site-container {
+  @apply mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12;
+}
+@utility grid-12 {
+  @apply grid grid-cols-4 gap-x-4 sm:grid-cols-8 lg:grid-cols-12 lg:gap-x-6;
+}
+@utility eyebrow {
+  @apply text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-mute;
+}
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors duration-300;
+}
+@utility btn-primary {
+  @apply btn bg-maroon text-bone hover:bg-maroon-deep;
+}
+@utility btn-ghost {
+  @apply btn border border-ink/20 text-ink hover:border-ink hover:bg-ink hover:text-bone;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

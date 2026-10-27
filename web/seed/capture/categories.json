@@ -1,0 +1,56 @@
+[
+  {
+    "id": 18,
+    "name": "Beds",
+    "slug": "beds",
+    "parent": 0,
+    "count": 1,
+    "description": "",
+    "image": "https://www.sofafactoryoutlet.lk/wp-content/uploads/2025/09/6.png"
+  },
+  {
+    "id": 17,
+    "name": "Chair",
+    "slug": "chair",
+    "parent": 0,
+    "count": 7,
+    "description": "",
+    "image": "https://www.sofafactoryoutlet.lk/wp-content/uploads/2025/09/3.png"
+  },
+  {
+    "id": 20,
+    "name": "Ottoman",
+    "slug": "ottoman",
+    "parent": 0,
+    "count": 1,
+    "description": "",
+    "image": "https://www.sofafactoryoutlet.lk/wp-content/uploads/2025/09/4.png"
+  },
+  {
+    "id": 21,
+    "name": "Pillows",
+    "slug": "pillows",
+    "parent": 0,
+    "count": 1,
+    "description": "",
+    "image": "https://www.sofafactoryoutlet.lk/wp-content/uploads/2025/09/5.png"
+  },
+  {
+    "id": 15,
+    "name": "sofa",
+    "slug": "sofa",
+    "parent": 0,
+    "count": 22,
+    "description": "",
+    "image": "https://www.sofafactoryoutlet.lk/wp-content/uploads/2025/09/1.png"
+  },
+  {
+    "id": 19,
+    "name": "Table",
+    "slug": "table",
+    "parent": 0,
+    "count": 4,
+    "description": "",
+    "image": "https://www.sofafactoryoutlet.lk/wp-content/uploads/2025/09/2.png"
+  }
+]

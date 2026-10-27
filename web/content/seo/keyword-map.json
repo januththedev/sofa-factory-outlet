@@ -1,0 +1,29 @@
+{
+  "market": "Sri Lanka (google.lk, English first; Sinhala pages follow in months 2–3)",
+  "rule": "One page per search intent. A page never targets two clusters, so pages do not compete with each other.",
+  "howToLock": [
+    "Check monthly volumes in Google Keyword Planner (free with an Ads account) and fill in `volume`.",
+    "Search each term on google.lk from Sri Lanka and record the current top 10 in `serpNotes`.",
+    "Change `status` from `pending` to `locked`, then pick the 20 priority searches for the SEO page."
+  ],
+  "clusters": [
+    { "id": "brand", "name": "Brand", "searches": ["sofa factory outlet"], "page": "/", "status": "pending", "volume": null, "serpNotes": null },
+    { "id": "sofas", "name": "Sofas in general", "searches": ["sofa Sri Lanka", "sofa set price in Sri Lanka", "sofa shop Colombo"], "page": "/sofas/", "status": "pending", "volume": null, "serpNotes": null },
+    { "id": "l-shape", "name": "L-shape and corner", "searches": ["L shape sofa Sri Lanka", "corner sofa price"], "page": "/sofas/l-shape/", "status": "pending", "volume": null, "serpNotes": null },
+    { "id": "u-shape", "name": "U-shape and large family", "searches": ["U shape sofa Sri Lanka", "large family sofa"], "page": "/sofas/u-shape/", "status": "pending", "volume": null, "serpNotes": null },
+    { "id": "sets", "name": "Sets", "searches": ["3+2+1 sofa set", "living room sofa set"], "page": "/sofas/sets/", "status": "pending", "volume": null, "serpNotes": null },
+    { "id": "recliners", "name": "Recliners", "searches": ["recliner sofa Sri Lanka"], "page": "/sofas/recliners/", "status": "pending", "volume": null, "serpNotes": null },
+    { "id": "velvet", "name": "Velvet", "searches": ["velvet sofa"], "page": "/sofas/velvet/", "status": "pending", "volume": null, "serpNotes": null },
+    { "id": "leather", "name": "Leather", "searches": ["leather sofa Sri Lanka"], "page": "/sofas/leather/", "status": "pending", "volume": null, "serpNotes": null },
+    { "id": "fabric", "name": "Fabric", "searches": ["fabric sofa"], "page": "/sofas/fabric/", "status": "pending", "volume": null, "serpNotes": null },
+    { "id": "beds", "name": "Beds", "searches": ["bed Sri Lanka", "bed price Sri Lanka"], "page": "/beds/", "status": "pending", "volume": null, "serpNotes": null },
+    { "id": "chairs", "name": "Chairs", "searches": ["chair Sri Lanka", "armchair price Sri Lanka"], "page": "/chairs/", "status": "pending", "volume": null, "serpNotes": null },
+    { "id": "tables", "name": "Tables", "searches": ["table Sri Lanka", "coffee table Sri Lanka"], "page": "/tables/", "status": "pending", "volume": null, "serpNotes": null },
+    { "id": "ottomans", "name": "Ottomans", "searches": ["ottoman Sri Lanka", "pouf Sri Lanka"], "page": "/ottomans/", "status": "pending", "volume": null, "serpNotes": null },
+    { "id": "pillows", "name": "Pillows and cushions", "searches": ["cushions Sri Lanka", "pillows Sri Lanka"], "page": "/pillows/", "status": "pending", "volume": null, "serpNotes": null },
+    { "id": "factory", "name": "Factory and custom", "searches": ["sofa manufacturer Sri Lanka", "factory price sofa", "custom made sofa"], "page": "/factory/", "status": "pending", "volume": null, "serpNotes": "Home also supports this cluster" },
+    { "id": "local", "name": "Local", "searches": ["sofa shop near me", "furniture shop Dehiwala", "furniture shop Colombo"], "page": "/visit/", "status": "pending", "volume": null, "serpNotes": "Google Business Profile is the main lever" },
+    { "id": "questions", "name": "Questions", "searches": ["best sofa fabric for humid weather", "how to clean a velvet sofa"], "page": "/guides/", "status": "pending", "volume": null, "serpNotes": "One guide per question" },
+    { "id": "sinhala", "name": "Sinhala / Singlish", "searches": ["සෝෆා", "sofa set mila"], "page": "/si/", "status": "later", "volume": null, "serpNotes": "Months 2–3: top 5 pages, machine-drafted then checked by a native speaker" }
+  ]
+}
