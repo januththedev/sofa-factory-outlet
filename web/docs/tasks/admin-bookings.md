@@ -1,0 +1,21 @@
+# Task: admin-bookings (Bookings section, customers)
+
+Read `web/docs/BUILD-GUIDE.md` first. Spec sources in `../Plan.md`: "Admin panel → The Bookings section" (list view, booking detail, calendar view, export), "Admin panel" (Bookings and Customers rows), "Local SEO and reviews" (Visited → WhatsApp review request).
+
+## You own
+`src/app/admin/(panel)/bookings/**`, `src/app/admin/(panel)/customers/**`, `src/components/admin/bookings/**`, `src/components/admin/customers/**`, `src/lib/admin/bookings.ts`, `src/lib/admin/customers.ts`, `tests/db/admin-bookings.test.ts`.
+
+## Build (every page and action starts with `requireRole()` from `@/lib/auth/session`; deleting is not offered; status changes are staff + owner)
+**List `/admin/bookings/`**: columns reference, name, phone, visit date + slot, the products (photo thumbnails and a count), status badge, how they found the site (`sourcePage`/`referrer`/utm summarised). Filters: status, date range, product; search by name, phone or reference; sort by visit date; pagination via URL params; "Export CSV" (`GET /admin/bookings/export/` route handler streaming a CSV of the **current filters**, with `requireRole`). Show a "New" count at the top. Server components read `searchParams` (a Promise).
+
+**Detail `/admin/bookings/[id]/`** (`params` is a Promise): customer block (name, phone with `tel:` link, WhatsApp link (`whatsappLink` from `@/lib/settings/get`), email, city, preferred contact method, their notes, past bookings and invoices); **products selected** (photo, name linking to the product page, colour swatch and name, quantity, price or "on request", a total only when every item is priced); visit block (date, slot, when booked, referrer/UTM, the chat transcript if `conversationId` is set: read `chat_messages` rows); staff notes (editable). **Actions** (server actions in `actions.ts`, each revalidating the page with `revalidatePath`): change status (New → Contacted → Visited → Purchased / Lost, plus Cancelled) with the allowed transitions enforced in one pure function; add/edit staff notes; **reschedule** (pick a date and slot with free capacity: reuse `getAvailability` from `@/lib/bookings/api`, a contract another agent implements; re-check capacity inside a transaction with a row lock on the slot before moving); mark as visited, which then offers the one-tap WhatsApp Google-review request (a prefilled `wa.me` link using the review URL from `settings.business.map.googleReviewUrl` when set, otherwise a plain thank-you message; set `reviewRequestedAt` when staff click it); **Convert to invoice** calls `createInvoiceFromBooking(booking.id)` from `@/lib/invoices/api` (a contract another agent implements; catch errors and show a friendly message) and redirects to `/admin/invoices/<invoiceId>/`; **print a one-page booking sheet** (`/admin/bookings/[id]/print/`: A4 print stylesheet in a `<style>` tag inside the page, logo, reference, customer, visit, products with photos, notes, signature line, `window.print()` button).
+
+**Calendar `/admin/bookings/calendar/`**: day and week views (toggle) of each slot with how full it is (booked/capacity), the bookings in it (name, count of pieces, status colour) linking to the detail, previous/next navigation, today; built from the database for the visible range (Asia/Colombo dates). Keyboard accessible, readable at 360px (list layout on small screens).
+
+**Customers `/admin/customers/`**: searchable list (name, phone, city, number of bookings and invoices, last activity) and `/admin/customers/[id]/` with contact details (editable, phone normalised and kept unique: friendly error on a clash), notes, full history of bookings and invoices with links. Customers are created automatically from bookings and invoices, matched by phone; a "New customer" form is also provided for walk-ins.
+
+## Tests
+`tests/db/admin-bookings.test.ts` (create customers, bookings and items with inserts): status transition rules, reschedule respects capacity and the slot weekday, the list query filters and search and sort, CSV generation escapes commas/quotes/newlines and honours filters, customer phone uniqueness error, booking sheet data assembly.
+
+## Don't
+Implement booking creation or invoice logic (use the contracts); skip `requireRole`; add dependencies.

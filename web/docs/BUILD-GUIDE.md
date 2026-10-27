@@ -29,11 +29,13 @@ export PATH="/c/Users/janut/AppData/Local/Programs/node-portable:$PATH"         
 
 8 logical CPUs, 7.7 GB RAM, many agents. Heavy commands **must** go through the 2-slot queue; they wait their turn automatically. Run from `web/`:
 
-| Command | Does |
+| Command (no npm; the npm wrapper is unreliable here) | Does |
 |---|---|
-| `npm run gate:tsc` | typecheck the whole app (also shows errors in files you don't own: ignore those) |
-| `npm run gate:lint -- src/lib/yourarea` | eslint on your paths (`--max-warnings=0`) |
-| `npm run gate:test -- tests/unit/yours.test.ts` | vitest on your test files |
+| `node scripts/check.mjs tsc` | typecheck the whole app (it also shows errors in files you don't own: ignore those) |
+| `node scripts/check.mjs lint src/lib/yourarea src/app/yourroute` | eslint on your paths (`--max-warnings=0`) |
+| `node scripts/check.mjs test tests/unit/yours.test.ts` | vitest on your test files |
+
+If a command prints nothing and exits non-zero, rerun it as `cmd /c "node scripts\check.mjs test <file> > out.log 2>&1"` and read `out.log` (outside the repo, e.g. in your temp folder).
 
 Never run `next dev`, `next build`, `next start`, Playwright, `npm install` or anything that opens a browser or a server. The integrator does that. No other long-running processes.
 
@@ -86,10 +88,14 @@ Never run `next dev`, `next build`, `next start`, Playwright, `npm install` or a
 | `src/lib/seo/jsonld.tsx` | seo-core | all pages |
 | `src/lib/auth/{session,gate,actions}.ts` | auth-shell | every admin page, proxy |
 
-Already real and shared (read, don't edit): `src/lib/cart/*`, `src/lib/notify/bell.ts`, `src/lib/revalidate.ts`, `src/lib/analytics/client.ts`, `src/lib/phone.ts`, `src/lib/money.ts`, `src/lib/settings/*`, `src/lib/catalogue/{queries,cached,types}.ts`, `src/components/{picture,catalogue/product-tile}.tsx`, `src/components/ui/*`, `src/components/admin/page-header.tsx`, `src/components/cart/cart-button.tsx`.
+Also contracts: `src/components/catalogue/complete-the-look.tsx` (colour-engine), and the fuller invoices API in `src/lib/invoices/api.ts` (invoices-core; invoices-ui and the bookings admin are written against it).
+
+Shared URL and event conventions: guides live at `/guides/<slug>/` (the two first guides are `sofa-fabrics-for-sri-lankas-humid-climate` and `l-shape-u-shape-or-3-2-1-which-fits-your-living-room`); open the chat widget with `openChat()` from `@/lib/events`; track behaviour with `trackEvent()` from `@/lib/analytics/client`; admin links to a booking are `/admin/bookings/<id>/`, to an invoice `/admin/invoices/<id>/`; the booking confirmation page is `/book-visit/done/<reference>/`.
+
+Already real and shared (read, don't edit): `src/lib/cart/*`, `src/lib/events.ts`, `src/lib/notify/bell.ts`, `src/lib/revalidate.ts`, `src/lib/analytics/client.ts`, `src/lib/phone.ts`, `src/lib/money.ts`, `src/lib/settings/*`, `src/lib/catalogue/{queries,cached,types}.ts`, `src/components/{picture,catalogue/product-tile}.tsx`, `src/components/ui/*`, `src/components/admin/page-header.tsx`, `src/components/cart/cart-button.tsx`.
 
 ## 7. Finishing
 
-Before you report: `npm run gate:tsc` shows no errors in your files, `npm run gate:lint -- <your paths>` is clean, your tests pass, everything is committed on your branch.
+Before you report: `node scripts/check.mjs tsc` shows no errors in your files, `node scripts/check.mjs lint <your paths>` is clean, your tests pass, everything is committed on your branch.
 
 Report in **200 words or fewer**: DONE or PARTIAL; branch name; key files; commands run and results; any contract change you need; known gaps. No code in the report.

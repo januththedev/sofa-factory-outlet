@@ -4,6 +4,8 @@
  * (+94771234567) or null. Customers are matched by this normalised number.
  */
 export function normaliseLkPhone(input: string): string | null {
+  // Only digits, spaces and common separators may appear; letters mean it is not a phone number.
+  if (!/^[\d\s\-().+]+$/.test(input)) return null;
   let digits = input.replace(/[^\d+]/g, '');
   if (digits.startsWith('+')) digits = digits.slice(1);
   if (digits.startsWith('0094')) digits = digits.slice(4);

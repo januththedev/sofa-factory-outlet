@@ -33,3 +33,10 @@ export const ingestDocument: (input: IngestInput) => Promise<IngestResult> = asy
 
 /** Rebuild chunks and embeddings for every enabled document (the month-3 "turn on embeddings" step). */
 export const reindexAll: () => Promise<{ documents: number; chunks: number }> = async () => notImplemented('reindexAll');
+
+/**
+ * Month-3 switch: probe the embedding model's dimension, create the vector column and HNSW index,
+ * store `settings.chat.embeddings`. Returns `{ ok: false, error }` (never throws) when the vector
+ * extension is unavailable, as on local PGlite, or no OpenRouter key is set.
+ */
+export const enableEmbeddings: (model: string) => Promise<{ ok: true; dim: number } | { ok: false; error: string }> = async () => notImplemented('enableEmbeddings');
