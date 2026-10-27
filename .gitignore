@@ -1,0 +1,29 @@
+# Downloaded originals from the live site (re-create with download-images.ps1)
+assets/uploads/
+
+# Next.js app
+web/node_modules/
+web/.next/
+web/out/
+web/next-env.d.ts
+web/*.tsbuildinfo
+web/.vercel/
+
+# Local database, local blob storage, caches
+web/.data/
+
+# Environment
+.env*.local
+web/.env
+
+# Test output
+web/test-results/
+web/playwright-report/
+web/blob-report/
+web/coverage/
+web/.lighthouse/
+
+# Misc
+*.log
+.DS_Store
+Thumbs.db
