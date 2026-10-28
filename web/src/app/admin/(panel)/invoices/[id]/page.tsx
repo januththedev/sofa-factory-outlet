@@ -10,15 +10,19 @@ import { SourceBadge } from '@/components/admin/invoices/source-badge';
 import { StatusBadge } from '@/components/admin/invoices/status-badge';
 import { Badge } from '@/components/ui/badge';
 import { buttonStyles } from '@/components/ui/button';
-import { Table, TBody, TD, TH, THead, TR } from '@/components/ui/table';
-import {
-  formatInvoiceDate,
-  paymentMethodLabel,
-  reviewRequestLink,
-} from '@/lib/admin/invoices';
+import { Table } from '@/components/ui/table';
+import { TBody } from '@/components/ui/table';
+import { TD } from '@/components/ui/table';
+import { TH } from '@/components/ui/table';
+import { THead } from '@/components/ui/table';
+import { TR } from '@/components/ui/table';
+import { formatInvoiceDate } from '@/lib/admin/invoices';
+import { paymentMethodLabel } from '@/lib/admin/invoices';
+import { reviewRequestLink } from '@/lib/admin/invoices';
 import { requireRole } from '@/lib/auth/session';
 import { colomboToday } from '@/lib/bookings/rules';
-import { createShareLink, getInvoice } from '@/lib/invoices/api';
+import { createShareLink } from '@/lib/invoices/api';
+import { getInvoice } from '@/lib/invoices/api';
 import { formatLkr } from '@/lib/money';
 import { getSettings } from '@/lib/settings/get';
 import { findInvoiceConvertedFrom } from '../query';
@@ -78,7 +82,7 @@ export default async function InvoiceDetailPage({ params }: { params: Params }) 
     ?? (invoice.type === 'quotation' ? 'Draft quotation' : 'Draft invoice');
 
   return (
-    <div>
+    <div className="min-w-0 max-w-full">
       <style>{printStyles}</style>
       <PageHeader
         title={heading}
@@ -93,19 +97,19 @@ export default async function InvoiceDetailPage({ params }: { params: Params }) 
         <StatusBadge status={invoice.status} />
         <SourceBadge source={invoice.source} />
         <Badge tone="neutral">{invoice.type === 'quotation' ? 'Quotation' : 'Invoice'}</Badge>
-        <span className="text-sm text-mute">Number: {invoice.number ?? 'Draft'}</span>
+        <span className="text-base sm:text-sm text-mute">Number: {invoice.number ?? 'Draft'}</span>
         {invoice.booking ? (
           <Link
             href={`/admin/bookings/${invoice.booking.id}/`}
-            className="text-sm text-maroon underline-offset-4 hover:underline"
+            className="text-base sm:text-sm text-maroon underline-offset-4 hover:underline"
           >
             Booking {invoice.booking.reference}
           </Link>
-        ) : <span className="text-sm text-mute">No originating booking</span>}
+        ) : <span className="text-base sm:text-sm text-mute">No originating booking</span>}
         {invoice.convertedFromId ? (
           <Link
             href={`/admin/invoices/${invoice.convertedFromId}/`}
-            className="text-sm text-maroon underline-offset-4 hover:underline"
+            className="text-base sm:text-sm text-maroon underline-offset-4 hover:underline"
           >
             Converted from quotation #{invoice.convertedFromId}
           </Link>
@@ -125,7 +129,7 @@ export default async function InvoiceDetailPage({ params }: { params: Params }) 
       {invoice.status === 'paid' && reviewUrl ? (
         <section className="no-print mb-6 rounded-[var(--radius-card)] border border-good/30 bg-good/5 p-4">
           <h2 className="font-display text-xl">Ask for a Google review</h2>
-          <p className="mt-1 text-sm text-ink-2">
+          <p className="mt-1 text-base sm:text-sm text-ink-2">
             This invoice is paid. Send the customer a one-tap WhatsApp message with your review link.
           </p>
           <div className="mt-3">
@@ -139,7 +143,10 @@ export default async function InvoiceDetailPage({ params }: { params: Params }) 
                 Send review request
               </a>
             ) : (
-              <p className="text-sm text-mute">Add a mobile number to the customer to send a review request.</p>
+              <p
+                className="text-base sm:text-sm text-mute">
+                Add a mobile number to the customer to send a review request.
+              </p>
             )}
           </div>
         </section>
@@ -163,8 +170,8 @@ export default async function InvoiceDetailPage({ params }: { params: Params }) 
                 <TR key={payment.id}>
                   <TD>{formatInvoiceDate(payment.paidOn)}</TD>
                   <TD>{paymentMethodLabel(payment.method)}</TD>
-                  <TD className="text-sm text-ink-2">{payment.reference ?? '—'}</TD>
-                  <TD className="text-sm text-ink-2">{payment.note ?? '—'}</TD>
+                  <TD className="text-base sm:text-sm text-ink-2">{payment.reference ?? '—'}</TD>
+                  <TD className="text-base sm:text-sm text-ink-2">{payment.note ?? '—'}</TD>
                   <TD className="text-right font-semibold tabular-nums text-good">
                     {formatLkr(payment.amountMinor, { decimals: true })}
                   </TD>
@@ -172,7 +179,7 @@ export default async function InvoiceDetailPage({ params }: { params: Params }) 
               ))}
             </TBody>
           </Table>
-        ) : <p className="text-sm text-mute">No payments recorded yet.</p>}
+        ) : <p className="text-base sm:text-sm text-mute">No payments recorded yet.</p>}
       </section>
 
       <div className="overflow-x-auto rounded-[var(--radius-card)] border border-line bg-bone/30 p-2 sm:p-4">

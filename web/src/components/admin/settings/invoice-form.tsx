@@ -3,16 +3,14 @@
 import Image from 'next/image';
 import { saveInvoiceAction } from '@/app/admin/(panel)/settings/actions';
 import type { InvoiceSettings } from '@/lib/settings/types';
-import {
-  AreaField,
-  CheckField,
-  ConfirmedField,
-  FormCard,
-  SaveBar,
-  SectionTitle,
-  TextField,
-  useSettingsForm,
-} from './form-kit';
+import { AreaField } from './form-kit';
+import { CheckField } from './form-kit';
+import { ConfirmedField } from './form-kit';
+import { FormCard } from './form-kit';
+import { SaveBar } from './form-kit';
+import { SectionTitle } from './form-kit';
+import { TextField } from './form-kit';
+import { useSettingsForm } from './form-kit';
 
 type InvoiceFormProps = { invoice: InvoiceSettings; taxRatePercent: string; businessName: string };
 
@@ -116,7 +114,10 @@ export function InvoiceForm({ invoice, taxRatePercent, businessName }: InvoiceFo
             className="h-14 w-auto object-contain"
           />
         </div>
-        <p className="mt-2 text-sm text-mute">To change the logo, replace public/brand/logo.png in the site files.</p>
+        <p
+          className="mt-2 text-base sm:text-sm text-mute">
+          To change the logo, replace public/brand/logo.png in the site files.
+        </p>
       </section>
 
       <SaveBar state={state} pending={pending} />

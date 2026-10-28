@@ -2,12 +2,15 @@ import Link from 'next/link';
 import { StatusBadge } from '@/components/admin/invoices/status-badge';
 import { SourceBadge } from '@/components/admin/invoices/source-badge';
 import { Badge } from '@/components/ui/badge';
-import { Table, TBody, TD, TH, THead, TR } from '@/components/ui/table';
-import {
-  formatInvoiceDate,
-  isInvoiceOverdue,
-  type InvoiceRowTotals,
-} from '@/lib/admin/invoices';
+import { Table } from '@/components/ui/table';
+import { TBody } from '@/components/ui/table';
+import { TD } from '@/components/ui/table';
+import { TH } from '@/components/ui/table';
+import { THead } from '@/components/ui/table';
+import { TR } from '@/components/ui/table';
+import { formatInvoiceDate } from '@/lib/admin/invoices';
+import { isInvoiceOverdue } from '@/lib/admin/invoices';
+import type { InvoiceRowTotals } from '@/lib/admin/invoices';
 import type { InvoiceRow } from '@/lib/invoices/api';
 import { formatLkr } from '@/lib/money';
 
@@ -40,7 +43,7 @@ function balanceClass(row: InvoiceRow): string {
 
 function InvoiceTotals({ totals }: { totals: InvoiceRowTotals }) {
   return (
-    <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <dl className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
       <div className="rounded-xl border border-line bg-paper px-4 py-3">
         <dt className="text-xs uppercase tracking-wider text-mute">Invoices</dt>
         <dd className="mt-1 text-xl font-semibold">{totals.count}</dd>
@@ -68,7 +71,7 @@ function EmptyState({ tab }: { tab: 'invoices' | 'quotations' }) {
   return (
     <div className="rounded-xl border border-dashed border-line p-10 text-center">
       <p className="font-display text-2xl">Nothing here yet</p>
-      <p className="mt-2 text-sm text-mute">
+      <p className="mt-2 text-base sm:text-sm text-mute">
         {tab === 'quotations'
           ? 'Create a quotation from the catalogue and convert it when the customer agrees.'
           : 'Create an invoice from a booking or for a walk-in customer.'}
@@ -102,7 +105,7 @@ export function InvoiceList({
       <InvoiceTotals totals={totals} />
       {rows.length === 0 ? <EmptyState tab={tab} /> : (
         <>
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <Table>
               <THead>
                 <TR>
@@ -143,7 +146,7 @@ export function InvoiceList({
                         <span className="block">{formatLkr(row.balanceMinor, { decimals: true })}</span>
                         {overdue ? <Badge tone="bad" className="mt-1">Overdue</Badge> : null}
                       </TD>
-                      <TD className="whitespace-nowrap text-sm text-ink-2">
+                      <TD className="whitespace-nowrap text-base sm:text-sm text-ink-2">
                         {row.issuedAt ? formatInvoiceDate(row.issuedAt) : blank}
                       </TD>
                     </TR>
@@ -152,11 +155,12 @@ export function InvoiceList({
               </TBody>
             </Table>
           </div>
-          <ul className="space-y-3 md:hidden">
+          <ul className="space-y-3 lg:hidden">
             {rows.map((row) => {
               const overdue = isInvoiceOverdue(row);
               return (
-                <li key={row.id} className={`rounded-xl border border-line bg-paper p-4 ${overdue ? 'bg-warn/5' : ''}`}>
+                <li key={row.id}
+                  className={`rounded-xl border border-line bg-paper p-4 ${overdue ? 'bg-warn/5' : ''}`}>
                   <div className="flex items-start justify-between gap-3">
                     <Link
                       href={`/admin/invoices/${row.id}/`}
@@ -166,7 +170,7 @@ export function InvoiceList({
                     </Link>
                     <StatusBadge status={row.status} />
                   </div>
-                  <p className="mt-2 text-sm font-medium">{row.customerName}</p>
+                  <p className="mt-2 text-base sm:text-sm font-medium">{row.customerName}</p>
                   <p className="text-xs text-mute">{row.customerPhone}</p>
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     <SourceBadge source={row.source} />
@@ -175,7 +179,7 @@ export function InvoiceList({
                       {row.issuedAt ? formatInvoiceDate(row.issuedAt) : 'Not issued'}
                     </span>
                   </div>
-                  <dl className="mt-3 grid grid-cols-3 gap-2 border-t border-line pt-3 text-sm">
+                  <dl className="mt-3 grid gap-3 sm:grid-cols-3 border-t border-line pt-3 text-base sm:text-sm">
                     <div>
                       <dt className="text-xs text-mute">Total</dt>
                       <dd className="tabular-nums">{formatLkr(row.totalMinor, { decimals: true })}</dd>
@@ -198,7 +202,8 @@ export function InvoiceList({
         </>
       )}
       {total > 0 ? (
-        <nav aria-label="Invoice pages" className="flex flex-wrap items-center justify-between gap-3 text-sm">
+        <nav aria-label="Invoice pages"
+          className="flex flex-wrap items-center justify-between gap-3 text-base sm:text-sm">
           <p className="text-mute">Showing {from}–{to} of {total}</p>
           <div className="flex items-center gap-3">
             {page > 1 ? (

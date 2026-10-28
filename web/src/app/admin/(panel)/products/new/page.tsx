@@ -1,3 +1,4 @@
+import { OpsFrame } from '@/components/admin/settings/ops-frame';
 import { asc } from 'drizzle-orm';
 import { requireRole } from '@/lib/auth/session';
 import { getDb } from '@/lib/db';
@@ -15,7 +16,7 @@ export default async function NewProductPage() {
     .from(s.categories)
     .orderBy(asc(s.categories.name));
   return (
-    <>
+    <OpsFrame>
       <PageHeader title="New product" description="Saving updates every catalogue surface automatically." />
       <ProductEditor
         categories={categories}
@@ -34,6 +35,6 @@ export default async function NewProductPage() {
           variants: [],
         }}
       />
-    </>
+    </OpsFrame>
   );
 }

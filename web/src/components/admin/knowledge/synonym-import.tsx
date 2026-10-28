@@ -1,11 +1,13 @@
 'use client';
 
 import { Upload } from 'lucide-react';
-import { useId, useState } from 'react';
+import { useId } from 'react';
+import { useState } from 'react';
 import { importSynonymsAction } from '@/app/admin/(panel)/knowledge/actions';
 import type { LineError } from '@/lib/admin/knowledge';
 import { cn } from '@/lib/cn';
-import { ErrorList, Status } from './status';
+import { ErrorList } from './status';
+import { Status } from './status';
 
 type Outcome = { tone: 'good'; text: string } | { tone: 'bad'; fileName: string; errors: LineError[] };
 
@@ -53,7 +55,7 @@ export function SynonymImport({ maxBytes }: { maxBytes: number }) {
         htmlFor={inputId}
         className={cn(
           'inline-flex cursor-pointer items-center gap-2 rounded-full border border-ink/20 px-5 py-2.5',
-          'text-sm font-semibold hover:border-ink focus-within:border-maroon',
+          'text-base sm:text-sm font-semibold hover:border-ink focus-within:border-maroon',
         )}
       >
         <Upload className="size-4" aria-hidden="true" />

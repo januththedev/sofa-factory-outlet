@@ -6,7 +6,10 @@ const SHOWN = 60;
 /** The chunks exactly as the chatbot reads them: heading path, text and tags. */
 export function ChunkPreview({ chunks, title }: { chunks: PreviewChunk[]; title?: string }) {
   if (chunks.length === 0) {
-    return <p className="text-sm text-mute">Nothing in this file becomes a chunk, so the bot would not see it.</p>;
+    return <p
+      className="text-base sm:text-sm text-mute">
+      Nothing in this file becomes a chunk, so the bot would not see it.
+    </p>;
   }
   return (
     <div>
@@ -17,7 +20,7 @@ export function ChunkPreview({ chunks, title }: { chunks: PreviewChunk[]; title?
         {chunks.slice(0, SHOWN).map((chunk, index) => (
           <li key={`${index}-${chunk.headingPath}`} className="rounded-xl border border-line bg-bone/50 p-4">
             <p className="text-xs font-semibold uppercase tracking-wider text-mute">{chunk.headingPath}</p>
-            <p className="mt-2 whitespace-pre-wrap text-sm text-ink-2">{chunk.body}</p>
+            <p className="mt-2 whitespace-pre-wrap text-base sm:text-sm text-ink-2">{chunk.body}</p>
             <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-mute">
               {chunk.tags.map((tag) => (
                 <Badge key={tag} tone="neutral">
@@ -31,7 +34,7 @@ export function ChunkPreview({ chunks, title }: { chunks: PreviewChunk[]; title?
         ))}
       </ol>
       {chunks.length > SHOWN ? (
-        <p className="mt-3 text-sm text-mute">…and {chunks.length - SHOWN} more chunks.</p>
+        <p className="mt-3 text-base sm:text-sm text-mute">…and {chunks.length - SHOWN} more chunks.</p>
       ) : null}
     </div>
   );

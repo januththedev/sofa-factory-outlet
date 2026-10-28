@@ -1,10 +1,13 @@
 'use client';
 
-import { useId, useState } from 'react';
-import { answerGapAction, dismissGapAction } from '@/app/admin/(panel)/knowledge/actions';
+import { useId } from 'react';
+import { useState } from 'react';
+import { answerGapAction } from '@/app/admin/(panel)/knowledge/actions';
+import { dismissGapAction } from '@/app/admin/(panel)/knowledge/actions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { type FaqDraft, FaqFields } from './faq-fields';
+import type { FaqDraft } from './faq-fields';
+import { FaqFields } from './faq-fields';
 import { Status } from './status';
 
 export type GapView = {
@@ -30,7 +33,8 @@ function AnswerForm({ gap, onClose }: { gap: GapView; onClose: () => void }) {
     setFieldErrors({});
     try {
       const result = await answerGapAction({ gapId: gap.id, ...draft, enabled: true });
-      if (!result.ok) {
+      if (result.ok) onClose();
+      else {
         setError(result.error);
         setFieldErrors(result.fieldErrors);
       }
@@ -43,7 +47,7 @@ function AnswerForm({ gap, onClose }: { gap: GapView; onClose: () => void }) {
 
   return (
     <form onSubmit={submit} className="mt-4 space-y-4 rounded-xl border border-line bg-bone/40 p-4">
-      <p className="text-sm text-mute">
+      <p className="text-base sm:text-sm text-mute">
         This becomes an instant FAQ. The visitor&apos;s own words are kept as another way of asking it.
       </p>
       <FaqFields idBase={base} value={draft} onChange={setDraft} errors={fieldErrors} />
@@ -67,6 +71,7 @@ export function GapItem({ gap }: { gap: GapView }) {
   const [error, setError] = useState<string | null>(null);
 
   async function dismiss() {
+    if (busy || !window.confirm('Dismiss this question? It will move out of the waiting list.')) return;
     setBusy(true);
     setError(null);
     try {
@@ -80,11 +85,11 @@ export function GapItem({ gap }: { gap: GapView }) {
   }
 
   return (
-    <li className="px-6 py-4">
+    <li className="m-3 min-w-0 rounded-xl border border-line p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1 basis-64">
           <p className="font-semibold">{gap.question}</p>
-          <p className="mt-1 text-sm text-mute">
+          <p className="mt-1 text-base sm:text-sm text-mute">
             Asked {gap.timesAsked} {gap.timesAsked === 1 ? 'time' : 'times'}, last on {gap.lastAskedLabel}
           </p>
         </div>

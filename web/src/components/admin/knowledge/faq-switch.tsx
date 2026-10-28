@@ -32,7 +32,7 @@ export function FaqSwitch({ id, question, enabled }: { id: number; question: str
     <div className="flex flex-wrap items-center gap-2">
       <Switch checked={on} onChange={change} label={`Use the FAQ "${question}" in chat answers`} disabled={busy} />
       {error ? (
-        <span role="alert" className="text-xs text-bad">
+        <span role="status" aria-live="polite" className="text-xs text-bad">
           {error}
         </span>
       ) : null}

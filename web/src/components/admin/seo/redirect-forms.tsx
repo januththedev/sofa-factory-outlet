@@ -1,16 +1,19 @@
 'use client';
 
-import { useId, useState, useTransition } from 'react';
-import {
-  createRedirectAction,
-  deleteRedirectAction,
-  type RedirectFormState,
-  updateRedirectAction,
-} from '@/app/admin/(panel)/seo/actions';
+import { useId } from 'react';
+import { useState } from 'react';
+import { useTransition } from 'react';
+import { createRedirectAction } from '@/app/admin/(panel)/seo/actions';
+import { deleteRedirectAction } from '@/app/admin/(panel)/seo/actions';
+import type { RedirectFormState } from '@/app/admin/(panel)/seo/actions';
+import { updateRedirectAction } from '@/app/admin/(panel)/seo/actions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Field, Input, Select } from '@/components/ui/field';
-import { TD, TR } from '@/components/ui/table';
+import { Field } from '@/components/ui/field';
+import { Input } from '@/components/ui/field';
+import { Select } from '@/components/ui/field';
+import { TD } from '@/components/ui/table';
+import { TR } from '@/components/ui/table';
 import type { RedirectRow as RedirectData } from '@/lib/admin/seo';
 
 const IDLE: RedirectFormState = { status: 'idle' };
@@ -85,7 +88,7 @@ function FormMessage({ state }: { state: RedirectFormState }) {
     <p
       role="status"
       aria-live="polite"
-      className={state.status === 'error' ? 'text-sm text-bad' : 'text-sm text-good'}
+      className={state.status === 'error' ? 'text-base sm:text-sm text-bad' : 'text-base sm:text-sm text-good'}
     >
       {state.status === 'idle' ? '' : state.message}
     </p>
@@ -103,7 +106,13 @@ export function RedirectAddForm() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     startTransition(async () => {
-      const result = await createRedirectAction(data);
+      let result: RedirectFormState;
+      try {
+        result = await createRedirectAction(data);
+      } catch {
+        setState({ status: 'error', message: 'The redirect could not be saved. Please try again.', fieldErrors: {} });
+        return;
+      }
       setState(result);
       if (result.status === 'saved') setRound((value) => value + 1);
     });
@@ -131,7 +140,13 @@ function RedirectEditForm({ redirect, onDone }: { redirect: RedirectData; onDone
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     startTransition(async () => {
-      const result = await updateRedirectAction(data);
+      let result: RedirectFormState;
+      try {
+        result = await updateRedirectAction(data);
+      } catch {
+        setState({ status: 'error', message: 'The redirect could not be saved. Please try again.', fieldErrors: {} });
+        return;
+      }
       setState(result);
       if (result.status === 'saved') onDone();
     });
@@ -160,6 +175,7 @@ function RedirectEditForm({ redirect, onDone }: { redirect: RedirectData; onDone
 
 export function RedirectRow({ redirect, canDelete }: { redirect: RedirectData; canDelete: boolean }) {
   const [editing, setEditing] = useState(false);
+  const [message, setMessage] = useState('');
   const [pending, startTransition] = useTransition();
 
   function remove() {
@@ -167,7 +183,12 @@ export function RedirectRow({ redirect, canDelete }: { redirect: RedirectData; c
     const data = new FormData();
     data.set('id', String(redirect.id));
     startTransition(async () => {
-      await deleteRedirectAction(data);
+      try {
+        await deleteRedirectAction(data);
+        setMessage('Redirect deleted.');
+      } catch {
+        setMessage('The redirect could not be deleted. Please try again.');
+      }
     });
   }
 
@@ -197,6 +218,7 @@ export function RedirectRow({ redirect, canDelete }: { redirect: RedirectData; c
               </Button>
             ) : null}
           </div>
+          <p role="status" aria-live="polite">{message}</p>
         </TD>
       </TR>
       {editing ? (

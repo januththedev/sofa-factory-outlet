@@ -1,22 +1,23 @@
+import { OpsFrame } from '@/components/admin/settings/ops-frame';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PageHeader } from '@/components/admin/page-header';
-import { InvoiceFilters, type InvoiceFilterValues } from '@/components/admin/invoices/invoice-filters';
+import { InvoiceFilters } from '@/components/admin/invoices/invoice-filters';
+import type { InvoiceFilterValues } from '@/components/admin/invoices/invoice-filters';
 import { InvoiceList } from '@/components/admin/invoices/invoice-list';
 import { ReportsView } from '@/components/admin/invoices/reports-view';
 import { buttonStyles } from '@/components/ui/button';
 import { sumInvoiceRows } from '@/lib/admin/invoices';
 import { requireRole } from '@/lib/auth/session';
-import { listInvoices, revenueReport } from '@/lib/invoices/api';
-import {
-  collectInvoiceRows,
-  firstParam,
-  parseDate,
-  parsePage,
-  parseSearch,
-  parseSource,
-  parseStatus,
-} from './query';
+import { listInvoices } from '@/lib/invoices/api';
+import { revenueReport } from '@/lib/invoices/api';
+import { collectInvoiceRows } from './query';
+import { firstParam } from './query';
+import { parseDate } from './query';
+import { parsePage } from './query';
+import { parseSearch } from './query';
+import { parseSource } from './query';
+import { parseStatus } from './query';
 
 export const dynamic = 'force-dynamic';
 
@@ -77,7 +78,7 @@ function Tabs({ active, values }: { active: Tab; values: InvoiceFilterValues }) 
           key={item.key}
           href={tabHref(item.key, values)}
           aria-current={active === item.key ? 'page' : undefined}
-          className={`-mb-px border-b-2 pb-3 text-sm font-semibold ${
+          className={`-mb-px border-b-2 pb-3 text-base sm:text-sm font-semibold ${
             active === item.key
               ? 'border-maroon text-ink'
               : 'border-transparent text-mute hover:text-ink'
@@ -147,7 +148,7 @@ export default async function InvoicesPage({ searchParams }: { searchParams: Sea
           ? 'Quotes for customers, ready to convert when they agree.'
           : 'Website and walk-in invoices, with payments, balances and printable copies.'}
         actions={(
-          <>
+          <OpsFrame>
             <Link
               href={listExportHref(tab, values)}
               className={buttonStyles({ variant: 'ghost', size: 'md' })}
@@ -163,7 +164,7 @@ export default async function InvoicesPage({ searchParams }: { searchParams: Sea
             >
               New quotation
             </Link>
-          </>
+          </OpsFrame>
         )}
       />
       <Tabs active={tab} values={values} />

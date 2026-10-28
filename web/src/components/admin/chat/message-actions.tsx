@@ -1,9 +1,13 @@
 'use client';
 
-import { Flag, PenLine } from 'lucide-react';
-import { useId, useState } from 'react';
-import { flagMessageAction, writeFaqFromMessageAction } from '@/app/admin/(panel)/chat/actions';
-import { type FaqDraft, FaqFields } from '@/components/admin/knowledge/faq-fields';
+import { Flag } from 'lucide-react';
+import { PenLine } from 'lucide-react';
+import { useId } from 'react';
+import { useState } from 'react';
+import { flagMessageAction } from '@/app/admin/(panel)/chat/actions';
+import { writeFaqFromMessageAction } from '@/app/admin/(panel)/chat/actions';
+import type { FaqDraft } from '@/components/admin/knowledge/faq-fields';
+import { FaqFields } from '@/components/admin/knowledge/faq-fields';
 import { Modal } from '@/components/admin/knowledge/modal';
 import { Status } from '@/components/admin/knowledge/status';
 import { Badge } from '@/components/ui/badge';
@@ -46,13 +50,16 @@ function WriteFaqForm({
 
   return (
     <form onSubmit={submit} className="space-y-4">
-      <p className="text-sm text-mute">
+      <p className="text-base sm:text-sm text-mute">
         Write the answer the bot should have given. It becomes an instant FAQ, and the answer in the transcript is
         flagged as wrong.
       </p>
       <FaqFields idBase={base} value={draft} onChange={setDraft} errors={fieldErrors} />
       <Status tone="bad">{error}</Status>
-      <div className="flex flex-wrap gap-3">
+      <div data-sticky-bar className={
+        'sticky bottom-0 z-20 flex flex-wrap gap-3 border-t border-line bg-paper p-3 '
+        + 'pb-[max(0.75rem,env(safe-area-inset-bottom))]'
+      }>
         <Button type="submit" disabled={busy}>
           {busy ? 'Saving…' : 'Save FAQ and flag'}
         </Button>

@@ -1,3 +1,4 @@
+import { ScrollTabs } from '@/components/admin/settings/scroll-tabs';
 import Link from 'next/link';
 import { cn } from '@/lib/cn';
 
@@ -17,14 +18,15 @@ export function parseChatTab(value: string | undefined): ChatTab {
 /** Tab links for the Chat page. Settings is only listed for the owner. */
 export function ChatTabs({ active, owner }: { active: ChatTab; owner: boolean }) {
   return (
-    <nav aria-label="Chat sections" className="mb-6 flex gap-1 overflow-x-auto border-b border-line">
+    <ScrollTabs active={active}>
+    <nav aria-label="Chat sections" className="mb-6 flex gap-2 min-w-max border-b border-line">
       {CHAT_TABS.filter((tab) => owner || !tab.ownerOnly).map((tab) => (
         <Link
           key={tab.id}
           href={`/admin/chat/?tab=${tab.id}`}
           aria-current={tab.id === active ? 'page' : undefined}
           className={cn(
-            'whitespace-nowrap border-b-2 px-4 py-3 text-sm font-semibold',
+            'whitespace-nowrap border-b-2 px-4 py-3 text-base sm:text-sm font-semibold',
             tab.id === active ? 'border-maroon text-maroon' : 'border-transparent text-mute hover:text-ink',
           )}
         >
@@ -32,5 +34,6 @@ export function ChatTabs({ active, owner }: { active: ChatTab; owner: boolean })
         </Link>
       ))}
     </nav>
+    </ScrollTabs>
   );
 }

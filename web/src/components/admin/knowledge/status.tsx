@@ -8,7 +8,7 @@ export function Status({ tone = 'info', children }: { tone?: 'good' | 'bad' | 'i
       {children ? (
         <p
           className={cn(
-            'rounded-xl px-4 py-3 text-sm',
+            'rounded-xl px-4 py-3 text-base sm:text-sm',
             tone === 'good' && 'bg-good/10 text-good',
             tone === 'bad' && 'bg-bad/10 text-bad',
             tone === 'info' && 'bg-bone-2 text-ink-2',
@@ -24,7 +24,7 @@ export function Status({ tone = 'info', children }: { tone?: 'good' | 'bad' | 'i
 /** Problems found in a file, one per line, with the line number when the checker knows it. */
 export function ErrorList({ errors, title }: { errors: LineError[]; title?: string }) {
   return (
-    <div role="alert" className="rounded-xl bg-bad/10 px-4 py-3 text-sm text-bad">
+    <div role="status" aria-live="polite" className="rounded-xl bg-bad/10 px-4 py-3 text-base sm:text-sm text-bad">
       <p className="font-semibold">{title ?? 'This file cannot be used yet. Please fix:'}</p>
       <ul className="mt-2 space-y-1">
         {errors.map((error, index) => (

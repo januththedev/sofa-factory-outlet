@@ -1,16 +1,25 @@
 'use client';
 
 import { Upload } from 'lucide-react';
-import { useId, useState } from 'react';
-import { previewKnowledgeAction, saveUploadAction } from '@/app/admin/(panel)/knowledge/actions';
+import { useId } from 'react';
+import { useState } from 'react';
+import { previewKnowledgeAction } from '@/app/admin/(panel)/knowledge/actions';
+import { saveUploadAction } from '@/app/admin/(panel)/knowledge/actions';
 import { GoldenRunner } from '@/components/admin/chat/golden-runner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
-import type { EvalView, KnowledgePreview, LineError, SaveResult } from '@/lib/admin/knowledge';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
+import type { EvalView } from '@/lib/admin/knowledge';
+import type { KnowledgePreview } from '@/lib/admin/knowledge';
+import type { LineError } from '@/lib/admin/knowledge';
+import type { SaveResult } from '@/lib/admin/knowledge';
 import { cn } from '@/lib/cn';
 import { ChunkPreview } from './chunk-preview';
-import { ErrorList, Status } from './status';
+import { ErrorList } from './status';
+import { Status } from './status';
 
 type Saved = Extract<SaveResult, { ok: true }>;
 
@@ -42,7 +51,7 @@ function SavedMessage({ fileName, result }: { fileName: string; result: Saved })
 
 function PreviewSummary({ preview }: { preview: KnowledgePreview }) {
   return (
-    <div className="space-y-2 text-sm">
+    <div className="space-y-2 text-base sm:text-sm">
       <p>
         <span className="font-semibold">{preview.contentType}:</span> {preview.title}
       </p>
@@ -69,7 +78,8 @@ function PreviewSummary({ preview }: { preview: KnowledgePreview }) {
       <p className="text-mute">
         {preview.currentVersion === null
           ? `A new document called ${preview.slug}.`
-          : `This replaces version ${preview.currentVersion} of ${preview.slug}. The old version stays in the history.`}
+          : `This replaces version ${preview.currentVersion} of ${preview.slug}. `
+            + 'The old version stays in the history.'}
       </p>
     </div>
   );
@@ -95,10 +105,12 @@ export function UploadPanel({
   const inputId = useId();
   const [stage, setStage] = useState<Stage>({ name: 'idle' });
   const [busy, setBusy] = useState(false);
+  const [saveErrors, setSaveErrors] = useState<LineError[]>([]);
   const [dragging, setDragging] = useState(false);
 
   async function choose(file: File | undefined) {
-    if (!file) return;
+    if (!file || busy) return;
+    setSaveErrors([]);
     const allowed = only === 'json' ? /\.json$/i : /\.(md|json)$/i;
     const fail = (message: string) => setStage({ name: 'invalid', fileName: file.name, errors: [{ message }] });
     if (!allowed.test(file.name)) {
@@ -123,18 +135,15 @@ export function UploadPanel({
   }
 
   async function save() {
-    if (stage.name !== 'preview') return;
+    if (stage.name !== 'preview' || busy) return;
+    setSaveErrors([]);
     setBusy(true);
     try {
       const result = await saveUploadAction({ fileName: stage.fileName, text: stage.text });
       if (result.ok) setStage({ name: 'saved', fileName: stage.fileName, result });
-      else setStage({ name: 'invalid', fileName: stage.fileName, errors: result.errors });
+      else setSaveErrors(result.errors);
     } catch {
-      setStage({
-        name: 'invalid',
-        fileName: stage.fileName,
-        errors: [{ message: 'The file could not be saved. Please try again.' }],
-      });
+      setSaveErrors([{ message: 'The file could not be saved. Please try again.' }]);
     } finally {
       setBusy(false);
     }
@@ -145,7 +154,7 @@ export function UploadPanel({
       <CardHeader>
         <div>
           <CardTitle>{heading}</CardTitle>
-          <p className="mt-1 text-sm text-mute">{help}</p>
+          <p className="mt-1 text-base sm:text-sm text-mute">{help}</p>
         </div>
       </CardHeader>
       <CardBody className="space-y-4">
@@ -169,10 +178,13 @@ export function UploadPanel({
         >
           <Upload className="size-6 text-maroon" aria-hidden="true" />
           <span className="font-semibold">Drop a file here, or choose one</span>
-          <span className="text-sm text-mute">{only === 'json' ? '.json' : '.md or .json'}, up to 1 MB</span>
+          <span className="text-base sm:text-sm text-mute">
+            {only === 'json' ? '.json' : '.md or .json'}, up to 1 MB
+          </span>
           <input
             id={inputId}
             type="file"
+            disabled={busy}
             accept={only === 'json' ? '.json,application/json' : '.md,.json,text/markdown,application/json'}
             className="sr-only"
             onChange={(event) => {
@@ -181,6 +193,7 @@ export function UploadPanel({
             }}
           />
         </label>
+        {saveErrors.length > 0 ? <ErrorList errors={saveErrors} /> : null}
         <Status>{busy ? 'Working on it…' : null}</Status>
         {stage.name === 'invalid' ? (
           <ErrorList errors={stage.errors} title={`${stage.fileName} cannot be used yet. Please fix:`} />

@@ -1,10 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { addCustomerAction, searchCustomersAction } from '@/app/admin/(panel)/invoices/actions';
+import { useEffect } from 'react';
+import { useState } from 'react';
+import { addCustomerAction } from '@/app/admin/(panel)/invoices/actions';
+import { searchCustomersAction } from '@/app/admin/(panel)/invoices/actions';
 import { Button } from '@/components/ui/button';
-import { Field, FieldError, Input, Textarea } from '@/components/ui/field';
-import type { BuilderCustomer, CustomerOption } from '@/lib/admin/invoices';
+import { Field } from '@/components/ui/field';
+import { FieldError } from '@/components/ui/field';
+import { Input } from '@/components/ui/field';
+import { Textarea } from '@/components/ui/field';
+import type { BuilderCustomer } from '@/lib/admin/invoices';
+import type { CustomerOption } from '@/lib/admin/invoices';
 
 const emptyForm = { name: '', phone: '', address: '', email: '' };
 
@@ -18,6 +24,7 @@ export function CustomerPicker({
   onClear: () => void;
 }) {
   const [query, setQuery] = useState('');
+  const [searchError, setSearchError] = useState('');
   const [result, setResult] = useState<{ term: string; rows: CustomerOption[] }>({ term: '', rows: [] });
   const [adding, setAdding] = useState(false);
   const [form, setForm] = useState(emptyForm);
@@ -31,10 +38,16 @@ export function CustomerPicker({
     const timer = setTimeout(() => {
       searchCustomersAction(term)
         .then((rows) => {
-          if (active) setResult({ term, rows });
+          if (active) {
+            setResult({ term, rows });
+            setSearchError('');
+          }
         })
         .catch(() => {
-          if (active) setResult({ term, rows: [] });
+          if (active) {
+            setResult({ term, rows: [] });
+            setSearchError('The search could not be loaded. Change the search text to try again.');
+          }
         });
     }, 250);
     return () => {
@@ -49,9 +62,9 @@ export function CustomerPicker({
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="font-semibold">{selected.name}</p>
-            <p className="text-sm text-ink-2">{selected.phone}</p>
-            {selected.address ? <p className="mt-1 text-sm text-mute">{selected.address}</p> : null}
-            {selected.email ? <p className="text-sm text-mute">{selected.email}</p> : null}
+            <p className="text-base sm:text-sm text-ink-2">{selected.phone}</p>
+            {selected.address ? <p className="mt-1 text-base sm:text-sm text-mute">{selected.address}</p> : null}
+            {selected.email ? <p className="text-base sm:text-sm text-mute">{selected.email}</p> : null}
           </div>
           <Button variant="subtle" size="sm" onClick={onClear}>Change customer</Button>
         </div>
@@ -106,9 +119,10 @@ export function CustomerPicker({
           autoComplete="off"
         />
       </Field>
-      <div aria-live="polite" className="text-sm text-mute">
+      <div aria-live="polite" className="text-base sm:text-sm text-mute">
+        {result.term === term ? searchError : null}
         {searching ? 'Searching…' : null}
-        {term.length >= 2 && !searching && rows.length === 0 ? 'No matching customer yet.' : null}
+        {term.length >= 2 && !searching && rows.length === 0 && !searchError ? 'No matching customer yet.' : null}
       </div>
       {rows.length ? (
         <ul className="divide-y divide-line rounded-xl border border-line bg-paper">
@@ -121,9 +135,9 @@ export function CustomerPicker({
               >
                 <span>
                   <span className="block font-medium">{customer.name}</span>
-                  <span className="block text-sm text-mute">{customer.phone}</span>
+                  <span className="block text-base sm:text-sm text-mute">{customer.phone}</span>
                 </span>
-                {customer.city ? <span className="text-sm text-mute">{customer.city}</span> : null}
+                {customer.city ? <span className="text-base sm:text-sm text-mute">{customer.city}</span> : null}
               </button>
             </li>
           ))}
@@ -135,7 +149,7 @@ export function CustomerPicker({
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Name" htmlFor="new-customer-name">
               <Input
-                id="new-customer-name"
+                id="new-customer-name" autoComplete="name"
                 required
                 minLength={2}
                 value={form.name}
@@ -144,7 +158,7 @@ export function CustomerPicker({
             </Field>
             <Field label="Phone" htmlFor="new-customer-phone" hint="Sri Lankan mobile or landline.">
               <Input
-                id="new-customer-phone"
+                id="new-customer-phone" autoComplete="tel" inputMode="tel"
                 required
                 type="tel"
                 value={form.phone}
@@ -155,7 +169,7 @@ export function CustomerPicker({
           </div>
           <Field label="Address" htmlFor="new-customer-address">
             <Textarea
-              id="new-customer-address"
+              id="new-customer-address" autoComplete="street-address"
               rows={2}
               value={form.address}
               onChange={(event) => setForm({ ...form, address: event.target.value })}
@@ -163,7 +177,7 @@ export function CustomerPicker({
           </Field>
           <Field label="Email (optional)" htmlFor="new-customer-email">
             <Input
-              id="new-customer-email"
+              id="new-customer-email" autoComplete="email"
               type="email"
               value={form.email}
               onChange={(event) => setForm({ ...form, email: event.target.value })}

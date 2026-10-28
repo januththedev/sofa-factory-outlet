@@ -1,13 +1,19 @@
 'use client';
 
+import { useKeyboardInset } from './use-keyboard-inset';
 import { Send } from 'lucide-react';
-import { useId, useState } from 'react';
+import { useId } from 'react';
+import { useState } from 'react';
 import { explainChatAction } from '@/app/admin/(panel)/chat/actions';
 import { Status } from '@/components/admin/knowledge/status';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input, Label } from '@/components/ui/field';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/field';
+import { Label } from '@/components/ui/field';
 import type { ChatExplanation } from '@/lib/chat/explain';
 
 const ANSWERED_BY: Record<ChatExplanation['answeredBy'], string> = {
@@ -27,7 +33,7 @@ function noPromptReason(answeredBy: ChatExplanation['answeredBy']): string {
 function Result({ result }: { result: ChatExplanation }) {
   const extracted = Object.entries(result.extracted).filter(([, value]) => value !== undefined && value !== null);
   return (
-    <div className="space-y-6">
+    <div className="min-w-0 space-y-6 pb-44">
       <Card>
         <CardHeader>
           <CardTitle>Answer</CardTitle>
@@ -41,7 +47,7 @@ function Result({ result }: { result: ChatExplanation }) {
         <CardHeader>
           <CardTitle>What it understood</CardTitle>
         </CardHeader>
-        <CardBody className="space-y-3 text-sm">
+        <CardBody className="space-y-3 text-base sm:text-sm">
           <p>
             Intent: <Badge tone="neutral">{result.intent}</Badge>
           </p>
@@ -65,7 +71,7 @@ function Result({ result }: { result: ChatExplanation }) {
         </CardHeader>
         <CardBody>
           {result.chunks.length === 0 ? (
-            <p className="text-sm text-mute">No knowledge chunks matched.</p>
+            <p className="text-base sm:text-sm text-mute">No knowledge chunks matched.</p>
           ) : (
             <ol className="space-y-3">
               {result.chunks.map((chunk, index) => (
@@ -77,7 +83,7 @@ function Result({ result }: { result: ChatExplanation }) {
                     <span>{chunk.headingPath}</span>
                     <span>Score {chunk.score.toFixed(3)}</span>
                   </p>
-                  <p className="mt-2 whitespace-pre-wrap text-sm text-ink-2">{chunk.body}</p>
+                  <p className="mt-2 whitespace-pre-wrap text-base sm:text-sm text-ink-2">{chunk.body}</p>
                 </li>
               ))}
             </ol>
@@ -85,7 +91,7 @@ function Result({ result }: { result: ChatExplanation }) {
           {result.products.length > 0 ? (
             <div className="mt-5">
               <h3 className="font-semibold">Products it found ({result.products.length})</h3>
-              <ul className="mt-2 space-y-1 text-sm">
+              <ul className="mt-2 space-y-1 text-base sm:text-sm">
                 {result.products.map((product) => (
                   <li key={product.id}>
                     {product.name} <span className="text-mute">(score {product.score.toFixed(3)})</span>
@@ -106,7 +112,7 @@ function Result({ result }: { result: ChatExplanation }) {
               {result.prompt}
             </pre>
           ) : (
-            <p className="text-sm text-mute">{noPromptReason(result.answeredBy)}</p>
+            <p className="text-base sm:text-sm text-mute">{noPromptReason(result.answeredBy)}</p>
           )}
         </CardBody>
       </Card>
@@ -120,6 +126,7 @@ function Result({ result }: { result: ChatExplanation }) {
  */
 export function Playground() {
   const inputId = useId();
+  const inset = useKeyboardInset();
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -127,6 +134,7 @@ export function Playground() {
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (busy) return;
     setBusy(true);
     setError(null);
     try {
@@ -141,20 +149,24 @@ export function Playground() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-w-0 space-y-6 pb-44">
       <Card>
         <CardHeader>
           <div>
             <CardTitle>Playground</CardTitle>
-            <p className="mt-1 text-sm text-mute">
+            <p className="mt-1 text-base sm:text-sm text-mute">
               Try a question the way a visitor would type it. Nothing is saved to the conversation log. If a model key
               is set and the bot decides to use the model, this counts as one real model call.
             </p>
           </div>
         </CardHeader>
         <CardBody>
-          <form onSubmit={submit} className="flex flex-wrap items-end gap-3">
-            <div className="min-w-0 flex-1 basis-72">
+          <form onSubmit={submit} data-sticky-bar style={{ bottom: inset }}
+            className={
+              'fixed inset-x-3 z-30 flex flex-wrap items-end gap-2 rounded-xl border border-line bg-paper p-3 '
+              + 'pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-sm lg:static'
+            }>
+            <div className="min-w-0 flex-1 basis-40">
               <Label htmlFor={inputId}>Question</Label>
               <Input
                 id={inputId}
@@ -162,6 +174,7 @@ export function Playground() {
                 onChange={(event) => setMessage(event.target.value)}
                 placeholder="Do you deliver outside Colombo?"
                 maxLength={600}
+                enterKeyHint="send"
                 required
               />
             </div>

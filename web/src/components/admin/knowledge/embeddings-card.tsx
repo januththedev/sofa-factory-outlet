@@ -1,11 +1,17 @@
 'use client';
 
-import { useId, useState } from 'react';
-import { enableEmbeddingsAction, reindexAction } from '@/app/admin/(panel)/knowledge/actions';
+import { useId } from 'react';
+import { useState } from 'react';
+import { enableEmbeddingsAction } from '@/app/admin/(panel)/knowledge/actions';
+import { reindexAction } from '@/app/admin/(panel)/knowledge/actions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input, Label } from '@/components/ui/field';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/field';
+import { Label } from '@/components/ui/field';
 import { Status } from './status';
 
 type Outcome = { tone: 'good' | 'bad'; text: string };
@@ -52,7 +58,7 @@ export function EmbeddingsCard({
       <CardHeader>
         <div>
           <CardTitle>Meaning search (embeddings)</CardTitle>
-          <p className="mt-1 text-sm text-mute">
+          <p className="mt-1 text-base sm:text-sm text-mute">
             Keyword search is on from day one. Embeddings add a second ranking that understands paraphrases.
           </p>
         </div>
@@ -60,12 +66,12 @@ export function EmbeddingsCard({
       </CardHeader>
       <CardBody className="space-y-4">
         {enabled ? (
-          <p className="text-sm">
+          <p className="text-base sm:text-sm">
             Using <span className="font-mono">{model ?? 'the saved model'}</span>
             {dim ? ` (${dim} dimensions)` : ''}.
           </p>
         ) : null}
-        <ul className="list-disc space-y-1 pl-5 text-sm text-mute">
+        <ul className="list-disc space-y-1 pl-5 text-base sm:text-sm text-mute">
           <li>It needs an OpenRouter key on the server and some OpenRouter credit.</li>
           <li>The database needs the pgvector extension. Neon has it; the local database does not.</li>
           <li>After turning it on, run Re-index once so every document gets its embeddings.</li>

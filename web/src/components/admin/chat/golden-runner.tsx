@@ -1,12 +1,20 @@
 'use client';
 
-import { Minus, Play, TrendingDown, TrendingUp } from 'lucide-react';
+import { Minus } from 'lucide-react';
+import { Play } from 'lucide-react';
+import { TrendingDown } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 import { useState } from 'react';
 import { runGoldenTestAction } from '@/app/admin/(panel)/chat/actions';
 import { Status } from '@/components/admin/knowledge/status';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Table, TBody, TD, TH, THead, TR } from '@/components/ui/table';
+import { Table } from '@/components/ui/table';
+import { TBody } from '@/components/ui/table';
+import { TD } from '@/components/ui/table';
+import { TH } from '@/components/ui/table';
+import { THead } from '@/components/ui/table';
+import { TR } from '@/components/ui/table';
 import type { EvalView } from '@/lib/admin/knowledge';
 
 /** Plan.md: retrieval hit@3 should be at least 90%. */
@@ -19,7 +27,7 @@ function Tile({ label, value, note }: { label: string; value: string; note?: Rea
     <div className="rounded-xl border border-line bg-bone/50 p-4">
       <p className="text-xs font-semibold uppercase tracking-wider text-mute">{label}</p>
       <p className="mt-1 font-display text-3xl">{value}</p>
-      {note ? <div className="mt-2 text-sm text-mute">{note}</div> : null}
+      {note ? <div className="mt-2 text-base sm:text-sm text-mute">{note}</div> : null}
     </div>
   );
 }
@@ -27,14 +35,17 @@ function Tile({ label, value, note }: { label: string; value: string; note?: Rea
 function Comparison({ run }: { run: EvalView }) {
   if (run.direction === 'first' || run.changePoints === null) {
     return (
-      <p className="text-sm text-mute">This is the first stored run, so there is nothing to compare it with yet.</p>
+      <p
+        className="text-base sm:text-sm text-mute">
+        This is the first stored run, so there is nothing to compare it with yet.
+      </p>
     );
   }
   const points = Math.abs(run.changePoints).toFixed(1);
   const since = run.previousAtLabel ? ` since the run on ${run.previousAtLabel}` : '';
   if (run.direction === 'same') {
     return (
-      <p className="flex items-center gap-2 text-sm text-ink-2">
+      <p className="flex items-center gap-2 text-base sm:text-sm text-ink-2">
         <Minus className="size-4" aria-hidden="true" /> Relevance is unchanged{since}.
       </p>
     );
@@ -42,7 +53,7 @@ function Comparison({ run }: { run: EvalView }) {
   const up = run.direction === 'up';
   const Icon = up ? TrendingUp : TrendingDown;
   return (
-    <p className={`flex items-center gap-2 text-sm font-semibold ${up ? 'text-good' : 'text-bad'}`}>
+    <p className={`flex items-center gap-2 text-base sm:text-sm font-semibold ${up ? 'text-good' : 'text-bad'}`}>
       <Icon className="size-4" aria-hidden="true" /> Relevance went {up ? 'up' : 'down'} by {points} points{since}.
     </p>
   );
@@ -87,7 +98,10 @@ export function GoldenRunner({
           <Play className="size-4" aria-hidden="true" />
           {busy ? 'Running…' : (runLabel ?? (run ? 'Run the golden test again' : 'Run the golden test'))}
         </Button>
-        <p className="text-sm text-mute">Checks retrieval against the saved questions. It never calls the model.</p>
+        <p
+          className="text-base sm:text-sm text-mute">
+          Checks retrieval against the saved questions. It never calls the model.
+        </p>
       </div>
       <Status tone="bad">{error}</Status>
       {run ? (
@@ -106,13 +120,13 @@ export function GoldenRunner({
             <Tile label="Answered without the model" value={percent(run.answeredWithoutModel)} />
           </div>
           <Comparison run={run} />
-          <p className="text-sm text-mute">
+          <p className="text-base sm:text-sm text-mute">
             Last run {run.atLabel} on {run.total} questions.
           </p>
           {showFailures ? <Failures run={run} /> : null}
         </div>
       ) : (
-        <p className="text-sm text-mute">No golden test has been stored yet.</p>
+        <p className="text-base sm:text-sm text-mute">No golden test has been stored yet.</p>
       )}
     </div>
   );
@@ -120,7 +134,7 @@ export function GoldenRunner({
 
 function Failures({ run }: { run: EvalView }) {
   if (run.failures.length === 0) {
-    return <p className="text-sm font-semibold text-good">Every question passed.</p>;
+    return <p className="text-base sm:text-sm font-semibold text-good">Every question passed.</p>;
   }
   return (
     <div>

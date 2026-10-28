@@ -5,8 +5,16 @@ import { saveHoursAction } from '@/app/admin/(panel)/settings/actions';
 import { Input } from '@/components/ui/field';
 import type { SlotInput } from '@/lib/admin/settings';
 import { DAY_KEYS } from '@/lib/settings/hours';
-import type { BookingSettings, DayKey, HoursSettings } from '@/lib/settings/types';
-import { AreaField, ConfirmedField, FormCard, SaveBar, SectionTitle, TextField, useSettingsForm } from './form-kit';
+import type { BookingSettings } from '@/lib/settings/types';
+import type { DayKey } from '@/lib/settings/types';
+import type { HoursSettings } from '@/lib/settings/types';
+import { AreaField } from './form-kit';
+import { ConfirmedField } from './form-kit';
+import { FormCard } from './form-kit';
+import { SaveBar } from './form-kit';
+import { SectionTitle } from './form-kit';
+import { TextField } from './form-kit';
+import { useSettingsForm } from './form-kit';
 import { SlotsEditor } from './slots-editor';
 
 const DAY_NAMES: Record<DayKey, string> = {
@@ -27,38 +35,48 @@ function DayRow({ day, hours, errors }: DayRowProps) {
   const problem = errors[`${base}.open`] ?? errors[`${base}.close`];
   return (
     <li className="py-3">
-      <div className="grid grid-cols-[6.5rem_1fr_1fr] items-center gap-3 sm:grid-cols-[8rem_auto_1fr_1fr]">
-        <span className="font-medium">{DAY_NAMES[day]}</span>
-        <label className="order-last col-span-3 flex items-center gap-2 text-sm sm:order-none sm:col-span-1">
+      <div className="grid grid-cols-1 items-center gap-3 sm:grid-cols-2 lg:grid-cols-[8rem_auto_1fr_1fr]">
+        <span className="col-span-full font-medium lg:col-span-1">{DAY_NAMES[day]}</span>
+        <label
+          className="order-last col-span-full flex items-center gap-2 text-base sm:text-sm lg:order-none
+          lg:col-span-1">
           <input
             type="checkbox"
             name={`${base}.closed`}
             checked={closed}
             onChange={(event) => setClosed(event.target.checked)}
-            className="size-4 accent-maroon"
+            className="size-11 accent-maroon"
           />
           Closed
           <span className="sr-only"> on {DAY_NAMES[day]}</span>
         </label>
+        <label className="min-w-0 space-y-1">
+          <span className="block text-base sm:text-sm">Opens</span>
         <Input
           type="time"
           name={`${base}.open`}
+          id={`f-hours-days-${day}-open`}
           aria-label={`${DAY_NAMES[day]} opens`}
           defaultValue={hours?.open ?? '10:00'}
           disabled={closed}
           aria-invalid={problem ? true : undefined}
         />
+        </label>
+        <label className="min-w-0 space-y-1">
+          <span className="block text-base sm:text-sm">Closes</span>
         <Input
           type="time"
           name={`${base}.close`}
+          id={`f-hours-days-${day}-close`}
           aria-label={`${DAY_NAMES[day]} closes`}
           defaultValue={hours?.close ?? '18:00'}
           disabled={closed}
           aria-invalid={problem ? true : undefined}
         />
+        </label>
       </div>
       {problem ? (
-        <p role="alert" className="mt-1.5 text-sm text-bad">
+        <p role="status" aria-live="polite" className="mt-1.5 text-base sm:text-sm text-bad">
           {DAY_NAMES[day]}: {problem}
         </p>
       ) : null}

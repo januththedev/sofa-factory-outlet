@@ -1,6 +1,8 @@
+import { OpsFrame } from '@/components/admin/settings/ops-frame';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { PageHeader } from '@/components/admin/page-header';
 import { InvoiceBuilder } from '@/components/admin/invoices/invoice-builder';
@@ -37,14 +39,14 @@ export default async function EditInvoicePage({ params }: { params: Params }) {
         description={`Draft ${label} · ${invoice.customerName}. `
           + 'Changes are not saved until you choose an action.'}
         actions={(
-          <>
+          <OpsFrame>
             <Link href="/admin/invoices/" className={buttonStyles({ variant: 'ghost', size: 'md' })}>
               All invoices
             </Link>
             <Link href={`/admin/invoices/${invoice.id}/`} className={buttonStyles({ variant: 'subtle', size: 'md' })}>
               View draft
             </Link>
-          </>
+          </OpsFrame>
         )}
       />
       <InvoiceBuilder invoice={invoice} type={invoice.type} settings={settings.invoice} />

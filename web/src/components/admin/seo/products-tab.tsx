@@ -1,8 +1,17 @@
 import Link from 'next/link';
-import { EmptyNote, ScoreBadge } from '@/components/admin/seo/ui';
+import { EmptyNote } from '@/components/admin/seo/ui';
+import { ScoreBadge } from '@/components/admin/seo/ui';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TBody, TD, TH, THead, TR } from '@/components/ui/table';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
+import { Table } from '@/components/ui/table';
+import { TBody } from '@/components/ui/table';
+import { TD } from '@/components/ui/table';
+import { TH } from '@/components/ui/table';
+import { THead } from '@/components/ui/table';
+import { TR } from '@/components/ui/table';
 import { getProductSeoReport } from '@/lib/admin/seo';
 
 const STATUS_TONE = { published: 'good', draft: 'neutral', hidden: 'warn' } as const;
@@ -17,7 +26,7 @@ export async function ProductsTab() {
       <CardHeader>
         <div>
           <CardTitle>Product SEO checklist</CardTitle>
-          <p className="mt-1 text-sm text-mute">
+          <p className="mt-1 text-base sm:text-sm text-mute">
             Five checks per product: search title and description, photos with alt text, product copy, a price and a
             related guide. Green passes all five, amber three or four, red fewer.
           </p>
@@ -25,13 +34,13 @@ export async function ProductsTab() {
       </CardHeader>
       {!checklistAvailable ? (
         <CardBody>
-          <p role="status" className="rounded-xl bg-bone-2 px-4 py-3 text-sm text-ink-2">
+          <p role="status" className="rounded-xl bg-bone-2 px-4 py-3 text-base sm:text-sm text-ink-2">
             — The checklist could not be read, so scores are not shown. The products are listed below with their
             editor links.
           </p>
         </CardBody>
       ) : (
-        <CardBody className="flex flex-wrap gap-3 pb-0 text-sm">
+        <CardBody className="flex flex-wrap gap-3 pb-0 text-base sm:text-sm">
           <Badge tone="good">{counts.green} green</Badge>
           <Badge tone="warn">{counts.amber} amber</Badge>
           <Badge tone="bad">{counts.red} red</Badge>

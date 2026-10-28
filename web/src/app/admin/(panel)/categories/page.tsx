@@ -1,18 +1,19 @@
+import { CatalogueForm } from '@/components/admin/products/catalogue-form';
+import { OpsFrame } from '@/components/admin/settings/ops-frame';
 import { asc } from 'drizzle-orm';
 import { PageHeader } from '@/components/admin/page-header';
 import { CategoryImageUpload } from '@/components/admin/products/category-image-upload';
 import { Button } from '@/components/ui/button';
-import { Input, Label, Textarea } from '@/components/ui/field';
+import { Input } from '@/components/ui/field';
+import { Textarea } from '@/components/ui/field';
 import { requireRole } from '@/lib/auth/session';
 import { getDb } from '@/lib/db';
 import * as s from '@/lib/db/schema';
-import {
-  deleteComplementFormAction,
-  deletePairingFormAction,
-  saveComplementFormAction,
-  savePairingFormAction,
-  updateCategoryFormAction,
-} from './actions';
+import { deleteComplementAction } from './actions';
+import { deletePairingAction } from './actions';
+import { saveComplementAction } from './actions';
+import { savePairingAction } from './actions';
+import { updateCategoryAction } from './actions';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,7 +28,7 @@ export default async function CategoriesPage() {
   const categoryNames = new Map(categories.map((category) => [category.id, category.name]));
 
   return (
-    <>
+    <OpsFrame>
       <PageHeader
         title="Categories and colour rules"
         description={disabled
@@ -39,9 +40,9 @@ export default async function CategoriesPage() {
           <h2 className="mb-4 font-display text-2xl">Category tree</h2>
           <div className="space-y-4">
             {categories.map((category) => (
-              <form
+              <CatalogueForm
                 key={category.id}
-                action={updateCategoryFormAction}
+                action={updateCategoryAction}
                 className="grid gap-3 rounded-[var(--radius-card)] border border-line bg-paper p-5 md:grid-cols-2"
               >
                 <input type="hidden" name="id" value={category.id} />
@@ -49,35 +50,35 @@ export default async function CategoriesPage() {
                   {category.kind} · /{category.path}/
                 </p>
                 <label>
-                  <Label>Name</Label>
+                  <span className="mb-2 block font-medium">Name</span>
                   <Input name="name" defaultValue={category.name} disabled={disabled} />
                 </label>
                 <label>
-                  <Label>Sort order</Label>
+                  <span className="mb-2 block font-medium">Sort order</span>
                   <Input name="sortOrder" type="number" defaultValue={category.sortOrder} disabled={disabled} />
                 </label>
                 <label className="md:col-span-2">
-                  <Label>Introduction</Label>
+                  <span className="mb-2 block font-medium">Introduction</span>
                   <Textarea name="intro" defaultValue={category.intro ?? ''} disabled={disabled} />
                 </label>
                 <label className="md:col-span-2">
-                  <Label>Buying tips</Label>
+                  <span className="mb-2 block font-medium">Buying tips</span>
                   <Textarea name="tips" defaultValue={category.tips ?? ''} disabled={disabled} />
                 </label>
                 <label>
-                  <Label>SEO title</Label>
+                  <span className="mb-2 block font-medium">SEO title</span>
                   <Input name="seoTitle" defaultValue={category.seoTitle ?? ''} disabled={disabled} />
                 </label>
                 <label>
-                  <Label>SEO description</Label>
+                  <span className="mb-2 block font-medium">SEO description</span>
                   <Input name="seoDescription" defaultValue={category.seoDescription ?? ''} disabled={disabled} />
                 </label>
                 <label>
-                  <Label>Hub shape filter</Label>
+                  <span className="mb-2 block font-medium">Hub shape filter</span>
                   <Input name="hubFilterShape" defaultValue={category.hubFilter?.shape ?? ''} disabled={disabled} />
                 </label>
                 <label>
-                  <Label>Hub material filter</Label>
+                  <span className="mb-2 block font-medium">Hub material filter</span>
                   <Input
                     name="hubFilterMaterial"
                     defaultValue={category.hubFilter?.material ?? ''}
@@ -86,7 +87,7 @@ export default async function CategoriesPage() {
                 </label>
                 <CategoryImageUpload categoryId={category.id} slug={category.slug} disabled={disabled} />
                 {!disabled ? <Button type="submit" className="md:col-span-2">Save category</Button> : null}
-              </form>
+              </CatalogueForm>
             ))}
           </div>
         </section>
@@ -94,10 +95,10 @@ export default async function CategoriesPage() {
           <h2 className="mb-4 font-display text-2xl">Colour rules</h2>
           <div className="space-y-3">
             {pairings.map((pairing) => (
-              <form
+              <CatalogueForm
                 key={pairing.id}
-                action={savePairingFormAction}
-                className="grid gap-3 rounded-xl border border-line bg-paper p-4 sm:grid-cols-5"
+                action={savePairingAction} deleteAction={deletePairingAction}
+                className="grid gap-3 rounded-xl border border-line bg-paper p-4 xl:grid-cols-5"
               >
                 <input type="hidden" name="id" value={pairing.id} />
                 <Input name="family" aria-label="Colour family" defaultValue={pairing.family} disabled={disabled} />
@@ -115,7 +116,7 @@ export default async function CategoriesPage() {
                   <div className="flex gap-2">
                     <Button type="submit" size="sm">Save</Button>
                     <Button
-                      formAction={deletePairingFormAction}
+                      data-delete="true"
                       name="id"
                       value={pairing.id}
                       type="submit"
@@ -126,30 +127,36 @@ export default async function CategoriesPage() {
                     </Button>
                   </div>
                 ) : null}
-              </form>
+              </CatalogueForm>
             ))}
           </div>
           {!disabled ? (
-            <form
-              action={savePairingFormAction}
-              className="mt-4 grid gap-3 rounded-xl border border-dashed border-line p-4 sm:grid-cols-5"
+            <CatalogueForm
+              action={savePairingAction} deleteAction={deletePairingAction}
+              className="mt-4 grid gap-3 rounded-xl border border-dashed border-line p-4 xl:grid-cols-5"
             >
-              <Input name="family" placeholder="Family" />
+              <label><span className="block">Family</span><Input name="family" placeholder="Family" /></label>
+              <label>
+              <span className="block">Pairs with</span>
               <Input name="pairsWith" placeholder="Pairs with" />
+              </label>
+              <label>
+              <span className="block">Weight</span>
               <Input name="weight" type="number" step="0.1" defaultValue="1" />
-              <Input name="reason" placeholder="Reason verb" />
+              </label>
+              <label><span className="block">Reason</span><Input name="reason" placeholder="Reason verb" /></label>
               <Button type="submit">Add rule</Button>
-            </form>
+            </CatalogueForm>
           ) : null}
         </section>
         <section>
           <h2 className="mb-4 font-display text-2xl">Category complements</h2>
           <div className="mb-4 space-y-2">
             {complements.map((complement) => (
-              <form
+              <CatalogueForm
                 key={complement.id}
-                action={deleteComplementFormAction}
-                className="flex items-center gap-3 text-sm"
+                action={deleteComplementAction} confirm="Remove this category complement? This cannot be undone."
+                className="flex flex-wrap items-center gap-3 text-base"
               >
                 <input type="hidden" name="id" value={complement.id} />
                 <span>
@@ -157,30 +164,37 @@ export default async function CategoriesPage() {
                   {' '}({complement.weight})
                 </span>
                 {!disabled ? <Button size="sm" variant="danger" type="submit">Remove</Button> : null}
-              </form>
+              </CatalogueForm>
             ))}
           </div>
           {!disabled ? (
-            <form
-              action={saveComplementFormAction}
-              className="grid gap-3 rounded-xl border border-line bg-paper p-4 sm:grid-cols-4"
+            <CatalogueForm
+              action={saveComplementAction}
+              className="grid gap-3 rounded-xl border border-line bg-paper p-4 xl:grid-cols-4"
             >
-              <select className="rounded-xl border border-line p-3" name="categoryId">
+              <label>
+              <span className="block">Category</span>
+              <select className="min-h-11 w-full rounded-xl border border-line p-3 text-base" name="categoryId">
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>{category.name}</option>
                 ))}
-              </select>
-              <select className="rounded-xl border border-line p-3" name="complementId">
+              </select></label>
+              <label>
+              <span className="block">Complement</span>
+              <select className="min-h-11 w-full rounded-xl border border-line p-3 text-base" name="complementId">
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>{category.name}</option>
                 ))}
-              </select>
+              </select></label>
+              <label>
+              <span className="block">Weight</span>
               <Input name="weight" type="number" step="0.1" defaultValue="1" />
+              </label>
               <Button type="submit">Save complement</Button>
-            </form>
+            </CatalogueForm>
           ) : null}
         </section>
       </div>
-    </>
+    </OpsFrame>
   );
 }

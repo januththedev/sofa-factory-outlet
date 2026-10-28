@@ -1,5 +1,9 @@
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
-import { listSynonyms, MAX_UPLOAD_BYTES } from '@/lib/admin/knowledge';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
+import { listSynonyms } from '@/lib/admin/knowledge';
+import { MAX_UPLOAD_BYTES } from '@/lib/admin/knowledge';
 import { GoldenCard } from './golden-card';
 import { SynonymEditor } from './synonym-editor';
 import { SynonymImport } from './synonym-import';
@@ -16,7 +20,7 @@ export async function SynonymsPanel() {
         <CardHeader>
           <div>
             <CardTitle>Synonyms</CardTitle>
-            <p className="mt-1 text-sm text-mute">
+            <p className="mt-1 text-base sm:text-sm text-mute">
               Words customers use for the same thing. Searches look for every variant of a term.
             </p>
           </div>
@@ -29,7 +33,7 @@ export async function SynonymsPanel() {
         <CardHeader>
           <div>
             <CardTitle>Import synonyms</CardTitle>
-            <p className="mt-1 text-sm text-mute">
+            <p className="mt-1 text-base sm:text-sm text-mute">
               A JSON object such as {'{ "l-shape": ["corner sofa", "sectional"] }'}. Up to 1 MB. Terms in the file
               replace their stored variants; other terms are left alone.
             </p>

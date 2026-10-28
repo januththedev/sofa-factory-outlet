@@ -1,6 +1,12 @@
 import Link from 'next/link';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatWhen, type GapSort, type GapStatus, listGaps } from '@/lib/admin/knowledge';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
+import { formatWhen } from '@/lib/admin/knowledge';
+import type { GapSort } from '@/lib/admin/knowledge';
+import type { GapStatus } from '@/lib/admin/knowledge';
+import { listGaps } from '@/lib/admin/knowledge';
 import { cn } from '@/lib/cn';
 import { GapItem } from './gap-item';
 import { GoldenCard } from './golden-card';
@@ -37,14 +43,14 @@ function Pills<T extends string>({
 }) {
   return (
     <nav aria-label={label} className="flex flex-wrap items-center gap-2">
-      <span className="text-sm text-mute">{label}</span>
+      <span className="text-base sm:text-sm text-mute">{label}</span>
       {items.map((item) => (
         <Link
           key={item.id}
           href={link(item.id)}
           aria-current={item.id === active ? 'true' : undefined}
           className={cn(
-            'rounded-full border px-3 py-1 text-sm',
+            'rounded-full border px-3 py-1 text-base sm:text-sm',
             item.id === active ? 'border-maroon bg-maroon/10 text-maroon' : 'border-line text-ink-2 hover:border-ink',
           )}
         >
@@ -69,7 +75,7 @@ export async function GapsPanel({ status, sort }: { status: GapStatus; sort: Gap
         <CardHeader>
           <div>
             <CardTitle>Questions the bot could not answer</CardTitle>
-            <p className="mt-1 text-sm text-mute">
+            <p className="mt-1 text-base sm:text-sm text-mute">
               The most asked come first. Write the answer once and it becomes an instant FAQ.
             </p>
           </div>
@@ -80,7 +86,7 @@ export async function GapsPanel({ status, sort }: { status: GapStatus; sort: Gap
         </CardBody>
         {gaps.length === 0 ? (
           <CardBody>
-            <p className="text-sm text-mute">{empty}</p>
+            <p className="text-base sm:text-sm text-mute">{empty}</p>
           </CardBody>
         ) : (
           <ul className="divide-y divide-line">

@@ -1,10 +1,16 @@
 'use client';
 
-import { startTransition, useActionState } from 'react';
+import { startTransition } from 'react';
+import { useActionState } from 'react';
+import { useEffect } from 'react';
+import { useRef } from 'react';
+import { unstable_rethrow } from 'next/navigation';
 import type { SettingsFormState } from '@/app/admin/(panel)/settings/schemas';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input, Select, Textarea } from '@/components/ui/field';
+import { Input } from '@/components/ui/field';
+import { Select } from '@/components/ui/field';
+import { Textarea } from '@/components/ui/field';
 import { cn } from '@/lib/cn';
 
 // Shared pieces of the Settings forms. Each form submits through onSubmit rather
@@ -19,9 +25,33 @@ const savedAt = (at: number) => clock.format(new Date(at));
 type SettingsAction = (previous: SettingsFormState, formData: FormData) => Promise<SettingsFormState>;
 
 export function useSettingsForm(action: SettingsAction) {
-  const [state, dispatch, pending] = useActionState<SettingsFormState, FormData>(action, null);
+  const [state, dispatch, pending] = useActionState<SettingsFormState, FormData>(async (previous, data) => {
+    try {
+      return await action(previous, data);
+    } catch (error) {
+      unstable_rethrow(error);
+      return {
+        ok: false,
+        message: 'Your changes could not be saved. They are kept here. Please try again.',
+        errors: {},
+        at: Date.now(),
+      };
+    }
+  }, null);
+  const submitted = useRef<HTMLFormElement | null>(null);
+  useEffect(() => {
+    if (!state || state.ok) return;
+    const field = submitted.current?.querySelector<HTMLElement>('[aria-invalid="true"]');
+    if (!field) return;
+    const section = field.closest('details');
+    if (section) section.open = true;
+    field.focus();
+    field.scrollIntoView({ block: 'center' });
+  }, [state]);
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (pending) return;
+    submitted.current = event.currentTarget;
     const data = new FormData(event.currentTarget);
     startTransition(() => dispatch(data));
   };
@@ -35,7 +65,8 @@ export function FormStatus({ state, pending }: { state: FormResult; pending: boo
   else if (state) text = state.ok ? `${state.message} (${savedAt(state.at)})` : state.message;
   const failed = Boolean(state && !state.ok && !pending);
   return (
-    <p role="status" aria-live="polite" className={cn('min-h-5 text-sm', failed ? 'text-bad' : 'text-good')}>
+    <p role="status" aria-live="polite"
+      className={cn('min-h-5 text-base sm:text-sm', failed ? 'text-bad' : 'text-good')}>
       {text}
     </p>
   );
@@ -45,11 +76,25 @@ type SaveBarProps = { state: FormResult; pending: boolean; label?: string };
 
 export function SaveBar({ state, pending, label = 'Save changes' }: SaveBarProps) {
   return (
-    <div className="flex flex-wrap items-center gap-4 border-t border-line pt-5">
+    <div data-sticky-bar className={
+      'sticky bottom-0 z-20 flex flex-wrap items-center gap-3 border-t border-line bg-paper p-3 '
+      + 'pb-[max(0.75rem,env(safe-area-inset-bottom))]'
+    }>
       <Button type="submit" disabled={pending}>
         {pending ? 'Saving…' : label}
       </Button>
-      <FormStatus state={state} pending={pending} />
+      <div className="min-w-0">
+        <FormStatus state={state} pending={pending} />
+        {state && !state.ok && Object.keys(state.errors).length > 0 ? (
+          <ul className="text-base text-bad sm:text-sm">
+            {Object.entries(state.errors).map(([name, error]) => (
+              <li key={name}>
+                <a className="inline-flex min-h-11 items-center underline" href={`#${idOf(name)}`}>{error}</a>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
     </div>
   );
 }
@@ -68,7 +113,7 @@ export function SectionTitle({ title, confirmed, children }: SectionTitleProps) 
         <h2 className="font-display text-2xl">{title}</h2>
         {confirmed === false ? <PlaceholderBadge /> : null}
       </div>
-      {children ? <p className="mt-1 max-w-2xl text-sm text-mute">{children}</p> : null}
+      {children ? <p className="mt-1 max-w-2xl text-base sm:text-sm text-mute">{children}</p> : null}
     </div>
   );
 }
@@ -81,17 +126,17 @@ function Shell({ name, label, hint, error, className, children }: FieldShell & {
   const id = idOf(name);
   return (
     <div className={className}>
-      <label htmlFor={id} className="mb-1.5 block text-sm font-medium text-ink-2">
+      <label htmlFor={id} className="mb-1.5 block text-base sm:text-sm font-medium text-ink-2">
         {label}
       </label>
       {children}
       {hint ? (
-        <p id={`${id}-hint`} className="mt-1.5 text-sm text-mute">
+        <p id={`${id}-hint`} className="mt-1.5 text-base sm:text-sm text-mute">
           {hint}
         </p>
       ) : null}
       {error ? (
-        <p id={`${id}-error`} role="alert" className="mt-1.5 text-sm text-bad">
+        <p id={`${id}-error`} role="status" aria-live="polite" className="mt-1.5 text-base sm:text-sm text-bad">
           {error}
         </p>
       ) : null}
@@ -111,6 +156,9 @@ export function TextField({ name, label, hint, error, className, ...input }: Tex
       <Input
         id={idOf(name)}
         name={name}
+        autoComplete={input.type === 'email' ? 'email' : input.type === 'tel' ? 'tel' : 'off'}
+        inputMode={input.type === 'number' ? 'decimal' : input.type === 'tel' ? 'tel' : undefined}
+        enterKeyHint="next"
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy({ name, hint, error })}
         {...input}
@@ -129,6 +177,8 @@ export function AreaField({ name, label, hint, error, className, ...area }: Area
         name={name}
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy({ name, hint, error })}
+        autoComplete="off"
+        enterKeyHint="enter"
         {...area}
       />
     </Shell>
@@ -166,7 +216,7 @@ export function CheckField({ name, label, defaultChecked, hint, error, className
   const id = idOf(name);
   return (
     <div className={className}>
-      <label htmlFor={id} className="flex cursor-pointer items-start gap-3 text-sm">
+      <label htmlFor={id} className="flex cursor-pointer items-start gap-3 text-base sm:text-sm">
         <input
           id={id}
           name={name}
@@ -174,7 +224,7 @@ export function CheckField({ name, label, defaultChecked, hint, error, className
           defaultChecked={defaultChecked}
           aria-invalid={error ? true : undefined}
           aria-describedby={describedBy({ name, hint, error })}
-          className="mt-0.5 size-4 shrink-0 accent-maroon"
+          className="size-11 shrink-0 accent-maroon"
         />
         <span>
           <span className="font-medium text-ink-2">{label}</span>
@@ -186,7 +236,7 @@ export function CheckField({ name, label, defaultChecked, hint, error, className
         </span>
       </label>
       {error ? (
-        <p id={`${id}-error`} role="alert" className="mt-1.5 text-sm text-bad">
+        <p id={`${id}-error`} role="status" aria-live="polite" className="mt-1.5 text-base sm:text-sm text-bad">
           {error}
         </p>
       ) : null}
@@ -213,7 +263,16 @@ export function FormCard({ children, className, ...props }: React.FormHTMLAttrib
   return (
     <form
       noValidate
-      className={cn('space-y-6 rounded-[var(--radius-card)] border border-line bg-paper p-5 sm:p-6', className)}
+      onBlurCapture={(event) => {
+        const input = event.target;
+        if (input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement) {
+          if (!input.checkValidity()) input.reportValidity();
+        }
+      }}
+      className={cn(
+        'min-w-0 space-y-6 rounded-[var(--radius-card)] border border-line bg-paper p-4 pb-24 sm:p-6 sm:pb-24',
+        className,
+      )}
       {...props}
     >
       {children}

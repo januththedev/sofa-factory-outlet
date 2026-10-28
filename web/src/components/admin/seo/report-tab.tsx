@@ -1,21 +1,29 @@
 import Link from 'next/link';
 import { CopyReportButton } from '@/components/admin/seo/copy-report-button';
-import { EmptyNote, ScoreBadge, StatGrid } from '@/components/admin/seo/ui';
+import { EmptyNote } from '@/components/admin/seo/ui';
+import { ScoreBadge } from '@/components/admin/seo/ui';
+import { StatGrid } from '@/components/admin/seo/ui';
 import { buttonStyles } from '@/components/ui/button';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
 import { Select } from '@/components/ui/field';
-import { Table, TBody, TD, TH, THead, TR } from '@/components/ui/table';
+import { Table } from '@/components/ui/table';
+import { TBody } from '@/components/ui/table';
+import { TD } from '@/components/ui/table';
+import { TH } from '@/components/ui/table';
+import { THead } from '@/components/ui/table';
+import { TR } from '@/components/ui/table';
 import { getMonthlyReport } from '@/lib/admin/seo';
 import { colomboToday } from '@/lib/bookings/rules';
-import {
-  formatCount,
-  formatPosition,
-  type MonthlyReport,
-  monthLabel,
-  monthOptions,
-  type RankingRow,
-  reportToText,
-} from '@/lib/seo/report';
+import { formatCount } from '@/lib/seo/report';
+import { formatPosition } from '@/lib/seo/report';
+import type { MonthlyReport } from '@/lib/seo/report';
+import { monthLabel } from '@/lib/seo/report';
+import { monthOptions } from '@/lib/seo/report';
+import type { RankingRow } from '@/lib/seo/report';
+import { reportToText } from '@/lib/seo/report';
 
 function changeText(row: RankingRow): string {
   if (row.change === null) return '—';
@@ -37,7 +45,7 @@ export async function ReportTab({ month }: { month: string }) {
         <form method="get" action="/admin/seo/" className="flex flex-wrap items-end gap-3">
           <input type="hidden" name="tab" value="report" />
           <div>
-            <label htmlFor="report-month" className="mb-1.5 block text-sm font-medium text-ink-2">
+            <label htmlFor="report-month" className="mb-1.5 block text-base sm:text-sm font-medium text-ink-2">
               Month
             </label>
             <Select id="report-month" name="month" defaultValue={report.month} className="min-w-52">
@@ -60,8 +68,8 @@ export async function ReportTab({ month }: { month: string }) {
         </div>
       </div>
       <ReportBody report={report} />
-      <details className="rounded-[var(--radius-card)] border border-line bg-paper p-4 text-sm">
-        <summary className="cursor-pointer font-medium text-ink-2">Plain text version</summary>
+      <details className="rounded-[var(--radius-card)] border border-line bg-paper p-4 text-base sm:text-sm">
+        <summary className="min-h-11 cursor-pointer font-medium text-ink-2">Plain text version</summary>
         <pre className="mt-3 overflow-x-auto whitespace-pre-wrap text-xs text-ink-2">{reportToText(report)}</pre>
       </details>
     </div>
@@ -93,7 +101,7 @@ function ReportBody({ report }: { report: MonthlyReport }) {
           ]}
         />
       ) : (
-        <p role="status" className="rounded-xl bg-bone-2 px-4 py-3 text-sm text-ink-2">
+        <p role="status" className="rounded-xl bg-bone-2 px-4 py-3 text-base sm:text-sm text-ink-2">
           Search Console has no data for {report.label} yet, so the ranking figures below are empty.
         </p>
       )}
@@ -140,7 +148,7 @@ function ReportBody({ report }: { report: MonthlyReport }) {
           <CardHeader>
             <CardTitle>New reviews</CardTitle>
           </CardHeader>
-          <CardBody className="space-y-1 text-sm text-ink-2">
+          <CardBody className="space-y-1 text-base sm:text-sm text-ink-2">
             <p>
               <strong className="font-semibold text-ink">{reviews.total}</strong> arrived in {report.label}:{' '}
               {reviews.approved} approved, {reviews.pending} waiting, {reviews.rejected} rejected.
@@ -162,7 +170,7 @@ function ReportBody({ report }: { report: MonthlyReport }) {
           ) : (
             <ul className="divide-y divide-line">
               {contentDue.map((item) => (
-                <li key={`${item.kind}:${item.title}`} className="px-6 py-4 text-sm">
+                <li key={`${item.kind}:${item.title}`} className="px-6 py-4 text-base sm:text-sm">
                   <p className="font-medium">
                     {item.title}
                     {item.later ? <span className="font-normal text-mute"> (planned for later)</span> : null}
@@ -188,7 +196,8 @@ function ReportBody({ report }: { report: MonthlyReport }) {
         ) : (
           <ul className="divide-y divide-line">
             {productsBelowGreen.map((product) => (
-              <li key={product.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 px-6 py-3 text-sm">
+              <li key={product.id}
+                className="flex flex-wrap items-center gap-x-3 gap-y-1 px-6 py-3 text-base sm:text-sm">
                 <ScoreBadge score={product.score} />
                 <Link href={`/admin/products/${product.id}/`} className="font-medium text-maroon hover:underline">
                   {product.name}

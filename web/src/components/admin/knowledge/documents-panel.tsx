@@ -1,22 +1,30 @@
 import Link from 'next/link';
 import { readChatSettings } from '@/lib/admin/chat';
-import {
-  type DocumentSummary,
-  formatWhen,
-  getCurrentDocument,
-  listChunks,
-  listDocuments,
-  listVersions,
-  MAX_UPLOAD_BYTES,
-  readLastEval,
-  readStoredText,
-  toEvalView,
-} from '@/lib/admin/knowledge';
-import { env, hasOpenRouter, isPglite } from '@/lib/env';
+import type { DocumentSummary } from '@/lib/admin/knowledge';
+import { formatWhen } from '@/lib/admin/knowledge';
+import { getCurrentDocument } from '@/lib/admin/knowledge';
+import { listChunks } from '@/lib/admin/knowledge';
+import { listDocuments } from '@/lib/admin/knowledge';
+import { listVersions } from '@/lib/admin/knowledge';
+import { MAX_UPLOAD_BYTES } from '@/lib/admin/knowledge';
+import { readLastEval } from '@/lib/admin/knowledge';
+import { readStoredText } from '@/lib/admin/knowledge';
+import { toEvalView } from '@/lib/admin/knowledge';
+import { env } from '@/lib/env';
+import { hasOpenRouter } from '@/lib/env';
+import { isPglite } from '@/lib/env';
 import { GoldenRunner } from '@/components/admin/chat/golden-runner';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TBody, TD, TH, THead, TR } from '@/components/ui/table';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
+import { Table } from '@/components/ui/table';
+import { TBody } from '@/components/ui/table';
+import { TD } from '@/components/ui/table';
+import { TH } from '@/components/ui/table';
+import { THead } from '@/components/ui/table';
+import { TR } from '@/components/ui/table';
 import { ChunkPreview } from './chunk-preview';
 import { DocumentEditor } from './document-editor';
 import { DocumentSwitch } from './document-switch';
@@ -32,7 +40,7 @@ const parseView = (value: string | undefined): View | null =>
 const detailHref = (slug: string, view: View) =>
   `/admin/knowledge/?tab=documents&doc=${encodeURIComponent(slug)}&view=${view}#doc-detail`;
 
-const linkClass = 'text-maroon underline-offset-4 hover:underline';
+const linkClass = 'inline-flex min-h-11 min-w-11 items-center text-maroon underline-offset-4 hover:underline';
 
 function DocumentRow({ doc }: { doc: DocumentSummary }) {
   return (
@@ -69,7 +77,7 @@ function DocumentRow({ doc }: { doc: DocumentSummary }) {
       <TD className="hidden whitespace-nowrap lg:table-cell">{formatWhen(doc.updatedAt)}</TD>
       <TD className="hidden lg:table-cell">{doc.source === 'starter' ? 'Starter' : 'Upload'}</TD>
       <TD>
-        <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm">
+        <div className="flex flex-wrap gap-2 text-base sm:text-sm">
           <Link href={detailHref(doc.slug, 'chunks')} className={linkClass}>
             Chunks
           </Link>
@@ -121,7 +129,7 @@ async function Detail({ doc, view }: { doc: DocumentSummary; view: View }) {
           <CardTitle>
             {titles[view]}: {doc.title}
           </CardTitle>
-          <p className="mt-1 text-sm text-mute">
+          <p className="mt-1 text-base sm:text-sm text-mute">
             <Link href="/admin/knowledge/?tab=documents" className={linkClass}>
               Close
             </Link>
@@ -154,7 +162,7 @@ export async function DocumentsPanel({
         <CardHeader>
           <div>
             <CardTitle>Golden test</CardTitle>
-            <p className="mt-1 text-sm text-mute">
+            <p className="mt-1 text-base sm:text-sm text-mute">
               Run it after every change to see whether the bot finds the right facts more or less often.
             </p>
           </div>
@@ -170,11 +178,36 @@ export async function DocumentsPanel({
         </CardHeader>
         {documents.length === 0 ? (
           <CardBody>
-            <p className="text-sm text-mute">
+            <p className="text-base sm:text-sm text-mute">
               No documents yet. Upload a file above, or the starter pack loads when the site first starts.
             </p>
           </CardBody>
         ) : (
+          <>
+          <ul className="grid gap-3 p-3 lg:hidden">
+            {documents.map((item) => (
+              <li key={item.id} className="min-w-0 space-y-3 rounded-xl border border-line p-4">
+                <p className="font-semibold">{item.title}</p>
+                <p
+                  className="break-all text-base sm:text-sm text-mute">
+                  {item.slug} · {item.kind} · Version {item.version}
+                </p>
+                <p>{item.chunkCount} chunks · {formatWhen(item.updatedAt)}</p>
+                <div className="flex flex-wrap items-center gap-3">
+                  <span>Use in chat</span>
+                  <DocumentSwitch id={item.id} title={item.title} enabled={item.enabled} />
+                </div>
+                <nav aria-label={`Open ${item.title}`} className="flex flex-wrap gap-2">
+                  <Link className={linkClass} href={detailHref(item.slug, 'chunks')}>Chunks</Link>
+                  <Link className={linkClass} href={detailHref(item.slug, 'history')}>
+                    History ({item.versionCount})
+                  </Link>
+                  <Link className={linkClass} href={detailHref(item.slug, 'edit')}>Edit</Link>
+                </nav>
+              </li>
+            ))}
+          </ul>
+          <div className="hidden min-w-0 lg:block">
           <Table>
             <THead>
               <TR>
@@ -198,6 +231,8 @@ export async function DocumentsPanel({
               ))}
             </TBody>
           </Table>
+          </div>
+          </>
         )}
       </Card>
       {selected && selectedView ? <Detail doc={selected} view={selectedView} /> : null}

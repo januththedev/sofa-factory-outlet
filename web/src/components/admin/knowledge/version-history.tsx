@@ -6,7 +6,12 @@ import { rollbackAction } from '@/app/admin/(panel)/knowledge/actions';
 import { GoldenRunner } from '@/components/admin/chat/golden-runner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Table, TBody, TD, TH, THead, TR } from '@/components/ui/table';
+import { Table } from '@/components/ui/table';
+import { TBody } from '@/components/ui/table';
+import { TD } from '@/components/ui/table';
+import { TH } from '@/components/ui/table';
+import { THead } from '@/components/ui/table';
+import { TR } from '@/components/ui/table';
 import type { EvalView } from '@/lib/admin/knowledge';
 import { Status } from './status';
 
@@ -87,7 +92,7 @@ export function VersionHistory({
                   <Badge tone="good">Current</Badge>
                 ) : confirming === row.id ? (
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-sm">Make version {row.version} current?</span>
+                    <span className="text-base sm:text-sm">Make version {row.version} current?</span>
                     <Button size="sm" onClick={() => rollBack(row)} disabled={busy}>
                       {busy ? 'Rolling back…' : 'Yes, roll back'}
                     </Button>

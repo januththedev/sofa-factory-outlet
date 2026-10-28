@@ -1,10 +1,22 @@
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input, Label } from '@/components/ui/field';
-import { Table, TBody, TD, TH, THead, TR } from '@/components/ui/table';
-import { listFaqs, MAX_UPLOAD_BYTES, readLastEval, toEvalView } from '@/lib/admin/knowledge';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/field';
+import { Label } from '@/components/ui/field';
+import { Table } from '@/components/ui/table';
+import { TBody } from '@/components/ui/table';
+import { TD } from '@/components/ui/table';
+import { TH } from '@/components/ui/table';
+import { THead } from '@/components/ui/table';
+import { TR } from '@/components/ui/table';
+import { listFaqs } from '@/lib/admin/knowledge';
+import { MAX_UPLOAD_BYTES } from '@/lib/admin/knowledge';
+import { readLastEval } from '@/lib/admin/knowledge';
+import { toEvalView } from '@/lib/admin/knowledge';
 import { FaqDialog } from './faq-dialog';
 import { FaqSwitch } from './faq-switch';
 import { GoldenCard } from './golden-card';
@@ -31,7 +43,7 @@ export async function FaqsPanel({ q, page }: { q: string; page: number }) {
         <CardHeader>
           <div>
             <CardTitle>FAQs</CardTitle>
-            <p className="mt-1 text-sm text-mute">
+            <p className="mt-1 text-base sm:text-sm text-mute">
               {list.total} {list.total === 1 ? 'question' : 'questions'}
               {q ? ` matching "${q}"` : ''}. Matches are answered instantly, without the model.
             </p>
@@ -51,7 +63,7 @@ export async function FaqsPanel({ q, page }: { q: string; page: number }) {
             {q ? (
               <Link
                 href="/admin/knowledge/?tab=faqs"
-                className="pb-3 text-sm text-maroon underline-offset-4 hover:underline"
+                className="pb-3 text-base sm:text-sm text-maroon underline-offset-4 hover:underline"
               >
                 Clear
               </Link>
@@ -60,9 +72,39 @@ export async function FaqsPanel({ q, page }: { q: string; page: number }) {
         </CardBody>
         {list.rows.length === 0 ? (
           <CardBody>
-            <p className="text-sm text-mute">{q ? 'No FAQ matches that search.' : 'No FAQs yet. Add one above.'}</p>
+            <p
+              className="text-base sm:text-sm text-mute">
+              {q ? 'No FAQ matches that search.' : 'No FAQs yet. Add one above.'}
+            </p>
           </CardBody>
         ) : (
+          <>
+          <ul className="grid gap-3 p-3 lg:hidden">
+            {list.rows.map((faq) => (
+              <li key={faq.id} className="min-w-0 space-y-3 rounded-xl border border-line p-4">
+                <p className="font-semibold">{faq.question}</p>
+                <p className="whitespace-pre-wrap">{faq.answer}</p>
+                {faq.alternatives.length ? <p
+                  className="text-base sm:text-sm">
+                  Also: {faq.alternatives.join(' / ')}
+                </p> : null}
+                <p className="text-base sm:text-sm text-mute">{faq.hitCount} matches</p>
+                <div className="flex flex-wrap items-center gap-3">
+                  <span>Use in chat</span>
+                  <FaqSwitch id={faq.id} question={faq.question} enabled={faq.enabled} />
+                  <FaqDialog faq={{
+                    id: faq.id,
+                    question: faq.question,
+                    alternatives: faq.alternatives,
+                    answer: faq.answer,
+                    tags: faq.tags,
+                    enabled: faq.enabled,
+                  }} />
+                </div>
+              </li>
+            ))}
+          </ul>
+          <div className="hidden min-w-0 lg:block">
           <Table>
             <THead>
               <TR>
@@ -123,9 +165,11 @@ export async function FaqsPanel({ q, page }: { q: string; page: number }) {
               ))}
             </TBody>
           </Table>
+          </div>
+          </>
         )}
         {list.pages > 1 ? (
-          <CardBody className="flex items-center justify-between gap-3 border-t border-line text-sm">
+          <CardBody className="flex items-center justify-between gap-3 border-t border-line text-base sm:text-sm">
             {list.page > 1 ? (
               <Link href={pageHref(q, list.page - 1)} className="text-maroon underline-offset-4 hover:underline">
                 Previous

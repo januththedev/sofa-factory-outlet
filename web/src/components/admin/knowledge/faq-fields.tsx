@@ -21,7 +21,7 @@ export function FaqFields({
   return (
     <>
       <Field label="Question" htmlFor={`${idBase}-q`} error={errors.question}>
-        <Input
+        <Input autoComplete="off" enterKeyHint="next"
           id={`${idBase}-q`}
           value={value.question}
           onChange={(event) => set('question', event.target.value)}
@@ -35,7 +35,7 @@ export function FaqFields({
         hint="One per line. Use the words customers actually type."
         error={errors.alternatives}
       >
-        <Textarea
+        <Textarea autoComplete="off" enterKeyHint="enter"
           id={`${idBase}-alt`}
           value={value.alternatives}
           onChange={(event) => set('alternatives', event.target.value)}
@@ -49,7 +49,7 @@ export function FaqFields({
         hint="Put the answer in the first sentence."
         error={errors.answer}
       >
-        <Textarea
+        <Textarea autoComplete="off" enterKeyHint="enter"
           id={`${idBase}-a`}
           value={value.answer}
           onChange={(event) => set('answer', event.target.value)}
@@ -64,7 +64,7 @@ export function FaqFields({
         hint="Comma separated, for example store_info, delivery."
         error={errors.tags}
       >
-        <Input
+        <Input autoComplete="off" enterKeyHint="next"
           id={`${idBase}-tags`}
           value={value.tags}
           onChange={(event) => set('tags', event.target.value)}

@@ -1,13 +1,18 @@
 import Link from 'next/link';
-import { RevenueChart, type RevenueChartPoint } from '@/components/admin/invoices/revenue-chart';
+import { RevenueChart } from '@/components/admin/invoices/revenue-chart';
+import type { RevenueChartPoint } from '@/components/admin/invoices/revenue-chart';
 import { Button } from '@/components/ui/button';
-import { Field, Input } from '@/components/ui/field';
-import { Table, TBody, TD, TH, THead, TR } from '@/components/ui/table';
-import {
-  formatInvoiceDate,
-  minorToRupees,
-  monthLabel,
-} from '@/lib/admin/invoices';
+import { Field } from '@/components/ui/field';
+import { Input } from '@/components/ui/field';
+import { Table } from '@/components/ui/table';
+import { TBody } from '@/components/ui/table';
+import { TD } from '@/components/ui/table';
+import { TH } from '@/components/ui/table';
+import { THead } from '@/components/ui/table';
+import { TR } from '@/components/ui/table';
+import { formatInvoiceDate } from '@/lib/admin/invoices';
+import { minorToRupees } from '@/lib/admin/invoices';
+import { monthLabel } from '@/lib/admin/invoices';
 import type { RevenueReport } from '@/lib/invoices/api';
 import { formatLkr } from '@/lib/money';
 
@@ -51,10 +56,12 @@ export function ReportsView({
         </Field>
         <div className="flex flex-wrap items-center gap-3 sm:col-span-6 sm:self-end">
           <Button type="submit" size="sm">Apply</Button>
-          <Link href="/admin/invoices/?tab=reports" className="text-sm text-mute underline-offset-4 hover:underline">
+          <Link href="/admin/invoices/?tab=reports"
+            className="text-base sm:text-sm text-mute underline-offset-4 hover:underline">
             Clear dates
           </Link>
-          <Link href={exportHref(from, to)} className="text-sm text-maroon underline-offset-4 hover:underline">
+          <Link href={exportHref(from, to)}
+            className="text-base sm:text-sm text-maroon underline-offset-4 hover:underline">
             Export CSV
           </Link>
         </div>
@@ -63,7 +70,10 @@ export function ReportsView({
       <section aria-labelledby="monthly-revenue-heading" className="space-y-4">
         <div>
           <h2 id="monthly-revenue-heading" className="font-display text-2xl">Monthly revenue</h2>
-          <p className="mt-1 text-sm text-mute">Invoiced and paid totals, split by where the sale came from.</p>
+          <p
+            className="mt-1 text-base sm:text-sm text-mute">
+            Invoiced and paid totals, split by where the sale came from.
+          </p>
         </div>
         <div className="rounded-[var(--radius-card)] border border-line bg-paper p-4 sm:p-6">
           <RevenueChart points={chartPoints(report)} />
@@ -93,13 +103,13 @@ export function ReportsView({
               ))}
             </TBody>
           </Table>
-        ) : <p className="text-sm text-mute">No invoices have been issued in this period.</p>}
+        ) : <p className="text-base sm:text-sm text-mute">No invoices have been issued in this period.</p>}
       </section>
 
       <section aria-labelledby="outstanding-heading" className="space-y-4">
         <div>
           <h2 id="outstanding-heading" className="font-display text-2xl">Outstanding balances</h2>
-          <p className="mt-1 text-sm text-mute">Issued invoices that still have money owing.</p>
+          <p className="mt-1 text-base sm:text-sm text-mute">Issued invoices that still have money owing.</p>
         </div>
         {report.outstanding.length ? (
           <Table>
@@ -123,7 +133,7 @@ export function ReportsView({
                     </Link>
                   </TD>
                   <TD>{row.customerName}</TD>
-                  <TD className="text-sm text-ink-2">{formatInvoiceDate(row.issuedAt)}</TD>
+                  <TD className="text-base sm:text-sm text-ink-2">{formatInvoiceDate(row.issuedAt)}</TD>
                   <TD className="text-right font-semibold tabular-nums text-warn">
                     {formatLkr(row.balanceMinor, { decimals: true })}
                   </TD>
@@ -131,7 +141,7 @@ export function ReportsView({
               ))}
             </TBody>
           </Table>
-        ) : <p className="text-sm text-mute">Every issued invoice is paid up.</p>}
+        ) : <p className="text-base sm:text-sm text-mute">Every issued invoice is paid up.</p>}
       </section>
     </div>
   );

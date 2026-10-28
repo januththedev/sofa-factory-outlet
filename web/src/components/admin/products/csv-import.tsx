@@ -1,12 +1,16 @@
 'use client';
 import { useState } from 'react';
-import { parseProductCsv, productCsvTemplate, type CsvParseResult } from '@/lib/catalogue/csv';
+import { parseProductCsv } from '@/lib/catalogue/csv';
+import { productCsvTemplate } from '@/lib/catalogue/csv';
+import type { CsvParseResult } from '@/lib/catalogue/csv';
 import { Button } from '@/components/ui/button';
 import { importProductsAction } from '@/app/admin/(panel)/products/actions';
 
 export function CsvImport() {
   const [preview, setPreview] = useState<CsvParseResult | null>(null);
   const [message, setMessage] = useState('');
+  const [pending, setPending] = useState(false);
+  const [results, setResults] = useState<Array<{ line: number; ok: boolean; error?: string }>>([]);
   function download() {
     const url = URL.createObjectURL(new Blob([productCsvTemplate()], { type: 'text/csv' }));
     const anchor = document.createElement('a');
@@ -16,13 +20,19 @@ export function CsvImport() {
     URL.revokeObjectURL(url);
   }
   async function runImport() {
-    if (!preview || preview.errors.length) return;
+    if (!preview || preview.errors.length || pending) return;
     setMessage('Importing…');
-    const result = await importProductsAction(preview.rows);
-    const failures = result.results.filter((row) => !row.ok);
-    setMessage(failures.length
-      ? failures.map((row) => `Line ${row.line}: ${row.error}`).join('\n')
-      : `${result.results.length} products imported.`);
+    setPending(true);
+    try {
+      const result = await importProductsAction(preview.rows);
+      setResults(result.results);
+      const failures = result.results.filter((row) => !row.ok).length;
+      setMessage(`${result.results.length - failures} imported. ${failures} need attention.`);
+    } catch {
+      setMessage('The import stopped. Check the product list before retrying these rows.');
+    } finally {
+      setPending(false);
+    }
   }
   return (
     <div className="space-y-5 rounded-[var(--radius-card)] border border-line bg-paper p-5">
@@ -32,9 +42,14 @@ export function CsvImport() {
         <input
           type="file"
           accept=".csv,text/csv"
+          disabled={pending}
+          className="min-h-11 w-full min-w-0 text-base file:mr-3 file:min-h-11 file:rounded-xl file:px-4"
           onChange={(event) => {
             const file = event.target.files?.[0];
-            if (file) void file.text().then((text) => setPreview(parseProductCsv(text)));
+            setResults([]);
+            if (file) void file.text()
+              .then((text) => setPreview(parseProductCsv(text)))
+              .catch(() => setMessage('The file could not be read. Choose it again.'));
           }}
         />
       </label>
@@ -55,12 +70,21 @@ export function CsvImport() {
             <>
               <h2 className="font-display text-xl text-good">{preview.rows.length} products ready</h2>
               <p>Photos are fetched only from HTTPS URLs and processed before each row is saved.</p>
-              <Button className="mt-4" onClick={() => void runImport()}>Import products</Button>
+              <Button className="mt-4" disabled={pending} onClick={() => void runImport()}>
+                {pending ? 'Importing…' : 'Import products'}
+              </Button>
             </>
           )}
         </div>
       ) : null}
-      <p className="whitespace-pre-wrap text-sm" aria-live="polite">{message}</p>
+      <ul className="space-y-2">
+        {results.map((row) => (
+          <li key={row.line} className="break-words rounded-xl border border-line p-3">
+            Line {row.line}: {row.ok ? 'Imported' : row.error || 'Could not import this row. Check it and try again.'}
+          </li>
+        ))}
+      </ul>
+      <p className="whitespace-pre-wrap text-base sm:text-sm" aria-live="polite">{message}</p>
     </div>
   );
 }

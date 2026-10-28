@@ -17,7 +17,7 @@ export function StatGrid({ stats }: { stats: Array<{ label: string; value: strin
 }
 
 export function EmptyNote({ children }: { children: React.ReactNode }) {
-  return <p className="px-6 py-10 text-center text-sm text-mute">{children}</p>;
+  return <p className="px-6 py-10 text-center text-base sm:text-sm text-mute">{children}</p>;
 }
 
 const SCORE_TONE = { green: 'good', amber: 'warn', red: 'bad' } as const;
