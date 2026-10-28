@@ -37,8 +37,8 @@ if ($Tool -eq 'codex') {
   $process = Start-Process -FilePath $exe -ArgumentList $arguments -RedirectStandardInput $promptFile -RedirectStandardOutput "$logs\$Id.out" -RedirectStandardError "$logs\$Id.err" -WindowStyle Hidden -PassThru
 }
 else {
-  if (-not $Model) { throw 'OpenCode needs -Model (a free model, ending in -free).' }
-  if ($Model -notmatch 'free$') { throw "Refusing non-free OpenCode model: $Model" }
+  if (-not $Model) { throw 'OpenCode needs -Model (an opencode-go/ model from the OpenCode Go plan, or a free model ending in -free).' }
+  if ($Model -notmatch '^opencode-go/' -and $Model -notmatch 'free$') { throw "Refusing OpenCode model outside the Go plan and the free tier: $Model" }
   @'
 {
   "$schema": "https://opencode.ai/config.json",

@@ -29,8 +29,8 @@ New-Item -ItemType Directory -Force -Path $logs | Out-Null
 
 # A gate step that dies with one of these says nothing about the code: the machine ran out of memory.
 $oomPattern = 'out of memory|could not allocate memory|Zone Allocation failed|Committing semi space failed|insufficient system resources|memory allocation of \d+ bytes failed|std::bad_alloc'
-# Free OpenCode models in the order they are tried; one that reports its free allowance used up is skipped.
-$openCodeModels = @('opencode/mimo-v2.6-flash-free', 'opencode/glm-5.3-flash-free', 'opencode/nemotron-3-ultra-free', 'opencode/deepseek-v4.1-flash-free')
+# OpenCode Go models (the user's subscription) in the order they are tried; one that reports its allowance used up is skipped.
+$openCodeModels = @('opencode-go/kimi-k3', 'opencode-go/glm-5.3', 'opencode-go/deepseek-v4-pro', 'opencode-go/qwen3.8-max', 'opencode-go/minimax-m3', 'opencode-go/kimi-k3.1-pro', 'opencode-go/mimo-v2.6-pro')
 $openCodeDown = @{}
 
 if ((Test-Path $pidFile) -and -not $DryRun) {

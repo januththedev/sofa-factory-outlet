@@ -1,19 +1,57 @@
 [
-  { "id": "auth-shell", "tool": "claude", "branch": "worktree-agent-af146f0b1c19ebf60" },
-  { "id": "booking-ui", "tool": "claude", "branch": "worktree-agent-a667c30ebbebe69c0" },
-
-  { "id": "kb-core", "tool": "codex", "writer": "Codex", "message": "feat(kb): knowledge loader, chunking, search and API" },
-  { "id": "chat-pipeline", "tool": "codex", "attempt": 2, "writer": "Codex", "message": "feat(chat): message pipeline, OpenRouter client, guard, budget, NDJSON route and eval runner" },
-  { "id": "admin-products", "tool": "codex", "writer": "Codex", "message": "feat(admin): product editor, photo pipeline upload, CSV import and categories" },
-  { "id": "analytics", "tool": "opencode", "model": "opencode/mimo-v2.6-flash-free", "writer": "OpenCode (mimo-v2.6-flash-free)", "message": "feat(analytics): tracking endpoint, rollups, digest, Visitors page and privacy page" },
-  { "id": "public-pages", "tool": "opencode", "model": "opencode/mimo-v2.6-flash-free", "writer": "OpenCode (mimo-v2.6-flash-free)", "message": "feat(pages): About, Factory, Visit, Trade and guides pages" },
-  { "id": "invoices-ui", "tool": "opencode", "model": "opencode/deepseek-v4.1-flash-free", "writer": "OpenCode (deepseek-v4.1-flash-free)", "message": "feat(invoices): builder, list, detail, print view and reports" },
-
-  { "id": "admin-bookings", "tool": "claude", "branch": "worktree-agent-aab1dd567c9b37abd" },
-  { "id": "seo-admin-reviews", "tool": "claude", "branch": "worktree-agent-ab8c7c1a629c8d8ba" },
-  { "id": "admin-dashboard", "tool": "opencode", "model": "opencode/glm-5.3-flash-free", "writer": "OpenCode (glm-5.3-flash-free)", "message": "feat(admin): dashboard, settings and setup checklist" },
-  { "id": "admin-chat-kb", "tool": "claude", "branch": "worktree-agent-a8ce8653af5e6ab6a" },
-
-  { "id": "integration-wiring", "tool": "codex", "needs": ["auth-shell", "kb-core", "chat-pipeline"], "allowShared": true, "writer": "Codex", "message": "feat(integration): mount cart and chat, compose the proxy, idempotent knowledge seed" },
-  { "id": "e2e-specs", "tool": "codex", "needs": ["integration-wiring"], "writer": "Codex", "message": "test(e2e): Playwright specs for the main flows (not yet run)" }
+  {
+    "id": "m-chrome",
+    "tool": "opencode",
+    "model": "opencode-go/kimi-k3",
+    "allowShared": true,
+    "writer": "OpenCode (kimi-k3)",
+    "message": "feat(mobile): header, footer, chat, shared UI and global CSS for phones"
+  },
+  {
+    "id": "m-landing",
+    "tool": "codex",
+    "allowShared": true,
+    "writer": "Codex",
+    "message": "feat(mobile): home page on phones, correct counters, compact factory story, tap-to-load map"
+  },
+  {
+    "id": "m-shop",
+    "tool": "opencode",
+    "model": "opencode-go/glm-5.3",
+    "allowShared": true,
+    "writer": "OpenCode (glm-5.3)",
+    "message": "feat(mobile): shop filters sheet, two-column grid and product page for phones"
+  },
+  {
+    "id": "m-booking-cart",
+    "tool": "opencode",
+    "model": "opencode-go/deepseek-v4-pro",
+    "allowShared": true,
+    "writer": "OpenCode (deepseek-v4-pro)",
+    "message": "feat(mobile): booking date and slot pickers, form UX, confirmation and cart for phones"
+  },
+  {
+    "id": "m-pages",
+    "tool": "opencode",
+    "model": "opencode-go/qwen3.8-max",
+    "allowShared": true,
+    "writer": "OpenCode (qwen3.8-max)",
+    "message": "feat(mobile): visit, about, factory, trade, guides, privacy and review form for phones"
+  },
+  {
+    "id": "m-admin-core",
+    "tool": "opencode",
+    "model": "opencode-go/kimi-k3.1-pro",
+    "allowShared": true,
+    "writer": "OpenCode (kimi-k3.1-pro)",
+    "message": "feat(mobile): admin shell, login, dashboard, bookings, customers and visitors for phones"
+  },
+  {
+    "id": "m-admin-ops",
+    "tool": "opencode",
+    "model": "opencode-go/minimax-m3",
+    "allowShared": true,
+    "writer": "OpenCode (minimax-m3)",
+    "message": "feat(mobile): admin products, invoices, settings, SEO, chat and knowledge for phones"
+  }
 ]
