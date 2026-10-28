@@ -1,9 +1,14 @@
 /** Flat front-view sofa that follows the chosen fabric colour: the explorer's fallback and its loading state. */
 export function SofaSvg({ color, accent }: { color: string; accent: string }) {
-  const fill = { fill: color, transition: 'fill 700ms ease' } as const;
-  const pillow = { fill: accent, transition: 'fill 700ms ease' } as const;
+  const fill = { fill: color };
+  const pillow = { fill: accent };
   return (
-    <svg viewBox="0 0 400 260" role="img" aria-label="Illustration of a three-seater sofa" className="h-full w-full">
+    <svg
+      viewBox="0 0 400 260"
+      role="img"
+      aria-label="Illustration of a three-seater sofa"
+      className="h-full w-full motion-safe:[&_rect]:transition-[fill] motion-safe:[&_rect]:duration-200"
+    >
       <ellipse cx="200" cy="238" rx="168" ry="9" fill="rgb(20 18 17 / 0.13)" />
       <g fill="#3a2a20">
         <rect x="58" y="214" width="11" height="22" rx="3" />
