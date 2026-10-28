@@ -8,11 +8,17 @@ import path from 'node:path';
 
 const port = process.env.E2E_PORT ?? '3100';
 const dataDir = path.join('.data', 'pglite-e2e');
+// A production server keeps sign-in closed without an AUTH_SECRET of 32+ characters. The owner account is seeded
+// from OWNER_EMAIL / OWNER_PASSWORD; playwright.config.ts sets E2E_OWNER_* so the specs and this server agree.
 const env = {
   ...process.env,
   PGLITE_DIR: dataDir,
   NEXT_DIST_DIR: '.next-e2e',
   NEXT_PUBLIC_SITE_URL: `http://localhost:${port}`,
+  AUTH_SECRET: process.env.AUTH_SECRET ?? 'e2e-only-auth-secret-0123456789-abcdef',
+  CRON_SECRET: process.env.CRON_SECRET ?? 'e2e-only-cron-secret-0123456789',
+  OWNER_EMAIL: process.env.E2E_OWNER_EMAIL ?? 'owner@e2e.test',
+  OWNER_PASSWORD: process.env.E2E_OWNER_PASSWORD ?? 'e2e-owner-password-1',
   E2E: '1',
 };
 

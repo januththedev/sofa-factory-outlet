@@ -1,6 +1,6 @@
 # Task: e2e-specs (Playwright specs for the main flows)
 
-Read `web/docs/BUILD-GUIDE.md` and `web/playwright.config.ts` first. You cannot run Playwright here. Write the specs carefully from the real pages (read the components for labels, roles and names); the integrator runs them later with `npm run test:e2e` (own production build, port 3100, database `.data/pglite-e2e`, owner account from `scripts/e2e-server.mjs`).
+Read `web/docs/BUILD-GUIDE.md` and `web/playwright.config.ts` first. You cannot run Playwright here. Write the specs carefully from the real pages (read the components for labels, roles and names); the integrator runs them later with `npm run test:e2e` (own production build, port 3100, database `.data/pglite-e2e`). **The owner account** is `process.env.E2E_OWNER_EMAIL` and `process.env.E2E_OWNER_PASSWORD` (set in `playwright.config.ts`, which also gives the server the same values as `OWNER_EMAIL` / `OWNER_PASSWORD`): read them in your helpers, never hard-code credentials, and sign in at `/admin/login/`.
 
 ## You own
 `tests/e2e/**` only. The existing smoke spec stays. Shared helpers go in `tests/e2e/helpers.ts`.

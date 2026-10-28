@@ -6,6 +6,11 @@ import { defineConfig, devices } from '@playwright/test';
 const port = Number(process.env.E2E_PORT ?? 3100);
 const baseURL = process.env.E2E_BASE_URL ?? `http://localhost:${port}`;
 
+// The owner account the e2e server seeds (scripts/e2e-server.mjs reads the same variables). Specs read
+// process.env.E2E_OWNER_EMAIL and process.env.E2E_OWNER_PASSWORD; both are set before any worker starts.
+process.env.E2E_OWNER_EMAIL ??= 'owner@e2e.test';
+process.env.E2E_OWNER_PASSWORD ??= 'e2e-owner-password-1';
+
 export default defineConfig({
   testDir: './tests/e2e',
   timeout: 90_000,
