@@ -245,7 +245,8 @@ function Merge-Task($task) {
     }
   }
   if ($problem) {
-    $revert = Invoke-Git @('revert', '-m', '1', '--no-edit', 'HEAD')
+    # Revert the merge itself: HEAD may be someone's commit made while the gate ran (it reverted a docs commit once).
+    $revert = Invoke-Git @('revert', '-m', '1', '--no-edit', $mergeSha)
     if ($revert.Code -ne 0) {
       Invoke-Git @('revert', '--abort') | Out-Null
       Log "CRITICAL: main is red after merging $id ($problem) and the revert failed: needs a person"
