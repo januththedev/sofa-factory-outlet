@@ -29,6 +29,7 @@ function refresh(bookingId: number) {
   revalidatePath(`/admin/bookings/${bookingId}`);
   revalidatePath('/admin/bookings');
   revalidatePath('/admin/bookings/calendar');
+  revalidatePath('/admin');
 }
 
 async function guarded(label: string, work: () => Promise<ActionState>): Promise<ActionState> {
@@ -72,7 +73,7 @@ export async function saveNotesAction(
     const result = await saveStaffNotes(id.data, notes);
     if (!result.ok) return { error: result.message, values: { notes } };
     refresh(id.data);
-    return { ok: true, message: 'Notes saved.', values: { notes: notes.trim() } };
+    return { ok: true, message: 'Saved.', values: { notes: notes.trim() } };
   });
 }
 

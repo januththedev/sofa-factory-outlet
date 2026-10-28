@@ -2,10 +2,12 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
-import { BookingSheet, PRINT_CSS } from '@/components/admin/bookings/booking-sheet';
+import { BookingSheet } from '@/components/admin/bookings/booking-sheet';
+import { PRINT_CSS } from '@/components/admin/bookings/booking-sheet';
 import { PrintButton } from '@/components/admin/bookings/print-button';
 import { buttonStyles } from '@/components/ui/button';
-import { getBookingSheet, parseRecordId } from '@/lib/admin/bookings';
+import { getBookingSheet } from '@/lib/admin/bookings';
+import { parseRecordId } from '@/lib/admin/bookings';
 import { requireRole } from '@/lib/auth/session';
 import { getSettings } from '@/lib/settings/get';
 

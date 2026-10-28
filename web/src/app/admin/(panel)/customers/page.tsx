@@ -4,8 +4,10 @@ import { UserPlus } from 'lucide-react';
 import { Pagination } from '@/components/admin/bookings/pagination';
 import { CustomerList } from '@/components/admin/customers/customer-list';
 import { PageHeader } from '@/components/admin/page-header';
-import { Button, buttonStyles } from '@/components/ui/button';
-import { Input, Label } from '@/components/ui/field';
+import { Button } from '@/components/ui/button';
+import { buttonStyles } from '@/components/ui/button';
+import { Input } from '@/components/ui/field';
+import { Label } from '@/components/ui/field';
 import { listCustomers } from '@/lib/admin/customers';
 import { requireRole } from '@/lib/auth/session';
 
@@ -60,6 +62,9 @@ export default async function CustomersPage({ searchParams }: { searchParams: Se
           <Input
             id="customer-search"
             type="search"
+            inputMode="search"
+            enterKeyHint="search"
+            autoComplete="off"
             name="q"
             defaultValue={q}
             placeholder="Name, phone, city or email"

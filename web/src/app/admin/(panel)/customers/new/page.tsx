@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { CustomerForm, EMPTY_CUSTOMER } from '@/components/admin/customers/customer-form';
+import { CustomerForm } from '@/components/admin/customers/customer-form';
+import { EMPTY_CUSTOMER } from '@/components/admin/customers/customer-form';
 import { PageHeader } from '@/components/admin/page-header';
 import { buttonStyles } from '@/components/ui/button';
-import { Card, CardBody } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
 import { requireRole } from '@/lib/auth/session';
 import { createCustomerAction } from '../actions';
 

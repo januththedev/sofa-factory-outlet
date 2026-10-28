@@ -9,19 +9,21 @@ export type Kpi = {
   href?: string;
 };
 
-const VALUE_STYLE = 'font-display text-3xl';
+const VALUE_STYLE = 'break-words font-display text-3xl';
 
 function Tile({ kpi }: { kpi: Kpi }) {
   const body = (
     <>
-      <span className="eyebrow block">{kpi.label}</span>
-      <span className={cn('mt-2 block tabular-nums', kpi.value === null ? 'text-base text-mute' : VALUE_STYLE)}>
+      <span className="eyebrow block break-words text-xs">{kpi.label}</span>
+      <span
+        className={cn('mt-2 block break-words tabular-nums', kpi.value === null ? 'text-base text-mute' : VALUE_STYLE)}
+      >
         {kpi.value ?? 'No data yet'}
       </span>
       {kpi.hint ? <span className="mt-1 block text-xs text-mute">{kpi.hint}</span> : null}
     </>
   );
-  const base = 'block h-full rounded-[var(--radius-card)] border border-line bg-paper p-5';
+  const base = 'block h-full rounded-[var(--radius-card)] border border-line bg-paper p-3 sm:p-5';
   if (!kpi.href) return <div className={base}>{body}</div>;
   return (
     <Link href={kpi.href} className={cn(base, 'transition-colors hover:border-maroon/40 hover:bg-bone/60')}>

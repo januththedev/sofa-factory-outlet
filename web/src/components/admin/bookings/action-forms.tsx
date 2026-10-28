@@ -1,10 +1,16 @@
 'use client';
 
-import { useActionState, useState } from 'react';
+import { useActionState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { FieldError, Label, Select, Textarea } from '@/components/ui/field';
+import { FieldError } from '@/components/ui/field';
+import { Label } from '@/components/ui/field';
+import { Select } from '@/components/ui/field';
+import { Textarea } from '@/components/ui/field';
 import type { RescheduleDay } from '@/lib/admin/bookings';
-import type { ActionState, BoundAction, PlainAction } from './types';
+import type { ActionState } from './types';
+import type { BoundAction } from './types';
+import type { PlainAction } from './types';
 
 /** The result of the last action: an error to fix, or a short confirmation. */
 function Feedback({ state }: { state: ActionState }) {
@@ -12,7 +18,7 @@ function Feedback({ state }: { state: ActionState }) {
     <>
       <FieldError>{state?.error}</FieldError>
       {state?.message ? (
-        <p role="status" className="mt-1.5 text-sm text-good">
+        <p role="status" className="mt-1.5 text-base sm:text-sm text-good">
           {state.message}
         </p>
       ) : null}
@@ -29,7 +35,7 @@ export function StatusForm({
 }) {
   const [state, formAction, pending] = useActionState(action, undefined);
   if (options.length === 0) {
-    return <p className="text-sm text-mute">This status is final, so it cannot change again.</p>;
+    return <p className="text-base sm:text-sm text-mute">This status is final, so it cannot change again.</p>;
   }
   return (
     <form action={formAction} className="space-y-3">
@@ -42,7 +48,7 @@ export function StatusForm({
             </option>
           ))}
         </Select>
-        <p className="mt-1.5 text-sm text-mute">
+        <p className="mt-1.5 text-base sm:text-sm text-mute">
           Lost and cancelled bookings cannot be reopened, and they free their slot.
         </p>
       </div>
@@ -70,17 +76,23 @@ export function VisitedForm({ action }: { action: BoundAction }) {
 
 export function NotesForm({ action, initial }: { action: BoundAction; initial: string }) {
   const [state, formAction, pending] = useActionState(action, undefined);
+  const [notes, setNotes] = useState(initial);
   return (
     <form action={formAction} className="space-y-3">
-      <Label htmlFor="staff-notes" className="sr-only">
+      <Label htmlFor="staff-notes">
         Staff notes
       </Label>
       <Textarea
         id="staff-notes"
         name="notes"
+        inputMode="text"
+        autoComplete="off"
+        enterKeyHint="enter"
         rows={6}
         maxLength={4000}
-        defaultValue={state?.values?.notes ?? initial}
+        value={notes}
+        onChange={(event) => setNotes(event.target.value)}
+        className="scroll-mt-20 scroll-mb-56"
         placeholder="Calls made, what they liked, anything to remember for the visit"
         aria-invalid={Boolean(state?.error)}
       />
@@ -96,7 +108,7 @@ export function RescheduleForm({ action, days }: { action: BoundAction; days: Re
   const [state, formAction, pending] = useActionState(action, undefined);
   const [chosen, setChosen] = useState('');
   if (days.length === 0) {
-    return <p className="text-sm text-mute">No date in the booking window has a free place right now.</p>;
+    return <p className="text-base sm:text-sm text-mute">No date in the booking window has a free place right now.</p>;
   }
   const day = days.find((candidate) => candidate.date === chosen) ?? days[0];
   return (
@@ -121,7 +133,7 @@ export function RescheduleForm({ action, days }: { action: BoundAction; days: Re
             </option>
           ))}
         </Select>
-        <p className="mt-1.5 text-sm text-mute">Only open days with a free place are listed.</p>
+        <p className="mt-1.5 text-base sm:text-sm text-mute">Only open days with a free place are listed.</p>
       </div>
       <Button type="submit" size="sm" variant="subtle" disabled={pending}>
         {pending ? 'Moving…' : 'Move booking'}

@@ -54,7 +54,7 @@ export function ItemStack({ items, pieces }: { items: ItemView[]; pieces: number
           <ItemThumb key={item.id} image={item.image} alt={itemAlt(item)} className="size-10 ring-2 ring-paper" />
         ))}
       </div>
-      <span className="text-sm">
+      <span className="text-base sm:text-sm">
         {pieces} {pieces === 1 ? 'piece' : 'pieces'}
         {more > 0 ? <span className="text-mute"> (+{more} more)</span> : null}
       </span>

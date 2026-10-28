@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui/badge';
-import { STATUS_LABELS, STATUS_TONES } from '@/lib/admin/bookings';
+import { STATUS_LABELS } from '@/lib/admin/bookings';
+import { STATUS_TONES } from '@/lib/admin/bookings';
 import type { BookingStatus } from '@/lib/db/schema/types';
 
 /** Left-edge colour for a booking in the calendar, one per status. */

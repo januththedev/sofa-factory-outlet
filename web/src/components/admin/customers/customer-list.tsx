@@ -1,5 +1,10 @@
 import Link from 'next/link';
-import { Table, TBody, TD, TH, THead, TR } from '@/components/ui/table';
+import { Table } from '@/components/ui/table';
+import { TBody } from '@/components/ui/table';
+import { TD } from '@/components/ui/table';
+import { TH } from '@/components/ui/table';
+import { THead } from '@/components/ui/table';
+import { TR } from '@/components/ui/table';
 import { formatColomboDateTime } from '@/lib/admin/bookings';
 import type { CustomerRow } from '@/lib/admin/customers';
 
@@ -7,7 +12,10 @@ const detailHref = (row: CustomerRow) => `/admin/customers/${row.id}/`;
 
 function Phone({ row }: { row: CustomerRow }) {
   return (
-    <a href={`tel:${row.phone}`} className="text-ink-2 hover:text-maroon hover:underline">
+    <a
+      href={`tel:${row.phone}`}
+      className="inline-flex min-h-11 min-w-11 items-center text-ink-2 hover:text-maroon hover:underline"
+    >
       {row.phoneLabel}
     </a>
   );
@@ -21,7 +29,7 @@ export function CustomerList({ rows, searching }: { rows: CustomerRow[]; searchi
     return (
       <div className="rounded-[var(--radius-card)] border border-dashed border-line bg-paper p-10 text-center">
         <p className="font-display text-xl">{searching ? 'No customers match' : 'No customers yet'}</p>
-        <p className="mt-2 text-sm text-mute">
+        <p className="mt-2 text-base sm:text-sm text-mute">
           {searching
             ? 'Try a name, a phone number or a city, written differently.'
             : 'Customers appear here when someone books a visit or an invoice is made. You can also add a walk-in.'}
@@ -31,7 +39,7 @@ export function CustomerList({ rows, searching }: { rows: CustomerRow[]; searchi
   }
   return (
     <>
-      <div className="hidden overflow-hidden rounded-[var(--radius-card)] border border-line bg-paper md:block">
+      <div className="hidden overflow-hidden rounded-[var(--radius-card)] border border-line bg-paper lg:block">
         <Table>
           <THead>
             <tr>
@@ -51,7 +59,13 @@ export function CustomerList({ rows, searching }: { rows: CustomerRow[]; searchi
             {rows.map((row) => (
               <TR key={row.id}>
                 <TD>
-                  <Link href={detailHref(row)} className="font-semibold text-maroon hover:underline">
+                  <Link
+                    href={detailHref(row)}
+                    className={
+                      'inline-flex min-h-11 min-w-11 items-center break-words font-semibold text-maroon ' +
+                      'hover:underline'
+                    }
+                  >
                     {row.name}
                   </Link>
                   {row.email ? (
@@ -71,17 +85,23 @@ export function CustomerList({ rows, searching }: { rows: CustomerRow[]; searchi
         </Table>
       </div>
 
-      <ul className="grid gap-3 md:hidden">
+      <ul className="grid gap-3 md:grid-cols-2 lg:hidden">
         {rows.map((row) => (
           <li key={row.id} className="rounded-[var(--radius-card)] border border-line bg-paper p-4">
-            <Link href={detailHref(row)} className="font-semibold text-maroon hover:underline">
+            <Link
+              href={detailHref(row)}
+              className={
+                'inline-flex min-h-11 min-w-11 items-center break-words font-semibold text-maroon ' +
+                'hover:underline'
+              }
+            >
               {row.name}
             </Link>
-            <p className="mt-1 text-sm">
+            <p className="mt-2 text-base">
               <Phone row={row} />
               {row.city ? <span className="text-mute"> · {row.city}</span> : null}
             </p>
-            <p className="mt-2 text-sm text-mute">
+            <p className="mt-2 text-base text-mute">
               {plural(row.bookings, 'booking', 'bookings')} · {plural(row.invoices, 'invoice', 'invoices')}
             </p>
             <p className="text-xs text-mute">Last activity {formatColomboDateTime(row.lastActivity)}</p>

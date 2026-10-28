@@ -1,43 +1,48 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, Printer } from 'lucide-react';
-import {
-  ConvertForm,
-  NotesForm,
-  RescheduleForm,
-  StatusForm,
-  VisitedForm,
-} from '@/components/admin/bookings/action-forms';
-import { CustomerCard, HistoryCard, ProductsCard, VisitCard } from '@/components/admin/bookings/detail-cards';
+import { ArrowLeft } from 'lucide-react';
+import { Printer } from 'lucide-react';
+import { ConvertForm } from '@/components/admin/bookings/action-forms';
+import { NotesForm } from '@/components/admin/bookings/action-forms';
+import { RescheduleForm } from '@/components/admin/bookings/action-forms';
+import { StatusForm } from '@/components/admin/bookings/action-forms';
+import { VisitedForm } from '@/components/admin/bookings/action-forms';
+import { CustomerCard } from '@/components/admin/bookings/detail-cards';
+import { HistoryCard } from '@/components/admin/bookings/detail-cards';
+import { ProductsCard } from '@/components/admin/bookings/detail-cards';
+import { VisitCard } from '@/components/admin/bookings/detail-cards';
 import { ReviewRequest } from '@/components/admin/bookings/review-request';
 import { StatusBadge } from '@/components/admin/bookings/status-badge';
+import { primaryStatusAction } from '@/components/admin/bookings/card-model';
+import { ContactActions } from '@/components/admin/bookings/contact-actions';
+import { QuickStatus } from '@/components/admin/bookings/quick-status';
 import { PageHeader } from '@/components/admin/page-header';
 import { buttonStyles } from '@/components/ui/button';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  allowedTransitions,
-  buildContactMessage,
-  buildReviewMessage,
-  canTransition,
-  formatColomboDateTime,
-  getBookingDetail,
-  getRescheduleOptions,
-  invoiceTitle,
-  isOpenBooking,
-  parseRecordId,
-  STATUS_LABELS,
-} from '@/lib/admin/bookings';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
+import { allowedTransitions } from '@/lib/admin/bookings';
+import { buildContactMessage } from '@/lib/admin/bookings';
+import { buildReviewMessage } from '@/lib/admin/bookings';
+import { canTransition } from '@/lib/admin/bookings';
+import { formatColomboDateTime } from '@/lib/admin/bookings';
+import { getBookingDetail } from '@/lib/admin/bookings';
+import { getRescheduleOptions } from '@/lib/admin/bookings';
+import { invoiceTitle } from '@/lib/admin/bookings';
+import { isOpenBooking } from '@/lib/admin/bookings';
+import { parseRecordId } from '@/lib/admin/bookings';
+import { STATUS_LABELS } from '@/lib/admin/bookings';
 import { requireRole } from '@/lib/auth/session';
 import { isLkMobile } from '@/lib/phone';
-import { getSettings, whatsappLink } from '@/lib/settings/get';
-import {
-  changeStatusAction,
-  convertToInvoiceAction,
-  rescheduleAction,
-  reviewRequestedAction,
-  saveNotesAction,
-} from './actions';
+import { getSettings } from '@/lib/settings/get';
+import { whatsappLink } from '@/lib/settings/get';
+import { changeStatusAction } from './actions';
+import { convertToInvoiceAction } from './actions';
+import { rescheduleAction } from './actions';
+import { reviewRequestedAction } from './actions';
+import { saveNotesAction } from './actions';
 
 export const dynamic = 'force-dynamic';
 
@@ -45,8 +50,8 @@ export const metadata: Metadata = { title: 'Booking' };
 
 function ActionCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <Card>
-      <CardHeader>
+    <Card className="min-w-0">
+      <CardHeader className="flex-wrap">
         <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardBody>{children}</CardBody>
@@ -86,9 +91,10 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
     .map((next) => ({ value: next, label: STATUS_LABELS[next] }));
   const canConvert = status !== 'cancelled' && status !== 'lost';
   const hasVisited = status === 'visited' || status === 'purchased';
+  const primary = primaryStatusAction(status);
 
   return (
-    <div>
+    <div className="pb-[calc(14rem+env(safe-area-inset-bottom))] lg:pb-0">
       <PageHeader
         title={sheet.reference}
         description={`${customer.name} · ${visit.dateLabel}, ${visit.slotLabel}`}
@@ -108,7 +114,7 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
           </>
         }
       />
-      <p className="mb-6 flex flex-wrap items-center gap-3 text-sm text-mute">
+      <p className="mb-6 flex flex-wrap items-center gap-3 text-base sm:text-sm text-mute">
         <StatusBadge status={status} />
         <span>Booked {formatColomboDateTime(detail.createdAt)}</span>
       </p>
@@ -155,7 +161,7 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
           <ActionCard title="Invoice">
             {detail.bookingInvoice ? (
               <div className="space-y-3">
-                <p className="text-sm text-ink-2">An invoice already exists for this booking.</p>
+                <p className="text-base sm:text-sm text-ink-2">An invoice already exists for this booking.</p>
                 <Link
                   href={`/admin/invoices/${detail.bookingInvoice.id}/`}
                   className={buttonStyles({ variant: 'dark', className: 'w-full' })}
@@ -165,19 +171,51 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
               </div>
             ) : canConvert ? (
               <div className="space-y-3">
-                <p className="text-sm text-ink-2">
+                <p className="text-base sm:text-sm text-ink-2">
                   Turns the chosen pieces into an invoice. Pieces without a price start at zero, so check them
                   before issuing.
                 </p>
                 <ConvertForm action={convertToInvoiceAction.bind(null, bookingId)} />
               </div>
             ) : (
-              <p className="text-sm text-mute">
+              <p className="text-base sm:text-sm text-mute">
                 A {STATUS_LABELS[status].toLowerCase()} booking cannot be turned into an invoice.
               </p>
             )}
           </ActionCard>
+          <ActionCard title="Print">
+            <Link
+              href={`/admin/bookings/${bookingId}/print/`}
+              className={buttonStyles({ variant: 'ghost', className: 'w-full' })}
+            >
+              <Printer className="size-4" aria-hidden />
+              Print booking sheet
+            </Link>
+          </ActionCard>
         </div>
+      </div>
+      <div
+        data-sticky-bar
+        aria-label="Booking actions"
+        className={
+          'fixed inset-x-0 bottom-0 z-30 space-y-2 border-t border-line bg-paper px-4 pt-3 ' +
+          'pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:hidden'
+        }
+      >
+        {primary ? (
+          <QuickStatus
+            action={changeStatusAction.bind(null, bookingId)}
+            target={primary.value}
+            label={primary.label}
+          />
+        ) : <p className="text-base sm:text-sm text-mute">Status: {STATUS_LABELS[status]}</p>}
+        <ContactActions
+          callHref={`tel:${customer.phone}`}
+          whatsappHref={whatsappLink(whatsappNumber, contactMessage)}
+        />
+        <a href="#staff-notes" className="inline-flex min-h-11 items-center text-maroon underline">
+          Edit staff notes
+        </a>
       </div>
     </div>
   );

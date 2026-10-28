@@ -1,4 +1,9 @@
-import { Table, TBody, TD, TH, THead, TR } from '@/components/ui/table';
+import { Table } from '@/components/ui/table';
+import { TBody } from '@/components/ui/table';
+import { TD } from '@/components/ui/table';
+import { TH } from '@/components/ui/table';
+import { THead } from '@/components/ui/table';
+import { TR } from '@/components/ui/table';
 import { NoData } from './no-data';
 
 export type BarItem = { label: string; value: number };
@@ -16,8 +21,8 @@ export function BarList({ items, unit = 'visitors', emptyLabel }: BarListProps) 
       <ul className="space-y-3">
         {items.map((item) => (
           <li key={item.label}>
-            <div className="flex items-baseline justify-between gap-3 text-sm">
-              <span>{item.label}</span>
+            <div className="flex flex-wrap items-baseline justify-between gap-3 text-base sm:text-sm">
+              <span className="min-w-0 break-words">{item.label}</span>
               <span className="tabular-nums text-mute">
                 {item.value.toLocaleString('en-LK')} {unit} · {Math.round((item.value / Math.max(total, 1)) * 100)}%
               </span>
@@ -31,8 +36,8 @@ export function BarList({ items, unit = 'visitors', emptyLabel }: BarListProps) 
           </li>
         ))}
       </ul>
-      <details className="mt-4 text-sm">
-        <summary className="cursor-pointer text-mute">View as table</summary>
+      <details className="mt-4 text-base sm:text-sm">
+        <summary className="min-h-11 cursor-pointer py-3 text-mute">View as table</summary>
         <Table className="mt-2">
           <caption className="sr-only">Same figures as the bars above</caption>
           <THead>

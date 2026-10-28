@@ -4,7 +4,9 @@ import { ArrowLeft } from 'lucide-react';
 import { CalendarView } from '@/components/admin/bookings/calendar-view';
 import { PageHeader } from '@/components/admin/page-header';
 import { buttonStyles } from '@/components/ui/button';
-import { getCalendar, parseCalendarParams } from '@/lib/admin/bookings';
+import { calendarAgenda } from '@/components/admin/bookings/calendar-agenda';
+import { getCalendar } from '@/lib/admin/bookings';
+import { parseCalendarParams } from '@/lib/admin/bookings';
 import { requireRole } from '@/lib/auth/session';
 
 export const dynamic = 'force-dynamic';
@@ -15,7 +17,9 @@ type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
 export default async function BookingCalendarPage({ searchParams }: { searchParams: SearchParams }) {
   await requireRole();
-  const calendar = await getCalendar(parseCalendarParams(await searchParams));
+  const requested = parseCalendarParams(await searchParams);
+  const calendar = await getCalendar(requested);
+  const dayCalendar = calendarAgenda(calendar);
   return (
     <div>
       <PageHeader
@@ -28,7 +32,7 @@ export default async function BookingCalendarPage({ searchParams }: { searchPara
           </Link>
         }
       />
-      <CalendarView calendar={calendar} />
+      <CalendarView calendar={calendar} dayCalendar={dayCalendar} />
     </div>
   );
 }

@@ -1,6 +1,13 @@
 'use client';
 
-import { Area, AreaChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Area } from 'recharts';
+import { AreaChart } from 'recharts';
+import { CartesianGrid } from 'recharts';
+import { Legend } from 'recharts';
+import { ResponsiveContainer } from 'recharts';
+import { Tooltip } from 'recharts';
+import { XAxis } from 'recharts';
+import { YAxis } from 'recharts';
 import { NoData } from './no-data';
 
 export type TrafficPointView = { date: string; label: string; visitors: number; sessions: number; pageViews: number };
@@ -65,10 +72,10 @@ export function TrafficChart({ data }: { data: TrafficPointView[] }) {
           </AreaChart>
         </ResponsiveContainer>
       </div>
-      <details className="mt-4 text-sm">
-        <summary className="cursor-pointer text-mute">View as table</summary>
+      <details className="mt-4 text-base sm:text-sm">
+        <summary className="min-h-11 cursor-pointer py-3 text-mute">View as table</summary>
         <div className="mt-2 overflow-x-auto">
-          <table className="w-full border-collapse text-left text-sm">
+          <table className="w-full border-collapse text-left text-base sm:text-sm">
             <caption className="sr-only">Visitors, sessions and page views per day</caption>
             <thead className="border-b border-line text-xs uppercase tracking-wider text-mute">
               <tr>

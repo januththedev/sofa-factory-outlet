@@ -27,20 +27,27 @@ export function ChatbotPanel({ stats }: { stats: ChatbotStats }) {
       </dl>
 
       <div>
-        <h3 className="text-sm font-semibold">Who answered</h3>
+        <h3 className="text-base sm:text-sm font-semibold">Who answered</h3>
         <div className="mt-3">
           <BarList items={answers} unit="answers" />
         </div>
       </div>
 
       <div>
-        <h3 className="text-sm font-semibold">Open knowledge gaps ({stats.openGapCount.toLocaleString('en-LK')})</h3>
+        <h3
+          className="text-base sm:text-sm font-semibold"
+        >
+          Open knowledge gaps ({stats.openGapCount.toLocaleString('en-LK')})
+        </h3>
         {stats.openGaps.length ? (
-          <ol className="mt-3 space-y-2 text-sm">
+          <ol className="mt-3 space-y-2 text-base sm:text-sm">
             {stats.openGaps.map((gap) => (
               <li
                 key={gap.question}
-                className="flex items-baseline justify-between gap-3 border-b border-line/70 pb-2 last:border-0"
+                className={
+                  'flex flex-wrap items-baseline justify-between gap-3 border-b border-line/70 pb-2 ' +
+                  'last:border-0'
+                }
               >
                 <span>{gap.question}</span>
                 <span className="shrink-0 tabular-nums text-mute">×{gap.timesAsked.toLocaleString('en-LK')}</span>

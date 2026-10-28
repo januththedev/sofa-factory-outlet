@@ -8,8 +8,16 @@ import { NoData } from '@/components/admin/visitors/no-data';
 import { RangeSelector } from '@/components/admin/visitors/range-selector';
 import { StatCards } from '@/components/admin/visitors/stat-cards';
 import { TrafficChart } from '@/components/admin/visitors/traffic-chart';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TBody, TD, TH, THead, TR } from '@/components/ui/table';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
+import { Table } from '@/components/ui/table';
+import { TBody } from '@/components/ui/table';
+import { TD } from '@/components/ui/table';
+import { TH } from '@/components/ui/table';
+import { THead } from '@/components/ui/table';
+import { TR } from '@/components/ui/table';
 import { getVisitorsOverview } from '@/lib/analytics/queries';
 import { requireRole } from '@/lib/auth/session';
 
@@ -74,31 +82,32 @@ export default async function VisitorsPage({ searchParams }: { searchParams: Pro
         ]}
       />
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_280px]">
-        <Card>
-          <CardHeader>
+      <div className="grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1fr)_280px]">
+        <Card className="min-w-0">
+          <CardHeader className="flex-wrap">
             <CardTitle>Traffic</CardTitle>
-            <span className="text-sm text-mute">Visitors, sessions and page views</span>
+            <span className="text-base sm:text-sm text-mute">Visitors, sessions and page views</span>
           </CardHeader>
           <CardBody>
             <TrafficChart data={trafficView} />
           </CardBody>
         </Card>
 
-        <Card>
+        <Card className="min-w-0">
           <CardBody>
             <p className="eyebrow">On the site now</p>
             <p className="mt-2 font-display text-5xl tabular-nums">
               <LiveCount initial={data.live} />
             </p>
-            <p className="mt-2 text-xs text-mute">Sessions active in the last 5 minutes. Refreshes every 30 seconds.</p>
+            <p
+              className="mt-2 text-xs text-mute">Sessions active in the last 5 minutes. Refreshes every 30 seconds.</p>
           </CardBody>
         </Card>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
-          <CardHeader>
+        <Card className="min-w-0">
+          <CardHeader className="flex-wrap">
             <CardTitle>Sources</CardTitle>
           </CardHeader>
           <CardBody>
@@ -111,8 +120,8 @@ export default async function VisitorsPage({ searchParams }: { searchParams: Pro
           </CardBody>
         </Card>
 
-        <Card>
-          <CardHeader>
+        <Card className="min-w-0">
+          <CardHeader className="flex-wrap">
             <CardTitle>Devices</CardTitle>
           </CardHeader>
           <CardBody>
@@ -121,20 +130,20 @@ export default async function VisitorsPage({ searchParams }: { searchParams: Pro
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
+      <Card className="min-w-0">
+        <CardHeader className="flex-wrap">
           <CardTitle>Funnel</CardTitle>
-          <span className="text-sm text-mute">Visit → product view → cart → booking</span>
+          <span className="text-base sm:text-sm text-mute">Visit → product view → cart → booking</span>
         </CardHeader>
         <CardBody>
           <FunnelChart steps={funnel} />
         </CardBody>
       </Card>
 
-      <Card>
-        <CardHeader>
+      <Card className="min-w-0">
+        <CardHeader className="flex-wrap">
           <CardTitle>Products</CardTitle>
-          <span className="text-sm text-mute">Views, adds to cart and bookings</span>
+          <span className="text-base sm:text-sm text-mute">Views, adds to cart and bookings</span>
         </CardHeader>
         <CardBody className="p-0">
           {products.length ? (
@@ -152,7 +161,10 @@ export default async function VisitorsPage({ searchParams }: { searchParams: Pro
                   <TR key={product.productId}>
                     <TD>
                       {product.slug ? (
-                        <Link href={`/product/${product.slug}/`} className="link-underline">
+                        <Link
+                          href={`/product/${product.slug}/`}
+                          className="inline-flex min-h-11 items-center break-words text-maroon underline"
+                        >
                           {product.name}
                         </Link>
                       ) : (
@@ -173,14 +185,14 @@ export default async function VisitorsPage({ searchParams }: { searchParams: Pro
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
-          <CardHeader>
+        <Card className="min-w-0">
+          <CardHeader className="flex-wrap">
             <CardTitle>Cities</CardTitle>
-            <span className="text-sm text-mute">Top cities in Sri Lanka</span>
+            <span className="text-base sm:text-sm text-mute">Top cities in Sri Lanka</span>
           </CardHeader>
           <CardBody>
             {audience.cities.length ? (
-              <ol className="space-y-2 text-sm">
+              <ol className="space-y-2 text-base sm:text-sm">
                 {audience.cities.map((city, index) => (
                   <li
                     key={city.label}
@@ -200,10 +212,10 @@ export default async function VisitorsPage({ searchParams }: { searchParams: Pro
           </CardBody>
         </Card>
 
-        <Card>
-          <CardHeader>
+        <Card className="min-w-0">
+          <CardHeader className="flex-wrap">
             <CardTitle>Chatbot</CardTitle>
-            <span className="text-sm text-mute">Answers and knowledge gaps</span>
+            <span className="text-base sm:text-sm text-mute">Answers and knowledge gaps</span>
           </CardHeader>
           <CardBody>
             <ChatbotPanel stats={chatbot} />

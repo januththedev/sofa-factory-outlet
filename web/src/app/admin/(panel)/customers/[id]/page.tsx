@@ -2,12 +2,17 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
-import { BookingLinks, InvoiceLinks } from '@/components/admin/bookings/history';
+import { BookingLinks } from '@/components/admin/bookings/history';
+import { InvoiceLinks } from '@/components/admin/bookings/history';
 import { CustomerForm } from '@/components/admin/customers/customer-form';
 import { PageHeader } from '@/components/admin/page-header';
 import { buttonStyles } from '@/components/ui/button';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatColomboDateTime, parseRecordId } from '@/lib/admin/bookings';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
+import { formatColomboDateTime } from '@/lib/admin/bookings';
+import { parseRecordId } from '@/lib/admin/bookings';
 import { getCustomerDetail } from '@/lib/admin/customers';
 import { requireRole } from '@/lib/auth/session';
 import { updateCustomerAction } from '../actions';
@@ -38,7 +43,7 @@ export default async function CustomerDetailPage({ params }: { params: Promise<{
       />
       <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_26rem]">
         <Card className="min-w-0">
-          <CardHeader>
+          <CardHeader className="flex-wrap">
             <CardTitle>Contact details</CardTitle>
           </CardHeader>
           <CardBody>
@@ -59,19 +64,19 @@ export default async function CustomerDetailPage({ params }: { params: Promise<{
         </Card>
 
         <div className="min-w-0 space-y-6">
-          <Card>
-            <CardHeader>
+          <Card className="min-w-0">
+            <CardHeader className="flex-wrap">
               <CardTitle>Bookings</CardTitle>
-              <span className="text-sm text-mute">{bookings.length}</span>
+              <span className="text-base sm:text-sm text-mute">{bookings.length}</span>
             </CardHeader>
             <CardBody>
               <BookingLinks bookings={bookings} empty="No bookings yet." />
             </CardBody>
           </Card>
-          <Card>
-            <CardHeader>
+          <Card className="min-w-0">
+            <CardHeader className="flex-wrap">
               <CardTitle>Invoices</CardTitle>
-              <span className="text-sm text-mute">{invoices.length}</span>
+              <span className="text-base sm:text-sm text-mute">{invoices.length}</span>
             </CardHeader>
             <CardBody>
               <InvoiceLinks invoices={invoices} empty="No invoices yet." />

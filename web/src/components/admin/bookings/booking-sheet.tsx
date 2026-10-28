@@ -1,10 +1,9 @@
 import { Swatch } from '@/components/admin/bookings/detail-cards';
-import { ItemThumb, itemAlt } from '@/components/admin/bookings/item-thumb';
-import {
-  PREFERRED_CONTACT_LABELS,
-  STATUS_LABELS,
-  type BookingSheet as BookingSheetData,
-} from '@/lib/admin/bookings';
+import { ItemThumb } from '@/components/admin/bookings/item-thumb';
+import { itemAlt } from '@/components/admin/bookings/item-thumb';
+import { PREFERRED_CONTACT_LABELS } from '@/lib/admin/bookings';
+import { STATUS_LABELS } from '@/lib/admin/bookings';
+import { type BookingSheet as BookingSheetData } from '@/lib/admin/bookings';
 import { formatLkr } from '@/lib/money';
 
 /**
@@ -30,7 +29,7 @@ function Block({ title, children }: { title: string; children: React.ReactNode }
   return (
     <section data-keep>
       <h2 className="eyebrow border-b border-ink/30 pb-1">{title}</h2>
-      <div className="mt-2 space-y-1 text-sm">{children}</div>
+      <div className="mt-2 space-y-1 text-base sm:text-sm">{children}</div>
     </section>
   );
 }
@@ -64,7 +63,7 @@ export function BookingSheet({ sheet, businessName }: { sheet: BookingSheetData;
             Showroom visit sheet
           </h1>
           <p className="text-lg font-semibold">{sheet.reference}</p>
-          <p className="text-sm text-mute">Status: {STATUS_LABELS[sheet.status]}</p>
+          <p className="text-base sm:text-sm text-mute">Status: {STATUS_LABELS[sheet.status]}</p>
         </div>
       </div>
 
@@ -90,60 +89,62 @@ export function BookingSheet({ sheet, businessName }: { sheet: BookingSheetData;
           Products
         </h2>
         {sheet.items.length === 0 ? (
-          <p className="mt-2 text-sm text-mute">No pieces were chosen before the visit.</p>
+          <p className="mt-2 text-base sm:text-sm text-mute">No pieces were chosen before the visit.</p>
         ) : (
-          <table className="mt-2 w-full border-collapse text-left text-sm">
-            <thead>
-              <tr className="text-xs uppercase tracking-wider text-mute">
-                <th scope="col" className="w-16 py-1.5 pr-3 font-semibold">
-                  <span className="sr-only">Photo</span>
-                </th>
-                <th scope="col" className="py-1.5 pr-3 font-semibold">
-                  Product
-                </th>
-                <th scope="col" className="py-1.5 pr-3 font-semibold">
-                  Colour
-                </th>
-                <th scope="col" className="py-1.5 pr-3 text-right font-semibold">
-                  Qty
-                </th>
-                <th scope="col" className="py-1.5 text-right font-semibold">
-                  Price
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-ink/15">
-              {sheet.items.map((item) => (
-                <tr key={item.id}>
-                  <td className="py-2 pr-3">
-                    <ItemThumb image={item.image} alt={itemAlt(item)} className="size-14" />
+          <div className="max-w-full overflow-x-auto print:overflow-visible">
+            <table className="mt-2 w-full border-collapse text-left text-base sm:text-sm">
+              <thead>
+                <tr className="text-xs uppercase tracking-wider text-mute">
+                  <th scope="col" className="w-16 py-1.5 pr-3 font-semibold">
+                    <span className="sr-only">Photo</span>
+                  </th>
+                  <th scope="col" className="py-1.5 pr-3 font-semibold">
+                    Product
+                  </th>
+                  <th scope="col" className="py-1.5 pr-3 font-semibold">
+                    Colour
+                  </th>
+                  <th scope="col" className="py-1.5 pr-3 text-right font-semibold">
+                    Qty
+                  </th>
+                  <th scope="col" className="py-1.5 text-right font-semibold">
+                    Price
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-ink/15">
+                {sheet.items.map((item) => (
+                  <tr key={item.id}>
+                    <td className="py-2 pr-3">
+                      <ItemThumb image={item.image} alt={itemAlt(item)} className="size-14" />
+                    </td>
+                    <td className="py-2 pr-3 font-medium">{item.name}</td>
+                    <td className="py-2 pr-3">
+                      <span className="inline-flex items-center gap-2">
+                        <Swatch hex={item.hex} />
+                        {item.colourName ?? 'Not chosen'}
+                      </span>
+                    </td>
+                    <td className="py-2 pr-3 text-right">{item.quantity}</td>
+                    <td className="py-2 text-right">
+                      {item.lineMinor === null ? 'On request' : formatLkr(item.lineMinor)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr className="border-t border-ink/30 font-semibold">
+                  <td colSpan={3} className="py-2">
+                    Total
                   </td>
-                  <td className="py-2 pr-3 font-medium">{item.name}</td>
-                  <td className="py-2 pr-3">
-                    <span className="inline-flex items-center gap-2">
-                      <Swatch hex={item.hex} />
-                      {item.colourName ?? 'Not chosen'}
-                    </span>
-                  </td>
-                  <td className="py-2 pr-3 text-right">{item.quantity}</td>
+                  <td className="py-2 pr-3 text-right">{sheet.pieces}</td>
                   <td className="py-2 text-right">
-                    {item.lineMinor === null ? 'On request' : formatLkr(item.lineMinor)}
+                    {sheet.totalMinor === null ? 'On request' : formatLkr(sheet.totalMinor)}
                   </td>
                 </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              <tr className="border-t border-ink/30 font-semibold">
-                <td colSpan={3} className="py-2">
-                  Total
-                </td>
-                <td className="py-2 pr-3 text-right">{sheet.pieces}</td>
-                <td className="py-2 text-right">
-                  {sheet.totalMinor === null ? 'On request' : formatLkr(sheet.totalMinor)}
-                </td>
-              </tr>
-            </tfoot>
-          </table>
+              </tfoot>
+            </table>
+          </div>
         )}
       </section>
 
@@ -167,7 +168,7 @@ export function BookingSheet({ sheet, businessName }: { sheet: BookingSheetData;
         </div>
       </section>
 
-      <div data-keep className="mt-10 grid gap-8 text-sm sm:grid-cols-2">
+      <div data-keep className="mt-10 grid gap-8 text-base sm:text-sm sm:grid-cols-2">
         <div>
           <div className="h-10 border-b border-ink" />
           <p className="mt-1 text-mute">Customer signature and date</p>
