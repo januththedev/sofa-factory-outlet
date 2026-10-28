@@ -3,17 +3,20 @@ import { Picture } from '@/components/picture';
 import type { ProductCard } from '@/lib/catalogue/queries';
 import { formatLkr } from '@/lib/money';
 
-/**
- * Product card for grids: photo (with a second photo on hover when there is one), name, colour and price.
- * The link is named by its visible text (name, price, colours); the photos are decorative beside the name.
- */
-export function ProductTile({ product, priority = false, sizes = '(min-width: 1024px) 25vw, 50vw' }: { product: ProductCard; priority?: boolean; sizes?: string }) {
-  const price = product.priceMinor ? `${product.priceFrom ? 'From ' : ''}${formatLkr(product.priceMinor)}` : 'Price on request';
+/** One link per tile; colour dots and photographs are decorative. */
+export function ProductTile({
+  product,
+  priority = false,
+  sizes = '(min-width: 1024px) 25vw, 50vw',
+}: { product: ProductCard; priority?: boolean; sizes?: string }) {
+  const price = product.priceMinor !== null
+    ? `${product.priceFrom ? 'From ' : ''}${formatLkr(product.priceMinor)}`
+    : 'Price on request';
   // White-background cut-outs sit on the page via multiply; lifestyle photos fill the card.
   const fit = product.image?.cutout ? 'object-contain mix-blend-multiply' : 'object-cover';
   return (
     <article className="group relative">
-      <TLink href={product.href} data-cursor="view" className="block">
+      <TLink href={product.href} aria-label={product.name} data-cursor="view" className="block min-h-11 min-w-11">
         <div className="relative aspect-square overflow-hidden rounded-[var(--radius-card)] bg-paper">
           {product.image ? (
             <Picture
@@ -21,7 +24,7 @@ export function ProductTile({ product, priority = false, sizes = '(min-width: 10
               alt=""
               sizes={sizes}
               priority={priority}
-              imgClassName={`h-full w-full ${fit} transition duration-700 ease-out ${product.hoverImage ? 'group-hover:opacity-0' : 'group-hover:scale-[1.04]'}`}
+              imgClassName={`h-full w-full ${fit}`}
             />
           ) : null}
           {product.hoverImage ? (
@@ -29,20 +32,25 @@ export function ProductTile({ product, priority = false, sizes = '(min-width: 10
               data={product.hoverImage}
               alt=""
               sizes={sizes}
-              imgClassName={`absolute inset-0 h-full w-full ${product.hoverImage.cutout ? 'object-contain mix-blend-multiply' : 'object-cover'} opacity-0 transition duration-700 ease-out group-hover:opacity-100`}
+              imgClassName={`absolute inset-0 h-full w-full opacity-0
+                [@media(hover:hover)_and_(pointer:fine)]:group-hover:opacity-100
+                ${product.hoverImage.cutout ? 'object-contain mix-blend-multiply' : 'object-cover'}`}
             />
           ) : null}
-          {product.isNew ? <span className="absolute left-3 top-3 rounded-full bg-maroon px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-wider text-bone">New</span> : null}
+          {product.isNew ? (
+            <span className="absolute left-2 top-2 rounded-full bg-maroon px-3 py-1 text-xs text-bone">New</span>
+          ) : null}
         </div>
-        <div className="mt-4 flex items-start justify-between gap-3">
+        <div className="mt-3">
           <div className="min-w-0">
-            <h3 className="font-display text-xl leading-snug">{product.name}</h3>
-            <p className="mt-1 text-sm text-mute">{price}</p>
+            <h3 className="line-clamp-2 font-display text-lg leading-snug">{product.name}</h3>
+            <p className="mt-1 text-base text-mute">{price}</p>
           </div>
           {product.colours.length ? (
-            <ul className="mt-1.5 flex shrink-0 -space-x-1" aria-label={`Colour: ${product.colours.map((c) => c.name).join(', ')}`}>
+            <ul className="mt-2 flex gap-1" aria-hidden="true">
               {product.colours.slice(0, 4).map((colour) => (
-                <li key={colour.id} className="h-4 w-4 rounded-full ring-2 ring-bone" style={{ backgroundColor: colour.hex }} title={colour.name} />
+                <li key={colour.id} className="h-3 w-3 rounded-full border border-line"
+                  style={{ backgroundColor: colour.hex }} />
               ))}
             </ul>
           ) : null}
