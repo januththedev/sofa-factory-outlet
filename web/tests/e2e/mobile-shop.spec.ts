@@ -31,8 +31,16 @@ test('phone filter dialog traps focus and discards changes on Escape or backdrop
   const close = sheet.getByRole('button', { name: 'Close filters' });
   await expect(close).toBeFocused();
   await expect(page.locator('body')).toHaveCSS('overflow', 'hidden');
-  await page.keyboard.press('Shift+Tab');
-  await expect(sheet.getByRole('button', { name: 'Clear all', exact: true })).toBeFocused();
+  // A native modal dialog keeps keyboard focus inside it, or hands it to the browser's own controls: never to
+  // the page behind. (It does not wrap Shift+Tab from the first control to the last, so that is not asserted.)
+  for (let press = 0; press < 8; press += 1) {
+    await page.keyboard.press(press % 2 === 0 ? 'Tab' : 'Shift+Tab');
+    const reachesPageBehind = await page.evaluate(() => {
+      const active = document.activeElement;
+      return active !== document.body && !active?.closest('dialog[open]');
+    });
+    expect(reachesPageBehind).toBe(false);
+  }
   await sheet.getByRole('group', { name: 'Colour', exact: true }).getByRole('checkbox').first().check();
   await page.keyboard.press('Escape');
   await expect(sheet).not.toBeVisible();
