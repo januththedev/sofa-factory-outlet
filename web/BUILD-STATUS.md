@@ -2,37 +2,27 @@
 
 Spec: `../Plan.md`. Implementation plan: nine phases, one local commit each. Updated after every phase, and the way to resume after a context reset.
 
-**Last updated:** 28 Oct 2026, morning: six external-agent modules merged and green; the first Claude wave produced nothing (usage limit). The phase table further down is from the end of Phase 1; **this Handoff section is current.**
+**Last updated:** 28 Oct 2026: the autopilot (`tools/orchestrate.ps1`) is running the remaining queue. The phase table further down is from the end of Phase 1; **the Handoff section is current.**
 
 ## Handoff (read this first when resuming)
 
-**Committed on `main` (nothing pushed, no remote):** Phase 1 foundations (`ef455f9`), Phase 2 landing page + site chrome (`90eb356`, desktop screenshots reviewed), agent infrastructure (`30f5709`: `docs/BUILD-GUIDE.md`, 23 specs in `docs/tasks/`, `content/knowledge/_FACTS.md`, typed contract stubs, `scripts/check.mjs` + `scripts/gate.mjs` 2-slot queue for tsc/lint/vitest), then six external-agent modules, merged and verified on 28 Oct:
-- colour engine, pairing, reasons and `CompleteTheLook` (Codex);
-- bookings core: availability, transactional create, ICS, WhatsApp links (Codex);
-- invoices core: totals, numbering, payments, PDF, signed share links (Codex);
-- knowledge pack (OpenCode, `deepseek-v4.1-flash-free`), 80 FAQs + synonyms + 60-question golden set (`glm-5.3-flash-free`), two buying guides (`mimo-v2.6-flash-free`).
+**Merged on `main` (local only, nothing pushed):** Phase 1 foundations, Phase 2 landing page and chrome, the agent infrastructure, then module by module: colour engine, bookings core, invoices core, knowledge pack, FAQs and golden set, guides, store (search, shop, hubs), product page, SEO core (JSON-LD, sitemaps, robots, proxy redirects, OG images, URL test), cart UI, chat widget. Gate on `main` after the store, product, SEO and cart merges: tsc 0, lint 0, vitest 19 files / 155 tests. `git log --oneline` shows every merge.
 
-**Gate on the merged tree: `tsc` 0, `lint` 0, vitest 103/103.** Integration fixes made while merging: `next/cache` stub for tests (`tests/stubs/next-cache.ts`), Postgres bigint strings converted with `Number()` in the invoice service, and the colour-engine DB test now asserts the real catalogue (no published non-sofa piece, so a sofa gets no suggestions until one is published).
+**Autopilot (needs no Claude):** `tools/orchestrate.ps1` works through `tools/queue.json`. For each task it launches Codex or an OpenCode free model in its own worktree (`D:\Sofa_Factory_wt\<id>`, branch `wt/<id>`), waits, runs the gate on the result (`tools/verify-worktree.ps1`), sends failures back as a fix pass (`tools/fix-pass.ps1`, three runs per task at most), merges green work into `main` (`tools/merge-worktree.ps1`), then runs the whole gate on `main` and reverts the merge if main went red. It never pushes. If Codex runs out of quota it moves tasks to OpenCode. Branches built by Claude (`"tool": "claude"`) are merged as soon as they have commits.
+- Start: `Start-Process powershell -ArgumentList '-NoProfile','-File','D:\Sofa_Factory\tools\orchestrate.ps1' -WindowStyle Hidden`. Plan only: `& tools\orchestrate.ps1 -DryRun`. Stop after the current step: create the file `D:\Sofa_Factory_wt\_logs\STOP`.
+- Look: `& tools\status.ps1` (queue, orchestrator, log tail, last merges, memory). State is `D:\Sofa_Factory_wt\_logs\state.json`; each task has `<id>.tsc.log`, `.lint.log`, `.test.log` and `.err` beside it; `summary.md` appears when the queue ends.
+- Statuses: `queued`, `running`, `finished` (agent exited, to be verified), `verified`, `merged`; `failed` (three runs did not get green: read the task's logs and `web/docs/tasks/_fix-<id>.md` in its worktree); `blocked` (a dependency failed, a merge conflict, or main went red after the merge and the merge was reverted).
+- Keep `main`'s tracked files clean while it runs: it waits to merge when there are uncommitted tracked changes.
+- Queue: kb-core, chat-pipeline, admin-products, analytics, public-pages, invoices-ui (already running when the orchestrator was written), then admin-bookings, seo-admin-reviews, admin-dashboard, admin-chat-kb, then integration-wiring (mounts cart and chat, composes the proxy, makes the knowledge seed idempotent, audits leftover stubs) and e2e-specs (Playwright specs, never run). auth-shell and booking-ui were built by Claude subagents and are merged by the orchestrator.
 
-**First Claude wave failed.** All 17 Claude subagents (store-listing … seo-admin-reviews) hit the account's session limit within their first steps and produced nothing. The two harness worktrees left under `.claude/worktrees/` hold no work. Their specs in `docs/tasks/<id>.md` are intact, so any module can be started again.
+**Not automated (next Claude session):**
+1. Triage `failed` and `blocked` tasks from `summary.md` and fix or re-queue them (delete the entry from `state.json` to run a task again).
+2. Read the report of `integration-wiring` for stubs that are still not implemented, then `next build`, `node scripts/smoke.mjs`, `npm run test:e2e` (the specs were written blind and need a first run and fixes), `npm run test:urls`, `eval:chat` (hit@3 target 90%), Lighthouse mobile (target 90), screenshots on desktop, mobile and reduced motion (`scripts/shots.mjs`) with a visual review of every page, the preloader and the factory line art.
+3. Phase 9: CSP in `next.config.ts` (WebGL, workers, Turnstile, Maps, the head boot script), accessibility pass, re-check the claims in `docs/DEPLOY.md` (cron auth, `test:urls` base URL, admin Setup checklist), refresh the placeholder register below.
+4. Style debt: several external modules are dense (lines over 140 characters; `tools/verify-worktree.ps1` lists them) and no formatter is installed.
+5. Known behaviour: with `DATABASE_URL` set and no Turnstile secret, bookings are refused (fail closed); the booking rate limit is best-effort, not atomic.
 
-**Wave 2 (launched 28 Oct, unmerged until verified):** Codex: store-listing, product-page, seo-core, chat-pipeline. OpenCode free models: analytics (`deepseek-v4.1-flash-free`), chat-widget (`glm-5.3-flash-free`), public-pages (`mimo-v2.6-flash-free`). Claude Sonnet subagents in `.claude/worktrees/`: auth-shell, cart-ui, booking-ui (these commit on their own branch and run the gate themselves).
-
-**Not started yet:** admin-products, admin-bookings, admin-dashboard, kb-core, admin-chat-kb, invoices-ui, seo-admin-reviews.
-
-`docs/DEPLOY.md` and `vercel.json` (region `sin1`, build runs `db:migrate`, three daily crons with trailing slashes) are written. After the modules merge, re-check the claims in DEPLOY.md that depend on them: cron routes reject requests without `CRON_SECRET`, `test:urls` base-URL variable, the admin Setup checklist, the CSP.
-
-**External CLIs.** Codex `C:\Users\janut\.codex\packages\app-server-daemon\current\bin\codex.exe` (0.164.0, ChatGPT login). OpenCode `C:\Users\janut\AppData\Roaming\npm\opencode.cmd` (2.2.0): only models ending `-free` (`deepseek-v4.1-flash-free`, `glm-5.3-flash-free`, `mimo-v2.6-flash-free`, `nemotron-3.5-lightning-free`, `nemotron-3.5-super-vl-free`, `beam-free`; `nemotron-3-ultra-free` and `flint-40b-free` were unavailable). Both are **write-only**: Codex's sandbox often cannot see Node, and OpenCode runs from a least-privilege `opencode.json` (edit allowed; bash, webfetch and external directories denied). Worktrees `D:\Sofa_Factory_wt\<id>` (branch `wt/<id>`), logs `D:\Sofa_Factory_wt\_logs\<id>.*`. The auto-mode classifier blocks `opencode --auto`, `-ExecutionPolicy Bypass` and pattern-based process kills; launch inline with `Start-Process` as in `tools/launch-external.ps1`.
-
-**To do, in order:**
-1. Build the unbuilt modules in small waves (three Codex at once at most, three OpenCode free-model writers, three or four Claude subagents), each in its own worktree cut from current `main`. Review each diff, run `node scripts/check.mjs tsc|lint|test` on it, commit in the worktree with `git add web ':!web/node_modules'`, then merge into `main` one at a time and re-run the gate. Content written by free models gets a fact check against `content/knowledge/_FACTS.md` before it ships (hours, delivery and warranty stay hedged).
-2. Integration wiring is step 3 below, once the modules it mounts exist.
-3. Integration wiring reserved for the integrator: mount `CartHydrator`, `CartDrawer` and `ChatWidget` in `src/app/(site)/layout.tsx`, add `CartButton` to the header, make `seedKnowledge` safe to run on every start, confirm `src/proxy.ts` composes `adminGate`.
-4. `next build`, `node scripts/smoke.mjs`, write and run Playwright specs per flow (shop, product, cart, booking incl. full slot, admin login/bookings/product save, chat, invoice PDF), `npm run test:urls`, `eval:chat` (hit@3 target 90%), Lighthouse mobile (target 90), screenshots of mobile and reduced-motion landing.
-5. Open Phase 2 items: preloader never seen in a screenshot (verify with a fresh context), factory step-1 line art draw-in after the `vector-effect` fix, mobile and reduced-motion runs of `scripts/shots.mjs`.
-6. Phase 9: `docs/DEPLOY.md`, `vercel.json` (region sin1, daily crons), CSP that still allows WebGL, workers, Turnstile, Maps and the head boot script, accessibility pass, update this file and the placeholder register.
-
-**Machine limits:** 7.7 GB RAM with only 0.5–0.8 GB free (Manus, ChatGPT, Edge and Defender are the big consumers): close them before `next build`. Heavy checks always go through `scripts/check.mjs`; never run several `next build`/`next dev` at once, and never two processes on the same PGlite folder.
+**Machine limits:** 7.7 GB RAM and about 25 GB commit limit, nearly all in use: Codex and OpenCode crash at start-up with "insufficient system resources" when too many agents run. Heavy checks go through `scripts/check.mjs` (2-slot queue); never run several `next build` or `next dev` at once, and never two processes on the same PGlite folder. Close Edge, Manus and ChatGPT before a build.
 
 ## Commands (Windows, portable Node)
 

@@ -21,7 +21,7 @@ elseif (Test-Path "$logs\$Id.out") { '--- agent output (tail)'; Get-Content "$lo
 
 $changed = @(git -C $wt status --porcelain --untracked-files=all |
   ForEach-Object { $_.Substring(3).Trim('"') } |
-  Where-Object { $_ -like 'web/*' -and $_ -notlike 'web/node_modules*' } |
+  Where-Object { $_ -like 'web/*' -and $_ -notlike 'web/node_modules*' -and $_ -notlike 'web/docs/tasks/_fix-*' } |
   ForEach-Object { $_.Substring(4) })
 "--- changed files: $($changed.Count)"
 $changed | ForEach-Object { "  $_" }
