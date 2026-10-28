@@ -92,7 +92,7 @@ export function FactoryStory() {
       ref={root}
       aria-labelledby="factory-heading"
       data-pinned={pinned}
-      className="group/factory overflow-hidden bg-ink py-10 text-bone data-[pinned=true]:py-0"
+      className="group/factory relative overflow-hidden bg-ink py-10 text-bone data-[pinned=true]:py-0"
     >
       <div
         className="site-container grid gap-5 group-data-[pinned=true]/factory:min-h-svh

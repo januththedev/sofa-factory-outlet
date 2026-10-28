@@ -68,7 +68,7 @@ export function SwipeRail({
         data-lenis-prevent={pinned ? undefined : true}
         className={pinned
           ? 'overflow-visible'
-          : `snap-x snap-mandatory overflow-x-auto overscroll-x-contain p-1.5 pb-3 ${desktopGrid}`}
+          : `relative snap-x snap-mandatory overflow-x-auto overscroll-x-contain p-1.5 pb-3 ${desktopGrid}`}
       >
         <ul
           ref={trackRef ?? localTrack}
