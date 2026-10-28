@@ -1,12 +1,15 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useCallback } from 'react';
+import { useEffect } from 'react';
+import { useRef } from 'react';
+import { useState } from 'react';
 import { CartButton } from '@/components/cart/cart-button';
 import { useScrolledPast } from '@/lib/motion/hooks';
 import { Magnetic } from './magnetic';
-import { getLenis } from './smooth-scroll';
 import { TLink } from './transition';
+import { useModal } from './use-modal';
 
 const NAV = [
   { href: '/shop/', label: 'Shop' },
@@ -16,121 +19,147 @@ const NAV = [
   { href: '/guides/', label: 'Guides' },
 ];
 
-export function Header() {
+export function Header({ whatsapp }: { whatsapp?: string | null }) {
   const pathname = usePathname();
   const solid = useScrolledPast(60);
-  // The menu counts as open only on the page it was opened on, so navigating closes it.
   const [openOn, setOpenOn] = useState<string | null>(null);
   const open = openOn === pathname;
-  const setOpen = (next: boolean | ((v: boolean) => boolean)) => {
-    const value = typeof next === 'function' ? next(open) : next;
-    setOpenOn(value ? pathname : null);
-  };
+  const menuRef = useRef<HTMLDivElement>(null);
+  const close = useCallback(() => setOpenOn(null), []);
+  useModal(open, menuRef, close);
 
-  // Lock scrolling while the menu is open.
+  // Derived visibility closes immediately; clearing the saved route prevents reopening on Back.
   useEffect(() => {
-    if (open) getLenis()?.stop();
-    else getLenis()?.start();
-    document.documentElement.style.overflow = open ? 'hidden' : '';
-    return () => {
-      document.documentElement.style.overflow = '';
-      getLenis()?.start();
+    if (openOn === null || openOn === pathname) return;
+    const frame = window.requestAnimationFrame(close);
+    return () => window.cancelAnimationFrame(frame);
+  }, [openOn, pathname, close]);
+
+  useEffect(() => {
+    const query = window.matchMedia('(min-width: 1024px)');
+    const resize = () => {
+      if (query.matches) close();
     };
-  }, [open]);
+    query.addEventListener('change', resize);
+    return () => query.removeEventListener('change', resize);
+  }, [close]);
 
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-40 transition-[background-color,box-shadow,backdrop-filter] duration-500 ${
-          solid || open ? 'bg-bone/95 shadow-[0_1px_0_var(--color-line)] backdrop-blur-md' : 'bg-transparent'
+        className={`site-header fixed inset-x-0 top-0 z-40 transition-colors duration-200 ${
+          solid || open ? 'bg-bone/95 shadow-[0_1px_0_var(--color-line)]' : 'bg-bone/95 lg:bg-transparent'
         }`}
       >
-        <div className="site-container flex h-[68px] items-center justify-between lg:h-[84px]">
-          <TLink href="/" aria-label="Sofa Factory Outlet, home" className="block shrink-0">
+        <div className="site-container flex h-16 items-center justify-between gap-2">
+          <TLink
+            href="/"
+            aria-label="Sofa Factory Outlet, home"
+            className="flex min-h-11 min-w-11 shrink-0 items-center"
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/brand/logo.png"
               alt="Sofa Factory Outlet"
               width={2111}
               height={503}
-              className="h-9 w-auto lg:h-11"
+              className="h-auto w-[148px] sm:w-[180px]"
             />
           </TLink>
 
-          <nav aria-label="Main" className="hidden items-center gap-9 lg:flex">
+          <nav aria-label="Main" className="hidden items-center gap-4 lg:flex">
             {NAV.map((item) => (
               <TLink
                 key={item.href}
                 href={item.href}
                 aria-current={pathname.startsWith(item.href) ? 'page' : undefined}
-                className="link-underline text-[0.95rem] font-medium"
+                className="link-underline flex min-h-11 min-w-11 items-center text-base font-medium"
               >
                 {item.label}
               </TLink>
             ))}
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-2">
             <Magnetic className="hidden sm:inline-block">
-              <TLink href="/book-visit/" className="btn-primary">
+              <TLink href="/book-visit/" className="btn-primary whitespace-nowrap">
                 Book a visit
               </TLink>
             </Magnetic>
             <CartButton />
             <button
               type="button"
-              className="relative grid h-11 w-11 place-items-center rounded-full border border-ink/15 lg:hidden"
+              className="grid h-11 w-11 place-items-center rounded-full border border-ink/15 lg:hidden"
               aria-expanded={open}
               aria-controls="mobile-menu"
-              aria-label={open ? 'Close menu' : 'Open menu'}
-              onClick={() => setOpen((v) => !v)}
+              aria-haspopup="dialog"
+              aria-label="Open menu"
+              onClick={() => setOpenOn(pathname)}
             >
-              <span
-                className={`absolute h-px w-5 bg-ink transition-transform duration-300 ${
-                  open ? 'rotate-45' : '-translate-y-1.5'
-                }`}
-              />
-              <span
-                className={`absolute h-px w-5 bg-ink transition-opacity duration-300 ${open ? 'opacity-0' : ''}`}
-              />
-              <span
-                className={`absolute h-px w-5 bg-ink transition-transform duration-300 ${
-                  open ? '-rotate-45' : 'translate-y-1.5'
-                }`}
-              />
+              <span aria-hidden className="flex flex-col gap-[5px]">
+                <span className="h-px w-5 bg-ink" />
+                <span className="h-px w-5 bg-ink" />
+                <span className="h-px w-5 bg-ink" />
+              </span>
             </button>
           </div>
         </div>
       </header>
 
       <div
+        ref={menuRef}
         id="mobile-menu"
-        className={`fixed inset-0 z-30 flex flex-col bg-ink px-6 pb-10 pt-28 text-bone lg:hidden
-          transition-[clip-path] duration-700 ease-[var(--ease-in-out-quart)] ${
-            open ? '[clip-path:inset(0_0_0_0)]' : '[clip-path:inset(0_0_100%_0)]'
-          }`}
+        role="dialog"
+        aria-modal={open ? true : undefined}
+        aria-label="Site menu"
         aria-hidden={!open}
         inert={!open}
+        tabIndex={-1}
+        data-lenis-prevent
+        className={`fixed inset-0 z-50 h-dvh bg-ink/50 ${open ? '' : 'hidden'}`}
       >
-        <nav aria-label="Mobile" className="flex flex-col gap-1">
-          {NAV.map((item, index) => (
-            <TLink
-              key={item.href}
-              href={item.href}
-              className="border-b border-bone/10 py-4 font-display text-4xl transition-all duration-700"
-              style={{
-                transitionDelay: open ? `${200 + index * 70}ms` : '0ms',
-                opacity: open ? 1 : 0,
-                transform: open ? 'none' : 'translateY(24px)',
-              }}
+        <div aria-hidden onClick={close} className="absolute inset-0" />
+        <div
+          className="relative flex h-full w-[calc(100%-1rem)] flex-col overflow-y-auto bg-ink px-5 text-bone
+            pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[env(safe-area-inset-top)]"
+        >
+          <div className="flex min-h-16 shrink-0 items-center justify-between gap-2">
+            <p className="text-base font-semibold">Sofa Factory Outlet</p>
+            <button
+              type="button"
+              aria-label="Close menu"
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+              onClick={close}
+              className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-bone/25"
             >
-              {item.label}
+              <span aria-hidden className="text-2xl">×</span>
+            </button>
+          </div>
+          <nav aria-label="Mobile" className="flex flex-col gap-2 py-2">
+            {NAV.map((item) => (
+              <TLink
+                key={item.href}
+                href={item.href}
+                onClick={close}
+                aria-current={pathname.startsWith(item.href) ? 'page' : undefined}
+                className="flex min-h-14 items-center border-b border-bone/10 font-display text-3xl"
+              >
+                {item.label}
+              </TLink>
+            ))}
+          </nav>
+          <div className="mt-auto flex flex-col gap-2 pt-6">
+            <TLink href="/book-visit/" onClick={close} className="btn-primary min-h-14 whitespace-nowrap">
+              Book a visit
             </TLink>
-          ))}
-        </nav>
-        <TLink href="/book-visit/" className="btn-primary mt-auto w-full justify-center py-4 text-base">
-          Book a showroom visit
-        </TLink>
+            {whatsapp ? (
+              <a href={whatsapp} className="btn min-h-14 border border-bone/25" onClick={close}>
+                Chat on WhatsApp
+              </a>
+            ) : null}
+          </div>
+        </div>
       </div>
     </>
   );

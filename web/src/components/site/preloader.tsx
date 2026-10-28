@@ -2,8 +2,10 @@
 
 import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
-import { PRELOADER_DONE_EVENT, PRELOADER_KEY } from '@/lib/motion/boot';
-import { gsap, MOTION_ANY } from '@/lib/motion/gsap';
+import { PRELOADER_DONE_EVENT } from '@/lib/motion/boot';
+import { PRELOADER_KEY } from '@/lib/motion/boot';
+import { gsap } from '@/lib/motion/gsap';
+import { skipCurtain } from './motion-policy';
 
 /**
  * First visit only: a 0→100 counter, the logo mark revealed through a circular
@@ -18,7 +20,11 @@ export function Preloader() {
     () => {
       const el = root.current;
       if (!el) return;
+      let finished = false;
       const finish = () => {
+        if (finished) return;
+        finished = true;
+        window.clearTimeout(timeout);
         try {
           sessionStorage.setItem(PRELOADER_KEY, '1');
         } catch {
@@ -28,23 +34,34 @@ export function Preloader() {
         document.documentElement.dataset.preloaded = '1';
         window.dispatchEvent(new Event(PRELOADER_DONE_EVENT));
       };
+      const timeout = window.setTimeout(finish, 2000);
 
-      if (document.documentElement.dataset.preloaded) {
+      const immediate = skipCurtain(
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+        window.matchMedia('(pointer: coarse)').matches,
+        window.innerWidth,
+      );
+      if (document.documentElement.dataset.preloaded || immediate) {
         finish();
         return;
       }
 
       const mm = gsap.matchMedia();
-      mm.add(MOTION_ANY, () => {
+      mm.add('(min-width: 768px) and (pointer: fine) and (prefers-reduced-motion: no-preference)', () => {
         const count = { value: 0 };
         const number = el.querySelector<HTMLElement>('[data-count]');
         const tl = gsap.timeline({ onComplete: finish });
-        tl.fromTo('[data-mark]', { clipPath: 'circle(0% at 50% 50%)', scale: 0.88 }, { clipPath: 'circle(50% at 50% 50%)', scale: 1, duration: 1, ease: 'power3.inOut' }, 0)
+        tl.fromTo(
+          '[data-mark]',
+          { clipPath: 'circle(0% at 50% 50%)', scale: 0.88 },
+          { clipPath: 'circle(50% at 50% 50%)', scale: 1, duration: 0.7, ease: 'power3.inOut' },
+          0,
+        )
           .to(
             count,
             {
               value: 100,
-              duration: 1,
+              duration: 0.7,
               ease: 'power2.inOut',
               onUpdate: () => {
                 if (number) number.textContent = String(Math.round(count.value)).padStart(3, '0');
@@ -52,13 +69,17 @@ export function Preloader() {
             },
             0,
           )
-          .to('[data-bar]', { scaleX: 1, duration: 1, ease: 'power2.inOut' }, 0)
-          .to('[data-content]', { opacity: 0, y: -16, duration: 0.3, ease: 'power2.in' }, 1.05)
-          .to('[data-bone]', { yPercent: -100, duration: 0.85, ease: 'power4.inOut' }, 1.15)
-          .to('[data-maroon]', { yPercent: -100, duration: 0.85, ease: 'power4.inOut' }, 1.28);
+          .to('[data-bar]', { scaleX: 1, duration: 0.7, ease: 'power2.inOut' }, 0)
+          .to('[data-content]', { opacity: 0, y: -16, duration: 0.25, ease: 'power2.in' }, 0.75)
+          .to('[data-bone]', { yPercent: -100, duration: 0.3, ease: 'power4.inOut' }, 0.9)
+          .to('[data-maroon]', { yPercent: -100, duration: 0.3, ease: 'power4.inOut' }, 1.05);
         return () => tl.kill();
       });
-      mm.add('(prefers-reduced-motion: reduce)', finish);
+      mm.add('(prefers-reduced-motion: reduce), (pointer: coarse), (max-width: 767px)', finish);
+      return () => {
+        window.clearTimeout(timeout);
+        mm.revert();
+      };
     },
     { scope: root },
   );

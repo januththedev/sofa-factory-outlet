@@ -32,11 +32,29 @@
 @layer base {
   html {
     -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    --site-header-height: 4rem;
+    --sticky-bar-clearance: calc(6rem + env(safe-area-inset-bottom));
+    scroll-padding-top: calc(var(--site-header-height) + env(safe-area-inset-top));
+    overscroll-behavior-y: auto;
     text-rendering: optimizeLegibility;
   }
   body {
     @apply bg-bone text-ink font-sans antialiased;
     font-feature-settings: "ss01", "cv11";
+    overscroll-behavior-y: auto;
+  }
+  /* Native taps stay immediate without disabling pinch zoom or momentum scrolling. */
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  summary,
+  label,
+  [role="button"] {
+    touch-action: manipulation;
   }
   h1,
   h2,
@@ -68,10 +86,11 @@
   @apply grid grid-cols-4 gap-x-4 sm:grid-cols-8 lg:grid-cols-12 lg:gap-x-6;
 }
 @utility eyebrow {
-  @apply text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-mute;
+  @apply text-xs font-semibold uppercase tracking-[0.18em] text-mute;
 }
 @utility btn {
-  @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors duration-300;
+  @apply inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full px-6 py-3;
+  @apply text-sm font-semibold transition-colors duration-200;
 }
 @utility btn-primary {
   @apply btn bg-maroon text-bone hover:bg-maroon-deep;
@@ -81,6 +100,74 @@
 }
 
 /* ---- Site chrome ------------------------------------------------------------ */
+
+.site-header {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* Reserve the fixed header before the first page eyebrow, including before hydration. */
+.site-main {
+  padding-top: calc(var(--site-header-height) + env(safe-area-inset-top));
+}
+
+/* Bottom-bar convention: every fixed product/filter/booking/cart action bar carries
+   data-sticky-bar and safe-area padding. Pages can use pb-[var(--sticky-bar-clearance)]
+   or .sticky-bar-padding; the site main also reserves that space automatically. */
+[data-sticky-bar] {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+.sticky-bar-padding,
+body:has([data-sticky-bar]) .site-main {
+  padding-bottom: var(--sticky-bar-clearance);
+}
+.chat-launcher {
+  bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  right: calc(0.75rem + env(safe-area-inset-right));
+}
+body:has([data-sticky-bar]) .chat-launcher {
+  bottom: calc(5.5rem + env(safe-area-inset-bottom));
+}
+
+/* The visual viewport variables are updated on keyboard resize and pan. */
+.chat-panel {
+  top: var(--chat-viewport-top, 0px);
+  height: var(--chat-viewport-height, 100dvh);
+}
+@media (min-width: 1024px) {
+  .chat-panel {
+    top: auto;
+    bottom: calc(5.75rem + env(safe-area-inset-bottom));
+    height: min(36rem, calc(var(--chat-viewport-height, 100dvh) - 7.5rem));
+  }
+}
+
+/* Wide tables scroll within their layout cell; an edge fade hints at more columns. */
+.table-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 0.75rem;
+  pointer-events: none;
+  background: linear-gradient(to right, transparent, var(--color-paper));
+}
+
+@media (max-width: 767px) {
+  /* Prevent iOS focus zoom, including controls with a smaller local text utility. */
+  input,
+  select,
+  textarea {
+    min-height: 2.75rem;
+    font-size: max(16px, 1em) !important;
+  }
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-width: 2.75rem;
+  }
+  /* CartButton is owned by cart; its shared header badge still needs readable type. */
+  .site-header a[href="/cart/"] > span {
+    font-size: 0.75rem;
+  }
+}
 
 .skip-link {
   position: absolute;
@@ -98,7 +185,8 @@
 
 .link-underline {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
 }
 .link-underline::after {
   content: "";
@@ -108,9 +196,10 @@
   background: currentColor;
   transform: scaleX(0);
   transform-origin: right;
-  transition: transform 0.45s var(--ease-out-expo);
+  transition: transform 0.3s var(--ease-out-expo);
 }
 .link-underline:hover::after,
+.link-underline:focus-visible::after,
 .link-underline[aria-current="page"]::after {
   transform: scaleX(1);
   transform-origin: left;
@@ -121,7 +210,8 @@
   position: fixed;
   inset: 0;
   z-index: 200;
-  animation: hide-failsafe 0.01s 7s forwards;
+  pointer-events: none;
+  animation: hide-failsafe 0.01s 2s forwards;
 }
 .preloader-panel {
   position: absolute;
@@ -143,8 +233,11 @@
 html[data-preloaded] .preloader {
   display: none;
 }
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce), (pointer: coarse), (max-width: 767px) {
   .preloader {
+    display: none;
+  }
+  .page-curtain {
     display: none;
   }
 }
@@ -214,7 +307,13 @@ html.has-cursor label {
   pointer-events: none;
   opacity: 0.07;
   will-change: transform;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'>\
+<filter id='n'>\
+<feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/>\
+<feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .6 0'/>\
+</filter>\
+<rect width='100%' height='100%' filter='url(%23n)'/>\
+</svg>");
   animation: grain-shift 1.4s steps(7) infinite;
 }
 @keyframes grain-shift {

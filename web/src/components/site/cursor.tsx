@@ -1,8 +1,10 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
+import { useRef } from 'react';
 import { gsap } from '@/lib/motion/gsap';
-import { useFinePointer, usePrefersReducedMotion } from '@/lib/motion/hooks';
+import { useFinePointer } from '@/lib/motion/hooks';
+import { usePrefersReducedMotion } from '@/lib/motion/hooks';
 
 /** Dot + ring cursor. The ring grows over links and turns into a "View" bubble over [data-cursor="view"]. */
 export function Cursor() {
@@ -19,8 +21,8 @@ export function Cursor() {
     document.documentElement.classList.add('has-cursor');
     const dotX = gsap.quickTo(dot.current, 'x', { duration: 0.08, ease: 'power3' });
     const dotY = gsap.quickTo(dot.current, 'y', { duration: 0.08, ease: 'power3' });
-    const ringX = gsap.quickTo(ring.current, 'x', { duration: 0.45, ease: 'power3' });
-    const ringY = gsap.quickTo(ring.current, 'y', { duration: 0.45, ease: 'power3' });
+    const ringX = gsap.quickTo(ring.current, 'x', { duration: 0.3, ease: 'power3' });
+    const ringY = gsap.quickTo(ring.current, 'y', { duration: 0.3, ease: 'power3' });
     gsap.set([dot.current, ring.current], { xPercent: -50, yPercent: -50, opacity: 0 });
 
     let visible = false;
@@ -35,7 +37,9 @@ export function Cursor() {
       ringX(event.clientX);
       ringY(event.clientY);
 
-      const el = (event.target as Element | null)?.closest<HTMLElement>('[data-cursor], a, button, [role="button"], input, textarea, select');
+      const el = (event.target as Element | null)?.closest<HTMLElement>(
+        '[data-cursor], a, button, [role="button"], input, textarea, select',
+      );
       const mode = el?.dataset.cursor ?? (el ? 'link' : 'default');
       // Position uses reusable tweens; appearance only changes when entering a different kind of target.
       if (mode === previousMode) return;
@@ -46,11 +50,16 @@ export function Cursor() {
         height: view ? 88 : mode === 'link' ? 56 : 36,
         backgroundColor: view ? 'rgba(132,35,35,1)' : 'rgba(132,35,35,0)',
         borderColor: view ? 'rgba(132,35,35,1)' : 'rgba(20,18,17,0.55)',
-        duration: 0.35,
+        duration: 0.3,
         ease: 'power3.out',
         overwrite: 'auto',
       });
-      gsap.to(label.current, { opacity: view ? 1 : 0, scale: view ? 1 : 0.6, duration: 0.25, overwrite: 'auto' });
+      gsap.to(label.current, {
+        opacity: view ? 1 : 0,
+        scale: view ? 1 : 0.6,
+        duration: 0.25,
+        overwrite: 'auto',
+      });
       gsap.to(dot.current, { scale: view ? 0 : 1, duration: 0.2, overwrite: 'auto' });
     };
     const leave = () => {
