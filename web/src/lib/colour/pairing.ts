@@ -15,7 +15,7 @@ export type SuggestionAnchor = {
   material?: string | null;
 };
 
-export type SuggestionCandidate = ProductCard & {
+export type SuggestionCandidate = Omit<ProductCard, 'colours'> & {
   categoryId: number;
   colours: Array<ProductCard['colours'][number] & { inStock?: boolean }>;
 };

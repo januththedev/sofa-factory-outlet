@@ -75,6 +75,12 @@ export async function saveInvoiceDraft(input: InvoiceDraftInput): Promise<{ invo
   });
 }
 
+/** Rows from a raw `tx.execute(...)`: the driver result type is opaque, and every driver exposes `.rows`. */
+function rowsOf<T>(result: unknown): T[] {
+  const value = result as { rows?: T[] } | T[];
+  return Array.isArray(value) ? value : (value.rows ?? []);
+}
+
 export async function issueInvoice(invoiceId: number): Promise<{ number: string }> {
   const settings = await getSettings();
   const db = await getDb();
@@ -82,7 +88,7 @@ export async function issueInvoice(invoiceId: number): Promise<{ number: string 
     const locked = await tx.execute<{ type: 'invoice' | 'quotation'; status: s.InvoiceStatus }>(sql`
       SELECT type, status FROM invoices WHERE id = ${invoiceId} FOR UPDATE
     `);
-    const invoice = locked.rows[0];
+    const invoice = rowsOf<{ type: 'invoice' | 'quotation'; status: s.InvoiceStatus }>(locked)[0];
     if (!invoice) throw new Error('Invoice not found');
     if (invoice.status !== 'draft') throw new Error('Only draft invoices can be issued');
     const [{ count }] = await tx.select({ count: sql<number>`count(*)::int` }).from(s.invoiceItems).where(eq(s.invoiceItems.invoiceId, invoiceId));
@@ -93,7 +99,8 @@ export async function issueInvoice(invoiceId: number): Promise<{ number: string 
       ON CONFLICT (year, type) DO UPDATE SET last = invoice_counters.last + 1
       RETURNING last
     `);
-    const last = result.rows[0]?.last;
+    const last = Number(rowsOf<{ last: number | string }>(result)[0]?.last);
+    if (!Number.isFinite(last)) throw new Error('Could not allocate invoice number');
     if (last === undefined) throw new Error('Could not allocate invoice number');
     const prefix = invoice.type === 'quotation' ? settings.invoice.quotationPrefix : settings.invoice.prefix;
     const number = `${prefix}-${year}-${String(last).padStart(4, '0')}`;
@@ -109,17 +116,20 @@ export async function recordPayment(input: PaymentInput): Promise<{ status: s.In
     const rows = await tx.execute<{ type: string; status: s.InvoiceStatus; total_minor: number; paid_minor: number }>(sql`
       SELECT type, status, total_minor, paid_minor FROM invoices WHERE id = ${input.invoiceId} FOR UPDATE
     `);
-    const invoice = rows.rows[0];
+    const invoice = rowsOf<{ type: string; status: s.InvoiceStatus; total_minor: number | string; paid_minor: number | string }>(rows)[0];
     if (!invoice) throw new Error('Invoice not found');
     if (invoice.type === 'quotation') throw new Error('Payments cannot be recorded against quotations');
     if (invoice.status === 'draft' || invoice.status === 'cancelled') throw new Error('Payments require an active issued invoice');
-    const balanceMinor = invoice.total_minor - invoice.paid_minor;
+    // bigint columns arrive as strings from raw SQL on Neon (PGlite returns numbers): convert before any arithmetic.
+    const totalMinor = Number(invoice.total_minor);
+    const currentPaid = Number(invoice.paid_minor);
+    const balanceMinor = totalMinor - currentPaid;
     if (input.amountMinor > balanceMinor) throw new Error('Payment exceeds the outstanding balance');
-    const paidMinor = invoice.paid_minor + input.amountMinor;
-    const status: s.InvoiceStatus = paidMinor === invoice.total_minor ? 'paid' : 'partially_paid';
+    const paidMinor = currentPaid + input.amountMinor;
+    const status: s.InvoiceStatus = paidMinor === totalMinor ? 'paid' : 'partially_paid';
     await tx.insert(s.payments).values(input);
     await tx.update(s.invoices).set({ paidMinor, status, updatedAt: new Date() }).where(eq(s.invoices.id, input.invoiceId));
-    return { status, paidMinor, balanceMinor: invoice.total_minor - paidMinor };
+    return { status, paidMinor, balanceMinor: totalMinor - paidMinor };
   });
 }
 
@@ -150,7 +160,7 @@ export async function createInvoiceFromBooking(bookingId: number): Promise<{ inv
   const db = await getDb();
   return db.transaction(async (tx) => {
     const locked = await tx.execute<{ customer_id: number }>(sql`SELECT customer_id FROM bookings WHERE id = ${bookingId} FOR UPDATE`);
-    const booking = locked.rows[0];
+    const booking = rowsOf<{ customer_id: number }>(locked)[0];
     if (!booking) throw new Error('Booking not found');
     const [existing] = await tx.select({ id: s.invoices.id }).from(s.invoices)
       .where(and(eq(s.invoices.bookingId, bookingId), ne(s.invoices.status, 'cancelled'))).limit(1);

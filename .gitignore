@@ -30,3 +30,6 @@ Thumbs.db
 
 # Heavy-command queue lock files (scripts/gate.mjs)
 .gate/
+
+# Harness-managed agent worktrees
+.claude/worktrees/

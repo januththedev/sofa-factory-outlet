@@ -36,6 +36,7 @@ function InvoiceDocument({ invoice, settings, logo }: { invoice: InvoiceView; se
     <Document title={invoice.number ?? 'Invoice'}>
       <Page size="A4" style={styles.page}>
         <View style={styles.between}>
+          {/* eslint-disable-next-line jsx-a11y/alt-text -- @react-pdf Image, not an HTML img: PDFs have no alt attribute */}
           <Image src={logo} style={styles.logo} />
           <View style={{ textAlign: 'right' }}>
             <Text style={styles.title}>{invoice.type === 'quotation' ? 'QUOTATION' : 'INVOICE'}</Text>

@@ -11,6 +11,8 @@ export default defineConfig({
       '@seed/': `${path.join(root, 'seed')}/`,
       // `server-only` throws outside React Server Components; tests run plain Node.
       'server-only': path.join(root, 'tests', 'stubs', 'server-only.ts'),
+      // unstable_cache needs a Next request context; tests get a pass-through.
+      'next/cache': path.join(root, 'tests', 'stubs', 'next-cache.ts'),
     },
   },
   test: {
