@@ -5,14 +5,14 @@
   { "id": "kb-core", "tool": "codex", "writer": "Codex", "message": "feat(kb): knowledge loader, chunking, search and API" },
   { "id": "chat-pipeline", "tool": "codex", "attempt": 2, "writer": "Codex", "message": "feat(chat): message pipeline, OpenRouter client, guard, budget, NDJSON route and eval runner" },
   { "id": "admin-products", "tool": "codex", "writer": "Codex", "message": "feat(admin): product editor, photo pipeline upload, CSV import and categories" },
-  { "id": "analytics", "tool": "opencode", "model": "opencode/deepseek-v4.1-flash-free", "writer": "OpenCode (deepseek-v4.1-flash-free)", "message": "feat(analytics): tracking endpoint, rollups, digest, Visitors page and privacy page" },
+  { "id": "analytics", "tool": "opencode", "model": "opencode/mimo-v2.6-flash-free", "writer": "OpenCode (mimo-v2.6-flash-free)", "message": "feat(analytics): tracking endpoint, rollups, digest, Visitors page and privacy page" },
   { "id": "public-pages", "tool": "opencode", "model": "opencode/mimo-v2.6-flash-free", "writer": "OpenCode (mimo-v2.6-flash-free)", "message": "feat(pages): About, Factory, Visit, Trade and guides pages" },
   { "id": "invoices-ui", "tool": "opencode", "model": "opencode/deepseek-v4.1-flash-free", "writer": "OpenCode (deepseek-v4.1-flash-free)", "message": "feat(invoices): builder, list, detail, print view and reports" },
 
-  { "id": "admin-bookings", "tool": "codex", "writer": "Codex", "message": "feat(admin): bookings list, detail, calendar, export and status flow" },
-  { "id": "seo-admin-reviews", "tool": "codex", "writer": "Codex", "message": "feat(seo): SEO admin page, redirects manager, Search Console client and reviews flow" },
+  { "id": "admin-bookings", "tool": "claude", "branch": "worktree-agent-aab1dd567c9b37abd" },
+  { "id": "seo-admin-reviews", "tool": "claude", "branch": "worktree-agent-ab8c7c1a629c8d8ba" },
   { "id": "admin-dashboard", "tool": "opencode", "model": "opencode/glm-5.3-flash-free", "writer": "OpenCode (glm-5.3-flash-free)", "message": "feat(admin): dashboard, settings and setup checklist" },
-  { "id": "admin-chat-kb", "tool": "opencode", "model": "opencode/deepseek-v4.1-flash-free", "writer": "OpenCode (deepseek-v4.1-flash-free)", "message": "feat(admin): knowledge, FAQ, chat log and playground screens" },
+  { "id": "admin-chat-kb", "tool": "claude", "branch": "worktree-agent-a8ce8653af5e6ab6a" },
 
   { "id": "integration-wiring", "tool": "codex", "needs": ["auth-shell", "kb-core", "chat-pipeline"], "allowShared": true, "writer": "Codex", "message": "feat(integration): mount cart and chat, compose the proxy, idempotent knowledge seed" },
   { "id": "e2e-specs", "tool": "codex", "needs": ["integration-wiring"], "writer": "Codex", "message": "test(e2e): Playwright specs for the main flows (not yet run)" }

@@ -2,7 +2,9 @@
 # OpenCode free model in its own worktree, waits for it, runs the gate on the result, sends failures back as a
 # fix pass (at most -MaxAttempts runs per task), merges green work into main, then runs the whole gate on main
 # and reverts the merge if main went red. Local only: nothing is ever pushed. Branches built by Claude
-# (tool "claude") are merged as soon as they have commits.
+# (tool "claude") are merged once they have commits AND the file _logs\ready\<id> exists (create it when the
+# subagent's report has arrived, so a half-finished branch is never merged).
+# A gate step that dies of out-of-memory proves nothing about the code: it is retried later and costs no run.
 #   Start-Process powershell -ArgumentList '-NoProfile','-File','D:\Sofa_Factory\tools\orchestrate.ps1' -WindowStyle Hidden
 #   & tools\orchestrate.ps1 -DryRun            print what it would do, change nothing
 #   New-Item D:\Sofa_Factory_wt\_logs\STOP     ask a running orchestrator to stop after its current step
@@ -12,6 +14,8 @@ param(
   [int]$MaxCodex = 3,
   [int]$MaxOpenCode = 2,
   [int]$MaxAttempts = 3,
+  [int]$MaxGateRetries = 12,
+  [int]$GateRetryMinutes = 5,
   [int]$PollSeconds = 60
 )
 
@@ -22,6 +26,12 @@ $stateFile = "$logs\state.json"
 $logFile = "$logs\orchestrator.log"
 $pidFile = "$logs\orchestrator.pid"
 New-Item -ItemType Directory -Force -Path $logs | Out-Null
+
+# A gate step that dies with one of these says nothing about the code: the machine ran out of memory.
+$oomPattern = 'out of memory|could not allocate memory|Zone Allocation failed|Committing semi space failed|insufficient system resources|memory allocation of \d+ bytes failed|std::bad_alloc'
+# Free OpenCode models in the order they are tried; one that reports its free allowance used up is skipped.
+$openCodeModels = @('opencode/mimo-v2.6-flash-free', 'opencode/glm-5.3-flash-free', 'opencode/nemotron-3-ultra-free', 'opencode/deepseek-v4.1-flash-free')
+$openCodeDown = @{}
 
 if ((Test-Path $pidFile) -and -not $DryRun) {
   $other = [int](Get-Content $pidFile)
@@ -66,8 +76,9 @@ function Test-Alive([string]$Id) {
   return [bool](Get-Process -Id ([int](Get-Content $file)) -ErrorAction SilentlyContinue)
 }
 
-# Commit headroom (GB): new agents crash at start-up when the machine is out of memory.
-function Test-Headroom { ((Get-CimInstance Win32_OperatingSystem).FreeVirtualMemory / 1MB) -ge 2.5 }
+# Commit headroom (GB): new agents crash at start-up when the machine is out of memory (2.5 GB is the bar for
+# starting one; a merge only needs room for the gate, which copes with running out by itself).
+function Test-Headroom([double]$Gb = 2.5) { ((Get-CimInstance Win32_OperatingSystem).FreeVirtualMemory / 1MB) -ge $Gb }
 
 function Test-Ready($task) {
   foreach ($need in @($task.needs)) {
@@ -98,32 +109,71 @@ function Send-Fix([string]$Id) {
   Log "fix pass launched for $Id with $($entry.tool), run $($entry.attempt)"
 }
 
-# Runs the gate on the worktree and reads the verdict out of verify-worktree.ps1's report.
+# Runs the gate on the worktree and reads the verdict out of verify-worktree.ps1's report. A step that died of
+# out-of-memory proves nothing about the code, so a gate with only such failures is Inconclusive: it is run again
+# later and costs the task no run (and no fix pass is sent for it).
 function Test-Task([string]$Id, [bool]$AllowShared) {
   $text = (& "$PSScriptRoot\verify-worktree.ps1" -Id $Id | Out-String)
   $changed = 0
-  $tsc = 1
-  $lint = 0
-  $test = 0
-  if ($text -match 'changed files: (\d+)') { $changed = [int]$Matches[1] }
-  if ($text -match '--- tsc exit (\d+)') { $tsc = [int]$Matches[1] }
-  if ($text -match '--- lint exit (\d+)') { $lint = [int]$Matches[1] }
-  if ($text -match '--- test exit (\d+)') { $test = [int]$Matches[1] }
+  $reported = $false
+  if ($text -match 'changed files: (\d+)') {
+    $changed = [int]$Matches[1]
+    $reported = $true
+  }
+  $codes = @{ tsc = 1; lint = 0; test = 0 }
+  $ran = @{}
+  foreach ($name in @('tsc', 'lint', 'test')) {
+    if ($text -match "--- $name exit (\d+)") {
+      $codes[$name] = [int]$Matches[1]
+      $ran[$name] = $true
+    }
+  }
   $forbidden = [bool]($text -match 'FORBIDDEN EDITS') -and -not $AllowShared
+  # A report that never reached the typecheck (or never listed the files) means the verify script itself died.
+  $starved = (-not $reported) -or (-not $ran['tsc'])
+  $broken = ($reported -and $changed -eq 0) -or $forbidden
+  foreach ($name in @('tsc', 'lint', 'test')) {
+    if (-not $ran[$name] -or $codes[$name] -eq 0) { continue }
+    $log = "$logs\$Id.$name.log"
+    if ((Test-Path $log) -and (Select-String -Path $log -Pattern $oomPattern -Quiet)) { $starved = $true } else { $broken = $true }
+  }
+  $ok = ($changed -gt 0 -and $codes['tsc'] -eq 0 -and $codes['lint'] -eq 0 -and $codes['test'] -eq 0 -and -not $forbidden)
   [pscustomobject]@{
     Changed = $changed
-    Ok = ($changed -gt 0 -and $tsc -eq 0 -and $lint -eq 0 -and $test -eq 0 -and -not $forbidden)
-    Summary = "changed=$changed tsc=$tsc lint=$lint test=$test forbidden=$forbidden"
+    Ok = $ok
+    Inconclusive = ((-not $ok) -and (-not $broken) -and $starved)
+    Summary = "changed=$changed tsc=$($codes['tsc']) lint=$($codes['lint']) test=$($codes['test']) forbidden=$forbidden oom=$starved"
   }
 }
 
-# True when a run that changed nothing ended because the tool's quota is used up.
+# True when the last run ended on the tool's usage limit. Such a run is short (it failed at start-up), which keeps
+# a long run that merely prints the word "quota" from a test or a source file from looking like one.
 function Test-Exhausted([string]$Id) {
   $text = ''
+  $bytes = 0
   foreach ($file in @("$logs\$Id.err", "$logs\$Id.out", "$logs\$Id.last.txt")) {
-    if (Test-Path $file) { $text += (Get-Content $file -Tail 40 | Out-String) }
+    if (Test-Path $file) {
+      $bytes += (Get-Item $file).Length
+      $text += (Get-Content $file -Tail 40 | Out-String)
+    }
   }
-  [bool]($text -match 'hit your usage limit|usage limit has been reached|usage_limit_reached|insufficient_quota|exceeded your current quota|quota exceeded|credit balance')
+  if ($bytes -gt 8192) { return $false }
+  [bool]($text -match 'hit your usage limit|usage limit has been reached|usage limit reached|usage_limit_reached|insufficient_quota|exceeded your current quota|quota exceeded|credit balance')
+}
+
+# Empties the previous run's output so a quota message is acted on once, not on every poll.
+function Reset-RunLogs([string]$Id) {
+  foreach ($file in @("$logs\$Id.err", "$logs\$Id.out", "$logs\$Id.last.txt")) {
+    if (Test-Path $file) { Clear-Content -Path $file -ErrorAction SilentlyContinue }
+  }
+}
+
+# The first free OpenCode model that has not used up its allowance, or '' when none is left.
+function Get-FreeModel {
+  foreach ($model in $openCodeModels) {
+    if (-not $openCodeDown[$model]) { return $model }
+  }
+  return ''
 }
 
 function Invoke-Check([string]$Dir, [string]$Tag, [string]$Name, [string]$Arguments) {
@@ -135,15 +185,27 @@ function Invoke-Check([string]$Dir, [string]$Tag, [string]$Name, [string]$Argume
   $code
 }
 
-# The whole gate on main. Returns '' when green, otherwise which step failed. A failing step is retried once
-# because out-of-memory crashes on this machine are not real failures.
+# The whole gate on main. Returns '' when green, otherwise which step failed. A genuine failure is retried once
+# (flaky tests); a step that dies of out-of-memory waits and tries again, and when it still cannot run the
+# answer is "out of memory in <step>", which is not a verdict on the code.
 function Test-Main([string]$Tag) {
   foreach ($name in @('tsc', 'lint', 'test')) {
-    $code = Invoke-Check "$repo\web" $Tag $name $name
-    if ($code -ne 0) {
-      Log "main gate: $name failed (exit $code), retrying once"
+    $starvedRuns = 0
+    $failedRuns = 0
+    while ($true) {
       $code = Invoke-Check "$repo\web" $Tag $name $name
-      if ($code -ne 0) { return "$name exit $code" }
+      if ($code -eq 0) { break }
+      $logText = if (Test-Path "$logs\$Tag.$name.log") { Get-Content "$logs\$Tag.$name.log" -Raw } else { '' }
+      if ($logText -match $oomPattern) {
+        $starvedRuns++
+        if ($starvedRuns -ge 3) { return "out of memory in $name" }
+        Log "main gate: $name ran out of memory, waiting 90 seconds"
+        Start-Sleep -Seconds 90
+      } else {
+        $failedRuns++
+        if ($failedRuns -ge 2) { return "$name exit $code" }
+        Log "main gate: $name failed (exit $code), retrying once"
+      }
     }
   }
   return ''
@@ -155,6 +217,7 @@ function Merge-Task($task) {
     Log "main has uncommitted tracked changes, will try to merge $id again later"
     return 'retry'
   }
+  $before = (Invoke-Git @('rev-parse', 'HEAD')).Text
   if ($task.tool -eq 'claude') {
     $result = Invoke-Git @('merge', '--no-ff', '-q', $task.branch, '-m', "Merge $id")
   } else {
@@ -171,7 +234,16 @@ function Merge-Task($task) {
     Log "merge of $id did not complete: $($result.Text)"
     return 'conflict'
   }
+  $mergeSha = (Invoke-Git @('rev-parse', 'HEAD')).Text
   $problem = Test-Main "main-$id"
+  if ($problem -like 'out of memory*') {
+    # Not the module's fault. Take the merge back out so that merging it again later is a real merge, not a no-op
+    # (a reverted merge would be). --keep refuses to touch uncommitted changes, so nobody's edits are lost.
+    if ((Invoke-Git @('rev-parse', 'HEAD')).Text -eq $mergeSha -and (Invoke-Git @('reset', '--keep', $before)).Code -eq 0) {
+      Log "main gate ran out of memory after merging $id ($problem): merge taken back out, will retry"
+      return 'oom'
+    }
+  }
   if ($problem) {
     $revert = Invoke-Git @('revert', '-m', '1', '--no-edit', 'HEAD')
     if ($revert.Code -ne 0) {
@@ -241,9 +313,16 @@ while ($true) {
         if ($toolDown[$entry.tool]) {
           if ($entry.tool -eq 'codex') {
             $entry.tool = 'opencode'
-            $entry.model = 'opencode/deepseek-v4.1-flash-free'
+            $entry.model = ''
             Log "codex is out of quota, $id moves to opencode"
           } else {
+            break
+          }
+        }
+        if ($entry.tool -eq 'opencode' -and (-not $entry.model -or $openCodeDown[$entry.model])) {
+          $entry.model = Get-FreeModel
+          if (-not $entry.model) {
+            $toolDown['opencode'] = $true
             break
           }
         }
@@ -268,36 +347,64 @@ while ($true) {
       'waiting' {
         $count = 0
         [void][int]::TryParse((Invoke-Git @('rev-list', '--count', "main..$($task.branch)")).Text, [ref]$count)
-        if ($count -gt 0) {
+        if ($count -gt 0 -and (Test-Path "$logs\ready\$id")) {
           $entry.status = 'verified'
-          Log "$id has $count commit(s) ready to merge"
+          Log "$id has $count commit(s) and its report is in, ready to merge"
         } elseif (((Get-Date) - [datetime]$entry.since).TotalHours -gt 6) {
           $entry.status = 'blocked'
           $entry.note = 'no commit after 6 hours'
         }
       }
       'finished' {
+        if ($entry.gateAfter -and (Get-Date) -lt [datetime]$entry.gateAfter) { break }
+        if (Test-Exhausted $id) {
+          # The run ended on a usage limit, so it did nothing: it costs the task no run, and the task moves on.
+          $entry.attempt = [Math]::Max(1, [int]$entry.attempt - 1)
+          Reset-RunLogs $id
+          if ($entry.tool -eq 'codex') {
+            $toolDown['codex'] = $true
+            $entry.tool = 'opencode'
+            $entry.model = ''
+            Log "codex looks out of quota, $id moves to opencode"
+          } else {
+            $openCodeDown[$entry.model] = $true
+            Log "$($entry.model) has used up its free allowance"
+          }
+          $entry.model = Get-FreeModel
+          if (-not $entry.model) {
+            $toolDown['opencode'] = $true
+            $entry.status = 'blocked'
+            $entry.note = 'every free OpenCode model has used up its allowance'
+            Log "$id blocked: $($entry.note)"
+            break
+          }
+          Log "$id continues on $($entry.model)"
+        }
         $verdict = Test-Task $id ([bool]$task.allowShared)
         $entry.note = $verdict.Summary
         if ($verdict.Ok) {
           $entry.status = 'verified'
+          $entry.envRetries = 0
           Log "$id passed the gate ($($verdict.Summary))"
+        } elseif ($verdict.Inconclusive) {
+          $entry.envRetries = [int]$entry.envRetries + 1
+          if ($entry.envRetries -ge $MaxGateRetries) {
+            $entry.status = 'blocked'
+            $entry.note = "the gate kept running out of memory ($($entry.envRetries) times); free memory, then remove this task from state.json to run it again"
+            Log "$id blocked: $($entry.note)"
+          } else {
+            $entry.gateAfter = (Get-Date).AddMinutes($GateRetryMinutes).ToString('s')
+            Log "$id gate ran out of memory ($($entry.envRetries) of $MaxGateRetries), trying again after $GateRetryMinutes minutes"
+          }
         } elseif ($entry.attempt -ge $MaxAttempts) {
           $entry.status = 'failed'
           Log "$id still failing after $($entry.attempt) runs ($($verdict.Summary))"
+        } elseif (-not (Test-Headroom)) {
+          # An agent started on a machine with no memory left just crashes and wastes a run.
+          $entry.gateAfter = (Get-Date).AddMinutes(10).ToString('s')
+          Log "$id needs another run but the machine is out of memory, waiting 10 minutes"
         } else {
-          if ($verdict.Changed -eq 0 -and (Test-Exhausted $id)) {
-            $toolDown[$entry.tool] = $true
-            Log "$($entry.tool) looks out of quota"
-            if ($entry.tool -eq 'codex') {
-              $entry.tool = 'opencode'
-              $entry.model = 'opencode/deepseek-v4.1-flash-free'
-            } else {
-              $entry.status = 'blocked'
-              $entry.note = 'opencode out of quota'
-              break
-            }
-          }
+          $entry.envRetries = 0
           $entry.attempt = [int]$entry.attempt + 1
           try {
             if ($verdict.Changed -eq 0) { Start-Agent $id } else { Send-Fix $id }
@@ -310,10 +417,21 @@ while ($true) {
         }
       }
       'verified' {
+        if ($entry.gateAfter -and (Get-Date) -lt [datetime]$entry.gateAfter) { break }
+        if (-not (Test-Headroom 1.0)) { break }
         $outcome = Merge-Task $task
         if ($outcome -eq 'merged') { $entry.status = 'merged' }
         elseif ($outcome -eq 'conflict') { $entry.status = 'blocked'; $entry.note = 'merge conflict' }
         elseif ($outcome -eq 'red') { $entry.status = 'blocked'; $entry.note = 'main went red after the merge; merge reverted' }
+        elseif ($outcome -eq 'oom') {
+          $entry.envRetries = [int]$entry.envRetries + 1
+          if ($entry.envRetries -ge $MaxGateRetries) {
+            $entry.status = 'blocked'
+            $entry.note = 'the main gate kept running out of memory; free memory, then set the status back to verified'
+          } else {
+            $entry.gateAfter = (Get-Date).AddMinutes($GateRetryMinutes).ToString('s')
+          }
+        }
       }
     }
     Save-State

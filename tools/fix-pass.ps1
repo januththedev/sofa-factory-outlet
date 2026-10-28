@@ -21,6 +21,15 @@ $tsc = if (Test-Path "$logs\$Id.tsc.log") { @(Select-String -Path "$logs\$Id.tsc
 $lint = if (Test-Path "$logs\$Id.lint.log") { @(Get-Content "$logs\$Id.lint.log" | Where-Object { $_ -notmatch '^\[gate\]' } | Select-Object -Last 60) }
 $test = if (Test-Path "$logs\$Id.test.log") { @(Get-Content "$logs\$Id.test.log" | Where-Object { $_ -notmatch '^\[gate\]|Import  |isolate: false|learn more' } | Select-Object -First 110) }
 
+# A check that died of out-of-memory on the integrator's machine says nothing about the code: leave it out
+# (the integrator runs it again later) instead of asking the agent to fix a stack trace.
+$oomPattern = 'out of memory|could not allocate memory|Zone Allocation failed|Committing semi space failed|insufficient system resources|memory allocation of \d+ bytes failed|std::bad_alloc'
+$skipped = @()
+if ($tsc -and (($tsc -join "`n") -match $oomPattern)) { $tsc = $null; $skipped += 'typecheck' }
+if ($lint -and (($lint -join "`n") -match $oomPattern)) { $lint = $null; $skipped += 'eslint' }
+if ($test -and (($test -join "`n") -match $oomPattern)) { $test = $null; $skipped += 'vitest' }
+if ($skipped) { $Notes += "`nNote: the integrator's machine ran out of memory during $($skipped -join ', '), so that output is left out. It is not your fault and needs no change from you; it will be run again." }
+
 $body = @"
 # Fix pass: $Id
 
