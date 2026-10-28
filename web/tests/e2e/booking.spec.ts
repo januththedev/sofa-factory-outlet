@@ -1,0 +1,23 @@
+import { expect, test } from '@playwright/test';
+import { createBookingWithProduct, submitBooking } from './helpers';
+
+test('a cart becomes a confirmed booking with a calendar file', async ({ page, request }) => {
+  const { reference } = await createBookingWithProduct(page, 1_000_001);
+  await expect(page.getByText(reference, { exact: true })).toBeVisible();
+  const calendar = await request.get(`/api/bookings/${reference}/ics/`);
+  expect(calendar.status()).toBe(200);
+  expect(calendar.headers()['content-type']).toContain('text/calendar');
+});
+
+test('a slot at capacity is disabled', async ({ page }) => {
+  const first = await submitBooking(page, 2_000_001);
+  for (let index = 2; index <= first.remaining; index += 1) {
+    await submitBooking(page, 2_000_000 + index);
+  }
+  await page.goto('/book-visit/');
+  await page.getByRole('button', { name: first.dateName }).click();
+  const time = first.slotName.match(/\d{1,2}:\d{2}\s*[AP]M\s*–\s*\d{1,2}:\d{2}\s*[AP]M/i)?.[0] ?? '';
+  const fullSlot = page.getByRole('radio', { name: new RegExp(time, 'i') });
+  await expect(fullSlot).toBeDisabled();
+});
+
