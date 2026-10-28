@@ -15,20 +15,22 @@ export type PageMetadataInput = {
 
 /** Metadata for a public page: canonical, Open Graph and Twitter in one call. `metadataBase` is set in the root layout. */
 export function pageMetadata(input: PageMetadataInput): Metadata {
+  const canonical = new URL(input.path, `${siteUrl()}/`).toString();
+  const image = input.image ? new URL(input.image, `${siteUrl()}/`).toString() : undefined;
   return {
     title: input.absoluteTitle ? { absolute: input.title } : input.title,
     description: input.description,
-    alternates: { canonical: input.path },
+    alternates: { canonical },
     robots: input.noindex ? { index: false, follow: true } : undefined,
     openGraph: {
       type: 'website',
-      url: `${siteUrl()}${input.path}`,
+      url: canonical,
       title: input.title,
       description: input.description,
       siteName: 'Sofa Factory Outlet',
       locale: 'en_LK',
-      images: input.image ? [{ url: input.image }] : undefined,
+      images: image ? [{ url: image }] : undefined,
     },
-    twitter: { card: 'summary_large_image', title: input.title, description: input.description },
+    twitter: { card: 'summary_large_image', title: input.title, description: input.description, images: image ? [image] : undefined },
   };
 }
