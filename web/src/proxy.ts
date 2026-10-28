@@ -5,7 +5,9 @@ import { env, siteUrl } from '@/lib/env';
 import { RedirectCache, type RedirectEntry } from '@/lib/seo/redirects';
 
 async function loadRedirects(): Promise<RedirectEntry[]> {
-  const response = await fetch(new URL('/api/internal/redirects/', `${siteUrl()}/`), { headers: { authorization: `Bearer ${env.CRON_SECRET ?? ''}` } });
+  const response = await fetch(new URL('/api/internal/redirects/', `${siteUrl()}/`), {
+    headers: { authorization: `Bearer ${env.CRON_SECRET ?? ''}` },
+  });
   if (!response.ok) throw new Error(`Redirect service returned ${response.status}`);
   const data = await response.json() as { redirects?: RedirectEntry[] };
   return data.redirects ?? [];
@@ -13,18 +15,35 @@ async function loadRedirects(): Promise<RedirectEntry[]> {
 
 const redirects = new RedirectCache(loadRedirects);
 
-export async function proxy(request: NextRequest) {
+export async function composeProxy(request: NextRequest, redirectMap: RedirectCache): Promise<NextResponse> {
   const gated = adminGate(request);
   if (gated) return gated;
-  if (request.nextUrl.pathname === '/' && ['265', '267'].includes(request.nextUrl.searchParams.get('p') ?? '')) return NextResponse.redirect(new URL('/', request.url), 301);
+  if (request.nextUrl.pathname === '/' && ['265', '267'].includes(request.nextUrl.searchParams.get('p') ?? '')) {
+    return NextResponse.redirect(new URL('/', request.url), 301);
+  }
   try {
-    const match = await redirects.get(request.nextUrl.pathname);
-    if (match?.status === 301 && match.to) return NextResponse.redirect(new URL(match.to, request.url), 301);
-    if (match?.status === 410) return new NextResponse('<!doctype html><html><head><title>Page removed</title></head><body><h1>This page has been removed</h1></body></html>', { status: 410, headers: { 'content-type': 'text/html; charset=utf-8' } });
+    const match = await redirectMap.get(request.nextUrl.pathname);
+    if (match?.status === 301 && match.to) {
+      return NextResponse.redirect(new URL(match.to, request.url), 301);
+    }
+    if (match?.status === 410) {
+      const body = '<!doctype html><html><head><title>Page removed</title></head>'
+        + '<body><h1>This page has been removed</h1></body></html>';
+      return new NextResponse(body, {
+        status: 410,
+        headers: { 'content-type': 'text/html; charset=utf-8' },
+      });
+    }
   } catch {
     // Redirect lookup must fail open.
   }
   return NextResponse.next();
 }
 
-export const config = { matcher: ['/((?!_next/|blob/|brand/|api/internal/|.*\\.[^/]+$).*)'] };
+export async function proxy(request: NextRequest): Promise<NextResponse> {
+  return composeProxy(request, redirects);
+}
+
+export const config = {
+  matcher: ['/((?!_next/|blob/|api/cron(?:/|$)|api/internal/|.*\\.[^/]+$).*)'],
+};

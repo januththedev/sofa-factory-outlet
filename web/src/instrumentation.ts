@@ -6,7 +6,9 @@ export async function register(): Promise<void> {
   if (process.env.DATABASE_URL) return;
   try {
     const { getDb } = await import('./lib/db');
-    await getDb();
+    const { seedKnowledge } = await import('./lib/seed/knowledge');
+    const db = await getDb();
+    await seedKnowledge(db);
   } catch (error) {
     console.error('[db] the local database could not be opened:', error);
   }
