@@ -1,16 +1,20 @@
 import type { Metadata } from 'next';
-import { CtaSection, lightGhostBtn } from '@/components/pages/cta-section';
+import { CtaSection } from '@/components/pages/cta-section';
+import { lightGhostBtn } from '@/components/pages/cta-section';
 import { Note } from '@/components/pages/note';
 import { PageHeader } from '@/components/pages/page-header';
 import { TLink } from '@/components/site/transition';
-import { JsonLd, organizationJsonLd } from '@/lib/seo/jsonld';
+import { JsonLd } from '@/lib/seo/jsonld';
+import { organizationJsonLd } from '@/lib/seo/jsonld';
 import { pageMetadata } from '@/lib/seo/metadata';
-import { getSettings, whatsappLink } from '@/lib/settings/get';
+import { getSettings } from '@/lib/settings/get';
+import { whatsappLink } from '@/lib/settings/get';
 
 export const metadata: Metadata = pageMetadata({
   title: 'For the trade',
   description:
-    'Custom sofas and furniture for interior designers, architects and apartment developers: custom sizes, fabrics and colours, made to order at factory-direct prices.',
+    'Sofas and furniture for interior designers, architects and apartment developers. ' +
+    'Discuss sizes, fabrics and colours with the showroom team.',
   path: '/trade/',
 });
 
@@ -18,11 +22,11 @@ export const metadata: Metadata = pageMetadata({
 const OFFER = [
   {
     title: 'Custom sizes',
-    body: 'Pieces are made to order, so a sofa can be built to the measurement your room, show unit or client needs instead of a fixed catalogue size.',
+    body: 'Bring your room or show unit measurements. The team will confirm the sizes available for your project.',
   },
   {
     title: 'Fabrics and colours',
-    body: 'Durable fabrics in many colours and designs — velvet, leather, corduroy and woven covers among them — with the fabric and colour chosen for each project.',
+    body: 'Compare fabrics and colours at the showroom, and confirm which covers are available for your project.',
   },
   {
     title: 'Made to order',
@@ -42,24 +46,35 @@ const HOW_IT_WORKS = [
 
 export default async function TradePage() {
   const [settings, organisation] = await Promise.all([getSettings(), organizationJsonLd()]);
-  const whatsappUrl = whatsappLink(
-    settings.business.whatsapp.number,
-    'Hi, I would like to discuss a trade or project enquiry.',
-  );
+  const whatsappUrl = settings.business.whatsapp.confirmed
+    ? whatsappLink(settings.business.whatsapp.number, 'Hi, I would like to discuss a trade or project enquiry.')
+    : null;
 
   return (
     <>
       <PageHeader
         eyebrow="For the trade"
         title="Made to order for your projects"
-        lede="Interior designers, architects and apartment developers work with the factory directly: choose the fabric, size, colour and layout, and each piece is built to order at factory-direct prices."
+        lede="Planning a space for a client? Talk through the size, fabric, colour and layout with our showroom team."
+        actions={
+          <>
+            {whatsappUrl ? (
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn-primary px-6 py-3">
+                Enquire on WhatsApp
+              </a>
+            ) : null}
+            <TLink href="/book-visit/" className={whatsappUrl ? 'btn-ghost px-6 py-3' : 'btn-primary px-6 py-3'}>
+              Book a visit
+            </TLink>
+          </>
+        }
       />
 
-      <section aria-labelledby="offer-heading" className="site-container mt-14 lg:mt-20">
+      <section aria-labelledby="offer-heading" className="site-container mt-10 lg:mt-20">
         <h2 id="offer-heading" className="max-w-[20ch] text-[clamp(1.9rem,3.2vw,2.8rem)] font-light leading-[1.05]">
           What the factory can offer
         </h2>
-        <ul className="mt-10 grid gap-5 sm:grid-cols-2">
+        <ul className="mt-6 grid gap-5 sm:grid-cols-2 lg:mt-10">
           {OFFER.map((item) => (
             <li key={item.title} className="rounded-[var(--radius-card)] border border-line bg-paper p-7">
               <h3 className="text-xl font-normal">{item.title}</h3>
@@ -72,7 +87,7 @@ export default async function TradePage() {
         </p>
       </section>
 
-      <section aria-labelledby="how-heading" className="site-container mt-20 lg:mt-28">
+      <section aria-labelledby="how-heading" className="site-container mt-12 lg:mt-28">
         <h2 id="how-heading" className="max-w-[20ch] text-[clamp(1.9rem,3.2vw,2.8rem)] font-light leading-[1.05]">
           How a trade order works
         </h2>
@@ -88,7 +103,8 @@ export default async function TradePage() {
           {/* placeholder: trade terms are unknown until the client agrees them */}
           <Note label="Trade terms">
             <p>
-              Trade terms — pricing for volume, lead times and minimum quantities — are agreed with you directly. We will
+              Trade terms — pricing for volume, lead times and minimum quantities — are agreed with you directly. We
+              will
               publish them here once they are confirmed.
             </p>
           </Note>
@@ -97,7 +113,7 @@ export default async function TradePage() {
 
       <CtaSection
         title="Start a project enquiry"
-        body="Send the details of the project on WhatsApp, or book a showroom visit and talk it through with the team in person."
+        body="Book a showroom visit to talk through your project, measurements and fabric choices with the team."
         actions={
           <>
             {whatsappUrl ? (
