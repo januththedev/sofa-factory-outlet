@@ -15,6 +15,7 @@ const COMPANY = [
   { href: '/about-us/', label: 'About us' },
   { href: '/visit/', label: 'Visit the showroom' },
   { href: '/book-visit/', label: 'Book a visit' },
+  { href: '/trade/', label: 'Trade' },
   { href: '/privacy/', label: 'Privacy' },
 ];
 
@@ -34,13 +35,20 @@ export function Footer({ business }: { business: BusinessSettings }) {
         <div className="grid gap-16 lg:grid-cols-12">
           <div className="lg:col-span-6">
             <p className="eyebrow text-clay">See it before you buy it</p>
-            <h2 className="mt-5 max-w-xl font-display text-4xl leading-[1.05] sm:text-6xl">Come and sit on the sofa that made it onto your shortlist.</h2>
+            <h2 className="mt-5 max-w-xl font-display text-4xl leading-[1.05] sm:text-6xl">
+              Come and sit on the sofa that made it onto your shortlist.
+            </h2>
             <div className="mt-9 flex flex-wrap gap-3">
               <TLink href="/book-visit/" className="btn-primary">
                 Book a showroom visit
               </TLink>
               {whatsapp ? (
-                <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="btn border border-bone/25 text-bone hover:bg-bone hover:text-ink">
+                <a
+                  href={whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn border border-bone/25 text-bone hover:bg-bone hover:text-ink"
+                >
                   Chat on WhatsApp
                 </a>
               ) : null}
@@ -80,7 +88,12 @@ export function Footer({ business }: { business: BusinessSettings }) {
                   {address.locality}, {address.city}
                 </p>
               </address>
-              <a href={mapsDirectionsUrl(address)} target="_blank" rel="noopener noreferrer" className="link-underline mt-3 inline-block">
+              <a
+                href={mapsDirectionsUrl(address)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link-underline mt-3 inline-block"
+              >
                 Get directions
               </a>
               {socials.length ? (
@@ -100,7 +113,10 @@ export function Footer({ business }: { business: BusinessSettings }) {
 
         <FooterWordmark />
 
-        <div className="mt-6 flex flex-col justify-between gap-2 border-t border-bone/10 pt-6 text-sm text-bone/55 sm:flex-row">
+        <div
+          className="mt-6 flex flex-col justify-between gap-2 border-t border-bone/10 pt-6 text-sm
+            text-bone/55 sm:flex-row"
+        >
           <p>© {new Date().getFullYear()} Sofa Factory Outlet. Made in Colombo.</p>
           <p>Prices are confirmed at your visit.</p>
         </div>

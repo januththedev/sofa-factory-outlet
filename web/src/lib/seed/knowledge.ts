@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { and, eq } from 'drizzle-orm';
@@ -29,7 +30,10 @@ export async function seedKnowledge(db: Db, log: (message: string) => void = () 
   for (const name of files) {
     const extension = path.extname(name).toLowerCase();
     const slug = path.basename(name, extension);
-    const [current] = await db.select({ editedInAdmin: s.kbDocuments.editedInAdmin })
+    const [current] = await db.select({
+      checksum: s.kbDocuments.checksum,
+      editedInAdmin: s.kbDocuments.editedInAdmin,
+    })
       .from(s.kbDocuments)
       .where(and(eq(s.kbDocuments.slug, slug), eq(s.kbDocuments.isCurrent, true)))
       .limit(1);
@@ -38,6 +42,11 @@ export async function seedKnowledge(db: Db, log: (message: string) => void = () 
       continue;
     }
     const text = await fs.readFile(path.join(folder, name), 'utf8');
+    const checksum = createHash('sha256').update(text).digest('hex');
+    if (current?.checksum === checksum) {
+      log(`Skipped starter knowledge ${name}: already current.`);
+      continue;
+    }
     const result = await ingestDocumentWithDb(db, {
       slug,
       kind: extension === '.md' ? 'md' : 'json',

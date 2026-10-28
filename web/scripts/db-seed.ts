@@ -4,10 +4,12 @@
 import './_env';
 import { closeDb, dbMode, getDb } from '../src/lib/db';
 import { ensureSeeded } from '../src/lib/seed';
+import { seedKnowledge } from '../src/lib/seed/knowledge';
 
 async function main() {
   const db = await getDb();
   await ensureSeeded(db, (m) => console.log(m));
+  await seedKnowledge(db, (message) => console.log(message));
   console.log(`db:seed: done (${dbMode()})`);
   await closeDb();
 }
