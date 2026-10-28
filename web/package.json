@@ -18,6 +18,8 @@
     "gate:lint": "node scripts/gate.mjs eslint -- node node_modules/eslint/bin/eslint.js --max-warnings=0",
     "gate:test": "node scripts/gate.mjs vitest -- node node_modules/vitest/vitest.mjs run --pool=forks --maxWorkers=1",
     "smoke": "node scripts/smoke.mjs",
+    "qa:mobile": "node scripts/qa-mobile-audit.mjs",
+    "qa:journey": "node scripts/qa-phone-journey.mjs",
     "test:urls": "tsx scripts/test-urls.ts",
     "eval:chat": "tsx scripts/call-cron.ts eval-chat",
     "cron": "tsx scripts/call-cron.ts",
