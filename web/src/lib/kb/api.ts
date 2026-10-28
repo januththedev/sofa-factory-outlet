@@ -1,7 +1,3 @@
-import { notImplemented } from '../not-implemented';
-
-// CONTRACT STUB. Owner: "kb-core" agent. Keep these exports and signatures.
-
 export type KbHit = {
   chunkId: number;
   documentId: number;
@@ -12,8 +8,11 @@ export type KbHit = {
   score: number;
 };
 
-/** Hybrid retrieval: full-text (headings weighted above body), plus pgvector similarity merged by reciprocal rank fusion once embeddings are on. Only enabled documents. */
-export const searchKnowledge: (query: string, options?: { tags?: string[]; limit?: number }) => Promise<KbHit[]> = async () => notImplemented('searchKnowledge');
+/**
+ * Hybrid retrieval: weighted full-text plus pgvector similarity merged by reciprocal rank fusion.
+ * Only enabled documents are returned.
+ */
+export { searchKnowledge } from './index';
 
 export type IngestInput = {
   slug: string;
@@ -28,15 +27,15 @@ export type IngestResult =
   | { ok: true; documentId: number; version: number; chunks: number; faqs: number; synonyms: number }
   | { ok: false; errors: Array<{ line?: number; message: string }> };
 
-/** Validate (front matter / JSON schema, line-by-line errors), version the old copy, chunk (## sections, ~350 tokens, 50 overlap), index. */
-export const ingestDocument: (input: IngestInput) => Promise<IngestResult> = async () => notImplemented('ingestDocument');
+/** Validate, version, chunk into roughly 350 tokens with overlap, and index. */
+export { ingestDocument } from './index';
 
-/** Rebuild chunks and embeddings for every enabled document (the month-3 "turn on embeddings" step). */
-export const reindexAll: () => Promise<{ documents: number; chunks: number }> = async () => notImplemented('reindexAll');
+/** Rebuild chunks and embeddings for every current stored document. */
+export { reindexAll } from './index';
 
 /**
  * Month-3 switch: probe the embedding model's dimension, create the vector column and HNSW index,
  * store `settings.chat.embeddings`. Returns `{ ok: false, error }` (never throws) when the vector
  * extension is unavailable, as on local PGlite, or no OpenRouter key is set.
  */
-export const enableEmbeddings: (model: string) => Promise<{ ok: true; dim: number } | { ok: false; error: string }> = async () => notImplemented('enableEmbeddings');
+export { enableEmbeddings } from './index';
