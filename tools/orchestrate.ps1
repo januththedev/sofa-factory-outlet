@@ -197,7 +197,10 @@ function Write-Summary {
 }
 
 # ---- set-up -----------------------------------------------------------------------------------------------
-$queue = @(Get-Content "$PSScriptRoot\queue.json" -Raw | ConvertFrom-Json)
+# Windows PowerShell 5.1 hands a JSON array back as one object, so walk it explicitly.
+$parsed = Get-Content "$PSScriptRoot\queue.json" -Raw | ConvertFrom-Json
+$queue = @()
+foreach ($item in $parsed) { $queue += $item }
 $state = Load-State
 $toolDown = @{ codex = $false; opencode = $false }
 $halt = $false
