@@ -1,0 +1,8 @@
+[
+  {
+    "q": "Where is the showroom?",
+    "alt": ["showroom location", "address"],
+    "a": "The confirmed showroom address is in the business settings.",
+    "tags": ["store_info"]
+  }
+]
