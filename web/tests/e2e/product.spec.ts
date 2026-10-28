@@ -21,6 +21,8 @@ test('adding to the cart updates its count and the sofa question opens chat', as
   await page.goto(productPath());
   await page.getByRole('button', { name: 'Add to cart', exact: true }).first().click();
   await expect(page.getByRole('link', { name: 'Cart, 1 item' })).toBeVisible();
+  // Adding opens the cart drawer (a modal); close it to get back to the page.
+  await page.getByRole('button', { name: 'Close cart' }).click();
   await page.getByRole('button', { name: 'Ask about this sofa' }).first().click();
   await expect(page.getByRole('dialog', { name: 'Sofa Factory Outlet assistant' })).toBeVisible();
 });

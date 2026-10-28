@@ -3,18 +3,22 @@ import { Picture } from '@/components/picture';
 import type { ProductCard } from '@/lib/catalogue/queries';
 import { formatLkr } from '@/lib/money';
 
-/** Product card for grids: photo (with a second photo on hover when there is one), name, colour and price. */
+/**
+ * Product card for grids: photo (with a second photo on hover when there is one), name, colour and price.
+ * The link is named by its visible text (name, price, colours); the photos are decorative beside the name.
+ */
 export function ProductTile({ product, priority = false, sizes = '(min-width: 1024px) 25vw, 50vw' }: { product: ProductCard; priority?: boolean; sizes?: string }) {
   const price = product.priceMinor ? `${product.priceFrom ? 'From ' : ''}${formatLkr(product.priceMinor)}` : 'Price on request';
   // White-background cut-outs sit on the page via multiply; lifestyle photos fill the card.
   const fit = product.image?.cutout ? 'object-contain mix-blend-multiply' : 'object-cover';
   return (
     <article className="group relative">
-      <TLink href={product.href} data-cursor="view" className="block" aria-label={product.name}>
+      <TLink href={product.href} data-cursor="view" className="block">
         <div className="relative aspect-square overflow-hidden rounded-[var(--radius-card)] bg-paper">
           {product.image ? (
             <Picture
               data={product.image}
+              alt=""
               sizes={sizes}
               priority={priority}
               imgClassName={`h-full w-full ${fit} transition duration-700 ease-out ${product.hoverImage ? 'group-hover:opacity-0' : 'group-hover:scale-[1.04]'}`}
@@ -23,6 +27,7 @@ export function ProductTile({ product, priority = false, sizes = '(min-width: 10
           {product.hoverImage ? (
             <Picture
               data={product.hoverImage}
+              alt=""
               sizes={sizes}
               imgClassName={`absolute inset-0 h-full w-full ${product.hoverImage.cutout ? 'object-contain mix-blend-multiply' : 'object-cover'} opacity-0 transition duration-700 ease-out group-hover:opacity-100`}
             />

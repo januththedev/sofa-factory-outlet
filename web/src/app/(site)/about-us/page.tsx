@@ -33,7 +33,7 @@ const WHY_CHOOSE_US = [
     body: 'Choose your fabric, size, colour and layout — we build furniture that suits your space.',
   },
   {
-    title: 'Islandwide free delivery',
+    title: 'Islandwide delivery',
     body: 'Fast, reliable delivery to your doorstep anywhere in Sri Lanka.',
   },
   {

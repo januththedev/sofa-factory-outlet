@@ -19,6 +19,8 @@ test('chat answers FAQs, recommends products and offers a human handoff', async 
   await expect(log.getByRole('article').first()).toBeVisible();
 
   await ask(page, 'talk to a person');
-  await expect(log.getByRole('button', { name: /Talk to a person on WhatsApp/ })).toBeVisible();
+  // The WhatsApp button needs a number the owner has confirmed in Settings; until then the
+  // "Talk to a person" quick reply is the way to a human.
+  await expect(page.getByRole('button', { name: /^Talk to a person/ }).last()).toBeVisible();
 });
 

@@ -1,7 +1,7 @@
 import { expect, type Page } from '@playwright/test';
 
 export const publishedProduct = {
-  name: 'Luxury Emerald Green L-Shape Sofa | Modern Furniture Colombo',
+  name: 'Luxury Emerald Green L-Shape Sofa',
   slug: 'luxury-emerald-green-l-shape-sofa-modern-furniture-colombo',
 };
 
@@ -57,7 +57,9 @@ export async function submitBooking(page: Page, sequence: number) {
       break;
     }
   }
-  await slot.check();
+  // The radio is visually hidden inside its label (the drawn circle covers it), so click the label like a visitor.
+  await slot.locator('xpath=..').click();
+  await expect(slot).toBeChecked();
   const slotName = await slot.evaluate((element) => element.parentElement?.textContent?.trim() ?? '');
   const remaining = Number(slotName.match(/(\d+) places? left/)?.[1]);
   await page.getByLabel(/I agree that/).check();

@@ -6,14 +6,19 @@ import { buildContentSecurityPolicy } from './src/lib/security/csp';
 // `next build` defaults to several worker processes, so pin it to one.
 const usingPglite = !process.env.DATABASE_URL;
 
+const servedOverHttps = (process.env.NEXT_PUBLIC_SITE_URL ?? '').startsWith('https://');
+
 // `next dev` needs eval for React's debugging tools and hot reload, so only built sites get the policy.
 const contentSecurityPolicy = process.env.NODE_ENV === 'production'
   ? [{
     key: 'Content-Security-Policy',
-    value: buildContentSecurityPolicy({
-      upgradeInsecure: (process.env.NEXT_PUBLIC_SITE_URL ?? '').startsWith('https://'),
-    }),
+    value: buildContentSecurityPolicy({ upgradeInsecure: servedOverHttps }),
   }]
+  : [];
+
+// Two years, the usual value. Not includeSubDomains: other subdomains of the client's domain are not ours.
+const strictTransportSecurity = servedOverHttps
+  ? [{ key: 'Strict-Transport-Security', value: 'max-age=63072000' }]
   : [];
 
 const securityHeaders = [
@@ -22,6 +27,7 @@ const securityHeaders = [
   { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
   { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=()' },
   ...contentSecurityPolicy,
+  ...strictTransportSecurity,
 ];
 
 const nextConfig: NextConfig = {

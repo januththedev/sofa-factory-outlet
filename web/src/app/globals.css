@@ -10,7 +10,7 @@
   --color-paper: #fbf9f5;
   --color-ink: #141211;
   --color-ink-2: #3a3532;
-  --color-mute: #6f6862;
+  --color-mute: #69625c; /* 4.6:1 on bone-2, the darkest page background it sits on (WCAG AA) */
   --color-line: #ddd5c8;
   --color-maroon: #842323;
   --color-maroon-deep: #5e1717;

@@ -9,16 +9,19 @@ test('shop lists published products, filters and paginates without exposing hidd
   const colour = page.getByRole('group', { name: 'Colour' }).getByRole('checkbox').first();
   const colourText = await colour.evaluate((element) => element.parentElement?.textContent ?? '');
   const colourCount = Number(colourText.match(/(\d+)\s*$/)?.[1]);
-  await colour.check();
+  // Filters live in the URL, so a box ticks once the filtered page has arrived.
+  await colour.click();
   await expect(page).toHaveURL(/colour=/);
+  await expect(colour).toBeChecked();
   await expect(page.getByRole('article')).toHaveCount(colourCount);
 
   await page.goto('/shop/?pageSize=48');
   const shape = page.getByRole('group', { name: 'Shape' }).getByRole('checkbox').first();
   const shapeText = await shape.evaluate((element) => element.parentElement?.textContent ?? '');
   const shapeCount = Number(shapeText.match(/(\d+)\s*$/)?.[1]);
-  await shape.check();
+  await shape.click();
   await expect(page).toHaveURL(/shape=/);
+  await expect(shape).toBeChecked();
   await expect(page.getByRole('article')).toHaveCount(shapeCount);
 
   await page.goto('/shop/?colour=green&pageSize=1');

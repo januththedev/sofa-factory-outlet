@@ -30,7 +30,7 @@ Set for **Production and Preview**. `src/lib/env.ts` is the single source of tru
 | `BLOB_READ_WRITE_TOKEN` | yes | Vercel Blob. The public base URL is derived from the token; set `BLOB_BASE_URL` only for a custom domain |
 | `AUTH_SECRET` | yes | Signs admin sessions: `openssl rand -base64 32` |
 | `OWNER_EMAIL`, `OWNER_PASSWORD`, `OWNER_NAME` | first deploy | Creates the owner account when the database is seeded; change the password after the first login |
-| `NEXT_PUBLIC_SITE_URL` | yes | `https://sofafactoryoutlet.lk`: canonical URLs, sitemaps, share images |
+| `NEXT_PUBLIC_SITE_URL` | yes | `https://sofafactoryoutlet.lk`: canonical URLs, sitemaps, share images. An https value also turns on HSTS and `upgrade-insecure-requests` |
 | `CRON_SECRET` | yes | Vercel sends it as a bearer token to the cron routes; the cron routes reject anything else |
 | `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` | yes | Booking and chat spam protection (create a widget for the real hostname) |
 | `OPENROUTER_API_KEY` | for the model | Without it the chatbot answers from the knowledge pack only |
@@ -55,7 +55,7 @@ Set for **Production and Preview**. `src/lib/env.ts` is the single source of tru
    ```
 
    `media:import` needs the originals in `../assets/uploads` (`download-images.ps1` fetches them; the folder is git-ignored). Preview branches inherit Neon data from their parent branch, so the seed runs once.
-5. **Vercel project.** Import the GitHub repository, root directory `web`, Node 24. `vercel.json` sets the region, the build command (`db:migrate` then `build`) and the three daily crons (rollup 00:15, digest 08:00 and Search Console 03:30, Colombo time; Hobby allows once-a-day jobs). The cron paths end in `/` because the app uses trailing slashes and Vercel cron jobs do not follow redirects.
+5. **Vercel project.** Import the GitHub repository, root directory `web`, Node 24. `vercel.json` sets the region, the build command (`scripts/check-production-env.mjs`, which stops the build and lists any missing required variable, then `db:migrate`, then `build`) and the three daily crons (rollup 00:15, digest 08:00 and Search Console 03:30, Colombo time; Hobby allows once-a-day jobs). The cron paths end in `/` because the app uses trailing slashes and Vercel cron jobs do not follow redirects.
 6. **Deploy**, then open the preview URL and run the checks in section 5.
 
 ## 5. Checks on the preview deployment

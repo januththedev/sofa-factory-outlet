@@ -111,7 +111,7 @@ export function FactoryStory() {
               </li>
             ))}
           </ol>
-          <p className="factory-note mt-6 text-xs text-bone/45">Warranty and delivery terms are confirmed at your visit.</p>
+          <p className="factory-note mt-6 text-xs text-bone/60">Warranty and delivery terms are confirmed at your visit.</p>
         </div>
 
         <div className="factory-art" aria-hidden={false}>
