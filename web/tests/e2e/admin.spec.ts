@@ -41,6 +41,8 @@ test('owner manages a booking and edits a product, then signs out', async ({ pag
   await page.goto('/admin/');
   await page.getByRole('button', { name: /Account menu for/ }).click();
   await page.getByRole('button', { name: 'Sign out' }).click();
+  // Wait for the sign-out request to finish before going anywhere: navigating away cancels it.
+  await expect(page).toHaveURL(/\/admin\/login\//);
   await page.goto('/admin/');
   await expect(page).toHaveURL(/\/admin\/login\//);
 });
