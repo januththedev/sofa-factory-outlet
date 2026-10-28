@@ -16,7 +16,11 @@ Spec: `../Plan.md`. Implementation plan: nine phases, one local commit each. Upd
 
 **First Claude wave failed.** All 17 Claude subagents (store-listing … seo-admin-reviews) hit the account's session limit within their first steps and produced nothing. The two harness worktrees left under `.claude/worktrees/` hold no work. Their specs in `docs/tasks/<id>.md` are intact, so any module can be started again.
 
-**Still unbuilt:** store-listing, product-page, seo-core, cart-ui, booking-ui, auth-shell, admin-products, admin-bookings, admin-dashboard, kb-core, chat-pipeline, chat-widget, admin-chat-kb, analytics, invoices-ui, public-pages, seo-admin-reviews.
+**Wave 2 (launched 28 Oct, unmerged until verified):** Codex: store-listing, product-page, seo-core, chat-pipeline. OpenCode free models: analytics (`deepseek-v4.1-flash-free`), chat-widget (`glm-5.3-flash-free`), public-pages (`mimo-v2.6-flash-free`). Claude Sonnet subagents in `.claude/worktrees/`: auth-shell, cart-ui, booking-ui (these commit on their own branch and run the gate themselves).
+
+**Not started yet:** admin-products, admin-bookings, admin-dashboard, kb-core, admin-chat-kb, invoices-ui, seo-admin-reviews.
+
+`docs/DEPLOY.md` and `vercel.json` (region `sin1`, build runs `db:migrate`, three daily crons with trailing slashes) are written. After the modules merge, re-check the claims in DEPLOY.md that depend on them: cron routes reject requests without `CRON_SECRET`, `test:urls` base-URL variable, the admin Setup checklist, the CSP.
 
 **External CLIs.** Codex `C:\Users\janut\.codex\packages\app-server-daemon\current\bin\codex.exe` (0.164.0, ChatGPT login). OpenCode `C:\Users\janut\AppData\Roaming\npm\opencode.cmd` (2.2.0): only models ending `-free` (`deepseek-v4.1-flash-free`, `glm-5.3-flash-free`, `mimo-v2.6-flash-free`, `nemotron-3.5-lightning-free`, `nemotron-3.5-super-vl-free`, `beam-free`; `nemotron-3-ultra-free` and `flint-40b-free` were unavailable). Both are **write-only**: Codex's sandbox often cannot see Node, and OpenCode runs from a least-privilege `opencode.json` (edit allowed; bash, webfetch and external directories denied). Worktrees `D:\Sofa_Factory_wt\<id>` (branch `wt/<id>`), logs `D:\Sofa_Factory_wt\_logs\<id>.*`. The auto-mode classifier blocks `opencode --auto`, `-ExecutionPolicy Bypass` and pattern-based process kills; launch inline with `Start-Process` as in `tools/launch-external.ps1`.
 
