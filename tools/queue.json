@@ -1,10 +1,9 @@
 [
   {
     "id": "m-chrome",
-    "tool": "opencode",
-    "model": "opencode-go/kimi-k3",
+    "tool": "codex",
     "allowShared": true,
-    "writer": "OpenCode (kimi-k3)",
+    "writer": "Codex",
     "message": "feat(mobile): header, footer, chat, shared UI and global CSS for phones"
   },
   {
@@ -16,18 +15,16 @@
   },
   {
     "id": "m-shop",
-    "tool": "opencode",
-    "model": "opencode-go/glm-5.3",
+    "tool": "codex",
     "allowShared": true,
-    "writer": "OpenCode (glm-5.3)",
+    "writer": "Codex",
     "message": "feat(mobile): shop filters sheet, two-column grid and product page for phones"
   },
   {
     "id": "m-booking-cart",
-    "tool": "opencode",
-    "model": "opencode-go/deepseek-v4-pro",
+    "tool": "codex",
     "allowShared": true,
-    "writer": "OpenCode (deepseek-v4-pro)",
+    "writer": "Codex",
     "message": "feat(mobile): booking date and slot pickers, form UX, confirmation and cart for phones"
   },
   {
