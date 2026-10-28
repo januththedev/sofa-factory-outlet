@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import '@/lib/security/zod-jitless';
 import type { DayAvailability } from '@/lib/bookings/api';
 import { normaliseLkPhone } from '@/lib/phone';
 
