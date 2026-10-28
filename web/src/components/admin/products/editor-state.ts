@@ -54,3 +54,14 @@ export function movePhoto<T>(photos: readonly T[], from: number, to: number): T[
 export function hasUnsavedChanges(saved: unknown, current: unknown): boolean {
   return JSON.stringify(saved) !== JSON.stringify(current);
 }
+
+/**
+ * A number typed into a form field. Empty, missing or not-a-number means "not set". React Hook Form also runs a
+ * field's converter on a null default, and Number(null) is 0, which used to turn "no seat count" into 0 and made
+ * the server refuse to save the product.
+ */
+export function numberOrEmpty<Empty>(value: unknown, empty: Empty): number | Empty {
+  if (value === '' || value === null || value === undefined) return empty;
+  const parsed = Number(value);
+  return Number.isNaN(parsed) ? empty : parsed;
+}

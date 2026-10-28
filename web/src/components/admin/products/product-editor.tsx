@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form';
 import { useWatch } from 'react-hook-form';
 import { editorSchema } from './editor-state';
 import { hasUnsavedChanges } from './editor-state';
+import { numberOrEmpty } from './editor-state';
 import { PhotoUploader } from './photo-uploader';
 import { useUnsavedWarning } from './use-unsaved-warning';
 import { saveProductAction } from '@/app/admin/(panel)/products/actions';
@@ -211,7 +212,7 @@ export function ProductEditor({ initial, categories, mediaBaseUrl }: Props) {
           <Input autoComplete="off" enterKeyHint="next"
             id="seats"
             type="number"
-            {...form.register('seats', { setValueAs: (value) => value === '' ? null : Number(value) })}
+            {...form.register('seats', { setValueAs: (value) => numberOrEmpty(value, null) })}
           />
         </Field>
         <Field label="Price in rupees" htmlFor="price" hint="Leave blank for price on request.">
@@ -358,7 +359,7 @@ export function ProductEditor({ initial, categories, mediaBaseUrl }: Props) {
                 type="number"
                 step="0.1"
                 {...form.register(`dimensions.${key}`, {
-                  setValueAs: (value) => value === '' ? undefined : Number(value),
+                  setValueAs: (value) => numberOrEmpty(value, undefined),
                 })}
               />
             </Field>
