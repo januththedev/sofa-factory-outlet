@@ -45,7 +45,8 @@ export async function submitBooking(page: Page, sequence: number) {
   const openDate = calendar.getByRole('button', {
     name: /^(?!.*(?:fully booked|closed|not available)).+$/,
   }).first();
-  const dateName = await openDate.getAttribute('aria-label');
+  // The cell is named by a screen-reader-only description (weekday, date, state), not an aria-label.
+  const dateName = (await openDate.locator('.sr-only').first().textContent())?.trim() ?? null;
   await openDate.click();
 
   const slots = page.getByRole('group', { name: 'Time slot', exact: true }).getByRole('radio');

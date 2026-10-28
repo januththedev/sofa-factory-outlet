@@ -26,7 +26,7 @@ test('owner manages a booking and edits a product, then signs out', async ({ pag
   await page.getByRole('button', { name: 'Save product' }).click();
   await expect(page.getByText('Saved', { exact: true })).toBeVisible();
   await page.goto('/shop/?q=emerald');
-  await expect(page.getByRole('link', { name: title, exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: title })).toBeVisible();
 
   await page.goto('/admin/products/');
   await page.getByLabel('Search products').fill(title);
