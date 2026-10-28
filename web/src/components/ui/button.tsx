@@ -1,8 +1,12 @@
-import { cva, type VariantProps } from 'class-variance-authority';
+import { cva } from 'class-variance-authority';
+import type { VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/cn';
 
 export const buttonStyles = cva(
-  'inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-colors duration-200 disabled:pointer-events-none disabled:opacity-50',
+  [
+    'inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full font-semibold',
+    'transition-colors duration-200 disabled:pointer-events-none disabled:opacity-50',
+  ].join(' '),
   {
     variants: {
       variant: {
@@ -13,7 +17,7 @@ export const buttonStyles = cva(
         danger: 'bg-bad text-bone hover:bg-bad/90',
         link: 'rounded-none px-0 text-maroon underline-offset-4 hover:underline',
       },
-      size: { sm: 'h-9 px-4 text-sm', md: 'h-11 px-6 text-sm', lg: 'h-13 px-8 text-base' },
+      size: { sm: 'h-11 px-4 text-sm', md: 'h-11 px-6 text-sm', lg: 'h-13 px-8 text-base' },
     },
     defaultVariants: { variant: 'primary', size: 'md' },
   },

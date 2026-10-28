@@ -6,9 +6,13 @@
 
 import dynamic from 'next/dynamic';
 import { MessageCircle } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
+import { useRef } from 'react';
+import { useState } from 'react';
 import { cn } from '@/lib/cn';
-import { CHAT_OPEN_EVENT, type ChatOpenDetail } from '@/lib/events';
+import { CHAT_OPEN_EVENT } from '@/lib/events';
+import type { ChatOpenDetail } from '@/lib/events';
+import { configureChatWhatsApp } from './chat-store';
 import { useChatStore } from './chat-store';
 
 const ChatPanel = dynamic(() => import('./chat-panel').then((module) => module.ChatPanel), {
@@ -17,17 +21,21 @@ const ChatPanel = dynamic(() => import('./chat-panel').then((module) => module.C
   loading: () => (
     <div
       aria-hidden
-      className="fixed bottom-[5.5rem] right-3 z-40 h-14 w-14 rounded-full bg-maroon opacity-70 motion-safe:animate-pulse lg:bottom-6 lg:right-4"
+      className="chat-launcher fixed z-40 h-14 w-14 rounded-full bg-maroon opacity-70"
     />
   ),
 });
 
 /** Floating chat button + lazily loaded panel (integrator mounts it in the site layout). */
-export function ChatWidget() {
+export function ChatWidget({ whatsapp = null }: { whatsapp?: string | null }) {
   const [panelLoaded, setPanelLoaded] = useState(false);
   const open = useChatStore((state) => state.open);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const wasOpen = useRef(false);
+
+  useEffect(() => {
+    configureChatWhatsApp(whatsapp);
+    return () => configureChatWhatsApp(null);
+  }, [whatsapp]);
 
   useEffect(() => {
     const handleOpen = (event: Event) => {
@@ -47,18 +55,6 @@ export function ChatWidget() {
     void useChatStore.persist.rehydrate();
   }, []);
 
-  // Keyboard users come back to the button when the panel closes.
-  useEffect(() => {
-    if (open) {
-      wasOpen.current = true;
-      return;
-    }
-    if (wasOpen.current) {
-      wasOpen.current = false;
-      buttonRef.current?.focus();
-    }
-  }, [open]);
-
   const openNow = () => {
     setPanelLoaded(true);
     useChatStore.getState().openPanel();
@@ -73,19 +69,15 @@ export function ChatWidget() {
         aria-label="Open chat assistant"
         aria-haspopup="dialog"
         className={cn(
-          'fixed bottom-[5.5rem] right-3 z-40 grid h-14 w-14 place-items-center rounded-full bg-maroon text-bone shadow-lg',
-          'transition-colors duration-200 hover:bg-maroon-deep lg:bottom-6 lg:right-4',
+          'chat-launcher fixed z-40 grid h-14 w-14 place-items-center rounded-full bg-maroon text-bone shadow-lg',
+          'transition-colors duration-200 hover:bg-maroon-deep',
           // `hidden` as a class: the attribute loses to Tailwind's display utilities
           open && 'hidden',
         )}
       >
-        <span
-          aria-hidden
-          className="absolute inset-0 rounded-full bg-maroon opacity-40 motion-safe:animate-ping motion-reduce:animate-none"
-        />
         <MessageCircle size={22} aria-hidden />
       </button>
-      {panelLoaded ? <ChatPanel /> : null}
+      {panelLoaded ? <ChatPanel launcherRef={buttonRef} /> : null}
     </>
   );
 }

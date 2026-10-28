@@ -10,6 +10,7 @@ import type { ProductCard } from '@/lib/catalogue/queries';
 import { cn } from '@/lib/cn';
 import { addCardToCart } from './product-cards';
 import { talkToAPerson } from './chat-store';
+import { useChatStore } from './chat-store';
 
 type AddTarget = { productId: number; variantId?: number };
 
@@ -45,7 +46,9 @@ function parseAddTarget(payload: string | undefined): AddTarget | null {
 
 function findCard(cards: ProductCard[], target: AddTarget): ProductCard | undefined {
   return cards.find(
-    (card) => card.id === target.productId && (target.variantId === undefined || card.colours.some((colour) => colour.id === target.variantId)),
+    (card) => card.id === target.productId && (
+      target.variantId === undefined || card.colours.some((colour) => colour.id === target.variantId)
+    ),
   );
 }
 
@@ -77,6 +80,7 @@ export function QuickReplies({
         break;
       }
       case 'book_visit':
+        useChatStore.getState().close();
         router.push('/book-visit/');
         break;
       case 'whatsapp':
@@ -88,15 +92,19 @@ export function QuickReplies({
           onSend(chip.label);
           break;
         }
-        if (href.startsWith('/')) router.push(href);
-        else window.open(href, '_blank', 'noopener,noreferrer');
+        if (href.startsWith('/')) {
+          useChatStore.getState().close();
+          router.push(href);
+        } else {
+          window.open(href, '_blank', 'noopener,noreferrer');
+        }
         break;
       }
     }
   };
 
   return (
-    <div className="flex flex-wrap gap-1.5">
+    <div className="-mx-1 flex min-w-0 gap-2 overflow-x-auto px-1 py-2">
       {items.map((chip, index) => (
         <button
           key={`${chip.action}-${chip.label}-${index}`}
@@ -104,8 +112,9 @@ export function QuickReplies({
           disabled={disabled}
           onClick={() => handle(chip)}
           className={cn(
-            'rounded-full border border-ink/15 bg-bone px-2.5 py-1 text-[0.72rem] font-semibold text-ink',
-            'transition-colors duration-150 hover:border-maroon hover:bg-maroon hover:text-bone disabled:pointer-events-none disabled:opacity-50',
+            'min-h-11 min-w-11 shrink-0 whitespace-nowrap rounded-full border border-ink/15 bg-bone',
+            'px-3 py-2 text-xs font-semibold text-ink transition-colors duration-150',
+            'hover:border-maroon hover:bg-maroon hover:text-bone disabled:pointer-events-none disabled:opacity-50',
           )}
         >
           {chip.label}

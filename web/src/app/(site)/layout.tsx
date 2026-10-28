@@ -8,9 +8,11 @@ import { SmoothScroll } from '@/components/site/smooth-scroll';
 import { TransitionProvider } from '@/components/site/transition';
 import { CartHydrator } from '@/lib/cart/store';
 import { getSetting } from '@/lib/settings/get';
+import { whatsappLink } from '@/lib/settings/get';
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const business = await getSetting('business');
+  const whatsapp = business.whatsapp.confirmed ? whatsappLink(business.whatsapp.number) : null;
   return (
     <TransitionProvider>
       <Preloader />
@@ -19,12 +21,12 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       <a href="#main" className="skip-link">
         Skip to content
       </a>
-      <Header />
-      <main id="main">{children}</main>
+      <Header whatsapp={whatsapp} />
+      <main id="main" className="site-main min-w-0">{children}</main>
       <Footer business={business} />
       <CartHydrator />
       <CartDrawer />
-      <ChatWidget />
+      <ChatWidget whatsapp={whatsapp} />
       <div className="grain" aria-hidden />
     </TransitionProvider>
   );

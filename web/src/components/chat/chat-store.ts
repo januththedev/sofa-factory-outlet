@@ -7,21 +7,30 @@
 // link); nothing personal beyond what the visitor typed is stored.
 
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { createJSONStorage } from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
 import { useCart } from '@/lib/cart/store';
-import { toCartRef, type CartRef } from '@/lib/cart/types';
+import { toCartRef } from '@/lib/cart/types';
+import type { CartRef } from '@/lib/cart/types';
 import { trackEvent } from '@/lib/analytics/client';
 import type { ChatOpenDetail } from '@/lib/events';
 import type { ChatEvent, ChatRequest, QuickReply } from '@/lib/chat/api';
 import type { ProductCard } from '@/lib/catalogue/queries';
-import { DEFAULT_SETTINGS } from '@/lib/settings/defaults';
-import { chatSessionIds, sendChat } from '@/lib/chat/client';
+import { chatSessionIds } from '@/lib/chat/client';
+import { sendChat } from '@/lib/chat/client';
 
 const MAX_MESSAGE_LENGTH = 600;
 const PERSIST_KEY = 'sfo-chat-v1';
+let confirmedWhatsApp: string | null = null;
+
+/** The site layout supplies a link only when the owner has confirmed the number. */
+export function configureChatWhatsApp(link: string | null): void {
+  confirmedWhatsApp = link;
+}
 
 export const WELCOME_TEXT =
-  "Ask me about sofas, colours, sizes or booking a visit. I'm an automated assistant; for anything else the team is on WhatsApp.";
+  "Ask me about sofas, colours, sizes or booking a visit. I'm an automated assistant; " +
+  'you can also ask to talk to a person.';
 
 export const DEFAULT_ERROR_TEXT =
   "Sorry — that didn't come through. Try again, or talk to a person on WhatsApp.";
@@ -74,7 +83,11 @@ let activeController: AbortController | null = null;
 let sequence = 0;
 const nextId = () => `m${Date.now().toString(36)}-${(sequence++).toString(36)}`;
 
-function foldMessage(state: ChatStore, assistantId: string, patch: (message: ChatMessage) => ChatMessage): Partial<ChatStore> {
+function foldMessage(
+  state: ChatStore,
+  assistantId: string,
+  patch: (message: ChatMessage) => ChatMessage,
+): Partial<ChatStore> {
   let touched = false;
   const messages = state.messages.map((message) => {
     if (message.id !== assistantId) return message;
@@ -133,11 +146,10 @@ const slugLabel = (slug: string) =>
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 
-/** WhatsApp link for the honest hand-off when the server has not sent one: the saved business number. */
+/** Confirmed WhatsApp link for a hand-off before the server has sent one. */
 export function chatWhatsAppFallback(text?: string): string | null {
-  const digits = (DEFAULT_SETTINGS.business.whatsapp.number ?? '').replace(/\D/g, '');
-  if (!digits) return null;
-  return `https://wa.me/${digits}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
+  if (!confirmedWhatsApp) return null;
+  return `${confirmedWhatsApp}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
 }
 
 function lastUserMessage(state: ChatStore): ChatMessage | null {
@@ -151,13 +163,17 @@ function lastUserMessage(state: ChatStore): ChatMessage | null {
 /** Opens WhatsApp with a summary of the chat filled in; records the click. */
 export function talkToAPerson(whatsappUrl: string | null): void {
   if (typeof window === 'undefined') return;
-  trackEvent('whatsapp_click');
   const summary = lastUserMessage(useChatStore.getState())?.text ?? '';
   const text = summary
-    ? `Hi! I was just chatting with the site assistant and would like to talk to a person. Last message: "${summary.slice(0, 300)}"`
+    ? 'Hi! I was just chatting with the site assistant and would like to talk to a person. ' +
+      `Last message: "${summary.slice(0, 300)}"`
     : 'Hi! I would like to talk to a person at the showroom.';
-  const url = whatsappUrl ?? chatWhatsAppFallback(text);
-  if (!url) return;
+  const url = confirmedWhatsApp ? whatsappUrl ?? chatWhatsAppFallback(text) : null;
+  if (!url) {
+    void useChatStore.getState().send('talk to a person');
+    return;
+  }
+  trackEvent('whatsapp_click');
   window.open(url, '_blank', 'noopener,noreferrer');
 }
 

@@ -1,9 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { createContext, useCallback, useContext, useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { createContext } from 'react';
+import { useCallback } from 'react';
+import { useContext } from 'react';
+import { useEffect } from 'react';
+import { useRef } from 'react';
 import { gsap } from '@/lib/motion/gsap';
+import { skipCurtain } from './motion-policy';
 
 type Navigate = (href: string) => void;
 const TransitionContext = createContext<Navigate | null>(null);
@@ -27,14 +33,27 @@ export function TransitionProvider({ children }: { children: React.ReactNode }) 
     if (!target.current || !curtain.current) return;
     window.clearTimeout(failsafe.current);
     target.current = null;
-    gsap.to(curtain.current, { yPercent: -100, duration: 0.7, ease: 'power3.inOut', delay: 0.05 });
+    gsap.to(curtain.current, { yPercent: -100, duration: 0.3, ease: 'power3.inOut' });
   }, [pathname]);
+
+  useEffect(() => () => window.clearTimeout(failsafe.current), []);
 
   const navigate = useCallback<Navigate>(
     (href) => {
       const url = new URL(href, window.location.href);
       const samePage = url.pathname === window.location.pathname;
-      if (samePage || window.matchMedia(REDUCED).matches || !curtain.current || target.current) {
+      const immediate = skipCurtain(
+        window.matchMedia(REDUCED).matches,
+        window.matchMedia('(pointer: coarse)').matches,
+        window.innerWidth,
+      );
+      if (samePage || immediate || !curtain.current || target.current) {
+        window.clearTimeout(failsafe.current);
+        target.current = null;
+        if (curtain.current) {
+          gsap.killTweensOf(curtain.current);
+          gsap.set(curtain.current, { yPercent: -100 });
+        }
         router.push(href);
         return;
       }
@@ -42,14 +61,14 @@ export function TransitionProvider({ children }: { children: React.ReactNode }) 
       gsap.set(curtain.current, { yPercent: 100 });
       gsap.to(curtain.current, {
         yPercent: 0,
-        duration: 0.55,
+        duration: 0.3,
         ease: 'power3.inOut',
         onComplete: () => router.push(href),
       });
       // If the route never changes (error, same URL), don't leave the curtain down.
       failsafe.current = window.setTimeout(() => {
         target.current = null;
-        gsap.to(curtain.current, { yPercent: -100, duration: 0.5 });
+        gsap.to(curtain.current, { yPercent: -100, duration: 0.3 });
       }, 5000);
     },
     [router],
