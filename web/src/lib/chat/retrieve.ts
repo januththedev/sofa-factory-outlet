@@ -6,6 +6,7 @@ import { searchKnowledge, type KbHit } from '../kb/api';
 import type { ChatContextInput } from './api';
 import type { ExtractedDetails } from './extract';
 import type { ChatIntent } from './intent';
+import { productSearchText } from './search-text';
 
 export type Retrieval = {
   products: ProductCard[];
@@ -59,8 +60,7 @@ export async function retrieve(
     }
   } else if (intent === 'find_products' || intent === 'product_question') {
     try {
-      const result = await searchProducts({
-        q: query,
+      const filters = {
         category: details.category,
         colour: details.colour ? [details.colour] : undefined,
         material: details.material ? [details.material] : undefined,
@@ -68,7 +68,16 @@ export async function retrieve(
         seats: details.seats ? [details.seats] : undefined,
         maxPrice: details.maxPrice,
         pageSize: 4,
-      });
+      };
+      const text = productSearchText(query, details);
+      let result = await searchProducts({ ...filters, q: text || undefined });
+      // The search wants every word to match; if the leftover words match nothing, the filters still
+      // describe what was asked for. With no filters there is nothing to fall back on.
+      const filtered = filters.category || filters.colour || filters.material || filters.shape
+        || filters.seats || filters.maxPrice !== undefined;
+      if (text && filtered && result.items.length === 0) {
+        result = await searchProducts(filters);
+      }
       products = result.items.slice(0, 4);
     } catch {
       try {
