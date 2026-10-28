@@ -1,6 +1,7 @@
 import { CalendarPlus, MapPin, MessageCircle } from 'lucide-react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { BookingReference } from '@/components/booking/booking-reference';
 import { formatVisitDate } from '@/components/booking/calendar';
 import { ConfirmationEffects } from '@/components/booking/confirmation-effects';
 import { Picture } from '@/components/picture';
@@ -13,7 +14,6 @@ import { pageMetadata } from '@/lib/seo/metadata';
 import { getSettings, mapsDirectionsUrl } from '@/lib/settings/get';
 
 export const dynamic = 'force-dynamic';
-
 const REFERENCE = /^SFO-B-\d{1,9}$/i;
 
 export async function generateMetadata({ params }: { params: Promise<{ ref: string }> }): Promise<Metadata> {
@@ -31,111 +31,134 @@ export default async function BookingDonePage({ params }: { params: Promise<{ re
   if (!REFERENCE.test(ref)) notFound();
   const booking = await getBookingByReference(ref);
   if (!booking) notFound();
-
   const { business } = await getSettings();
   const active = booking.status !== 'cancelled' && booking.status !== 'lost';
-  const whatsappHref = bookingWhatsappLink(booking, business.whatsapp.number);
-  const address = [business.address.street, business.address.locality, business.address.city].filter(Boolean).join(', ');
+  const whatsappHref = business.whatsapp.confirmed
+    ? bookingWhatsappLink(booking, business.whatsapp.number)
+    : null;
+  const address = business.address.confirmed
+    ? [business.address.street, business.address.locality, business.address.city].filter(Boolean).join(', ')
+    : null;
+  const directionsHref = business.map.confirmed
+    ? business.map.placeUrl ?? (
+      business.map.lat !== null && business.map.lng !== null
+        ? `https://www.google.com/maps/dir/?api=1&destination=${business.map.lat},${business.map.lng}`
+        : address ? mapsDirectionsUrl(business.address) : null
+    )
+    : address ? mapsDirectionsUrl(business.address) : null;
   const calendarHref = `/api/bookings/${encodeURIComponent(booking.reference)}/ics/`;
 
   return (
-    <div className="site-container pb-24 pt-32 lg:pb-32 lg:pt-44">
+    <div className="site-container pb-24 pt-24 lg:pb-32 lg:pt-44">
       {active ? <ConfirmationEffects reference={booking.reference} pieces={booking.items.length} /> : null}
       <div className="mx-auto max-w-4xl">
-        <p className="eyebrow">{active ? 'Visit booked' : 'Booking closed'}</p>
-        <h1 className="mt-4 text-[clamp(2.4rem,5vw,4.4rem)] font-light leading-[1]">{active ? 'Your visit is booked.' : 'This booking is no longer active.'}</h1>
-
-        <Card className="mt-10 p-6 sm:p-10">
-          <p className="eyebrow">Booking reference</p>
-          <p className="mt-3 break-all font-display text-[clamp(2.2rem,7vw,4.2rem)] font-light leading-none tracking-tight text-maroon">{booking.reference}</p>
-          <p className="mt-4 text-sm text-mute">{active ? 'Keep this reference and quote it if you message us.' : 'Message us on WhatsApp with this reference if you would like to book again.'}</p>
-
+        <p className="eyebrow text-xs">{active ? 'Visit booked' : 'Booking closed'}</p>
+        <h1 className="mt-4 text-[clamp(2.4rem,5vw,4.4rem)] font-light leading-[1]">
+          {active ? 'Your visit is booked.' : 'This booking is no longer active.'}
+        </h1>
+        <Card className="mt-10 min-w-0 p-4 sm:p-10">
+          <p className="eyebrow text-xs">Booking reference</p>
+          <BookingReference reference={booking.reference} />
+          <p className="mt-2 text-base text-mute">Keep this reference and quote it when you contact us.</p>
           <dl className="mt-8 grid gap-6 border-t border-line pt-8 sm:grid-cols-3">
             <div>
-              <dt className="eyebrow">Date</dt>
+              <dt className="eyebrow text-xs">Date</dt>
               <dd className="mt-2 text-lg">{formatVisitDate(booking.visitDate)}</dd>
             </div>
             <div>
-              <dt className="eyebrow">Time</dt>
+              <dt className="eyebrow text-xs">Time</dt>
               <dd className="mt-2 text-lg tabular-nums">{booking.slotLabel}</dd>
             </div>
             <div>
-              <dt className="eyebrow">Showroom</dt>
-              <dd className="mt-2 text-lg">{address}</dd>
+              <dt className="eyebrow text-xs">Showroom</dt>
+              <dd className="mt-2 text-lg">{address ?? 'Details confirmed when we contact you.'}</dd>
             </div>
           </dl>
-
-          <div className="mt-8 flex flex-wrap gap-3">
+          {active ? (
+            <section aria-labelledby="done-next" className="mt-8 border-t border-line pt-6">
+              <h2 id="done-next" className="font-display text-2xl">What happens next</h2>
+              <ol className="mt-4 list-decimal space-y-3 pl-5 text-base text-ink-2">
+                <li>We confirm your visit by WhatsApp or phone.</li>
+                <li>Your showroom visit is by appointment, at the agreed time.</li>
+                <li>Prices are confirmed at the showroom.</li>
+              </ol>
+            </section>
+          ) : null}
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             {active ? (
-              <a href={calendarHref} className="btn-primary px-7 py-4">
-                <CalendarPlus className="h-4 w-4" aria-hidden />
+              <TLink
+                href={calendarHref}
+                prefetch={false}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary min-h-11 px-5 py-3"
+              >
+                <CalendarPlus className="size-4" aria-hidden />
                 Add to calendar
+              </TLink>
+            ) : null}
+            {directionsHref ? (
+              <a
+                href={directionsHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-ghost min-h-11 px-5 py-3"
+              >
+                <MapPin className="size-4" aria-hidden />
+                Get directions
               </a>
             ) : null}
-            <a href={mapsDirectionsUrl(business.address)} target="_blank" rel="noopener noreferrer" className="btn-ghost px-7 py-4">
-              <MapPin className="h-4 w-4" aria-hidden />
-              Get directions
-            </a>
             {whatsappHref ? (
-              <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="btn-ghost px-7 py-4">
-                <MessageCircle className="h-4 w-4" aria-hidden />
-                WhatsApp the showroom
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-ghost min-h-11 px-5 py-3"
+              >
+                <MessageCircle className="size-4" aria-hidden />
+                Message us on WhatsApp
               </a>
             ) : null}
+            <TLink href="/shop/" className="btn-ghost min-h-11 px-5 py-3">Back to the shop</TLink>
           </div>
         </Card>
-
-        <div className="mt-12 grid gap-12 lg:grid-cols-2">
-          <section aria-labelledby="done-pieces">
-            <h2 id="done-pieces" className="text-2xl font-light">
-              Your pieces
-            </h2>
-            {booking.items.length ? (
-              <ul className="mt-6 divide-y divide-line">
-                {booking.items.map((item, index) => (
-                  <li key={`${item.slug ?? item.name}-${index}`} className="flex items-center gap-4 py-4 first:pt-0">
-                    <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-bone-2">
-                      {item.image ? (
-                        <Picture
-                          data={item.image}
-                          alt=""
-                          sizes="64px"
-                          imgClassName={cn('h-full w-full', item.image.cutout ? 'object-contain mix-blend-multiply' : 'object-cover')}
-                        />
-                      ) : null}
-                    </div>
-                    <div className="min-w-0">
-                      {item.slug ? (
-                        <TLink href={`/product/${item.slug}/`} className="font-display text-lg leading-snug hover:underline">
-                          {item.name}
-                        </TLink>
-                      ) : (
-                        <p className="font-display text-lg leading-snug">{item.name}</p>
-                      )}
-                      <p className="text-sm text-mute">
-                        {[item.colourName, `Quantity ${item.quantity}`].filter(Boolean).join(' · ')}
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="mt-6 text-ink-2">No pieces chosen yet. That is fine: you can look around and choose at the showroom.</p>
-            )}
-          </section>
-
-          <section aria-labelledby="done-next">
-            <h2 id="done-next" className="text-2xl font-light">
-              What happens next
-            </h2>
-            <ol className="mt-6 list-decimal space-y-4 pl-5 text-ink-2 marker:font-semibold marker:text-maroon">
-              <li>Your visit is saved under the reference above.</li>
-              <li>Come at your chosen time. Photos or measurements of your room are handy to bring, if you have them.</li>
-              <li>Prices, fabrics and delivery are confirmed at your visit. Nothing is paid online.</li>
-              {whatsappHref ? <li>Need to change the time? Message us on WhatsApp with your reference.</li> : null}
-            </ol>
-          </section>
-        </div>
+        <section aria-labelledby="done-pieces" className="mt-10">
+          <h2 id="done-pieces" className="text-2xl font-light">Your pieces</h2>
+          {booking.items.length ? (
+            <ul className="mt-6 divide-y divide-line">
+              {booking.items.map((item, index) => (
+                <li key={`${item.slug ?? item.name}-${index}`} className="flex min-w-0 items-center gap-4 py-4">
+                  <div className="size-[72px] shrink-0 overflow-hidden rounded-lg bg-bone-2">
+                    {item.image ? (
+                      <Picture
+                        data={item.image}
+                        alt=""
+                        sizes="72px"
+                        imgClassName={cn(
+                          'h-full w-full',
+                          item.image.cutout ? 'object-contain mix-blend-multiply' : 'object-cover',
+                        )}
+                      />
+                    ) : null}
+                  </div>
+                  <div className="min-w-0">
+                    {item.slug ? (
+                      <TLink
+                        href={`/product/${item.slug}/`}
+                        className="line-clamp-2 min-h-11 break-words font-display text-lg leading-snug underline"
+                      >
+                        {item.name}
+                      </TLink>
+                    ) : <p className="break-words font-display text-lg">{item.name}</p>}
+                    <p className="text-base text-mute">
+                      {[item.colourName, `Quantity ${item.quantity}`].filter(Boolean).join(' · ')}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : <p className="mt-6 text-base text-ink-2">No pieces chosen yet. You can choose at the showroom.</p>}
+        </section>
       </div>
     </div>
   );
