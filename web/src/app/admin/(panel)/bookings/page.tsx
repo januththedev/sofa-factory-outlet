@@ -1,18 +1,19 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { CalendarDays, Download } from 'lucide-react';
+import { CalendarDays } from 'lucide-react';
+import { Download } from 'lucide-react';
 import { BookingFilters } from '@/components/admin/bookings/filters';
 import { BookingList } from '@/components/admin/bookings/booking-list';
 import { Pagination } from '@/components/admin/bookings/pagination';
 import { PageHeader } from '@/components/admin/page-header';
 import { buttonStyles } from '@/components/ui/button';
-import {
-  bookingsQuery,
-  countNewBookings,
-  listBookedProducts,
-  listBookings,
-  parseBookingFilters,
-} from '@/lib/admin/bookings';
+import { bookingsQuery } from '@/lib/admin/bookings';
+import { BOOKING_STATUSES } from '@/lib/admin/bookings';
+import { STATUS_LABELS } from '@/lib/admin/bookings';
+import { countNewBookings } from '@/lib/admin/bookings';
+import { listBookedProducts } from '@/lib/admin/bookings';
+import { listBookings } from '@/lib/admin/bookings';
+import { parseBookingFilters } from '@/lib/admin/bookings';
 import { requireRole } from '@/lib/auth/session';
 
 export const dynamic = 'force-dynamic';
@@ -44,25 +45,33 @@ export default async function BookingsPage({ searchParams }: { searchParams: Sea
               <CalendarDays className="size-4" aria-hidden />
               Calendar
             </Link>
-            <Link
-              href={`/admin/bookings/export/${exportQuery ? `?${exportQuery}` : ''}`}
-              download
-              prefetch={false}
-              className={buttonStyles({ variant: 'ghost', size: 'md' })}
-            >
-              <Download className="size-4" aria-hidden />
-              Export CSV
-              <span className="sr-only">{hasFilter ? ' of the current filters' : ' of all bookings'}</span>
-            </Link>
+            <details className="relative">
+              <summary className="min-h-11 min-w-11 cursor-pointer rounded-full border border-line px-5 py-3">
+                More actions
+              </summary>
+              <div className="mt-2 rounded-xl border border-line bg-paper p-2">
+                <Link
+                  href={`/admin/bookings/export/${exportQuery ? `?${exportQuery}` : ''}`}
+                  download
+                  prefetch={false}
+                  className={buttonStyles({ variant: 'ghost', size: 'md' })}
+                >
+                  <Download className="size-4" aria-hidden />
+                  Export CSV
+                  <span className="sr-only">{hasFilter ? ' of the current filters' : ' of all bookings'}</span>
+                </Link>
+              </div>
+            </details>
           </>
         }
       />
 
-      <p className="mb-6 text-sm" role="status">
+      <p className="mb-6 text-base sm:text-sm" role="status">
         <Link
           href="/admin/bookings/?status=new&sort=asc"
           className={
-            'inline-flex items-center gap-2 rounded-full bg-maroon/10 px-4 py-1.5 font-semibold text-maroon ' +
+            'inline-flex min-h-11 min-w-11 items-center gap-2 rounded-full bg-maroon/10 px-4 font-semibold ' +
+            'text-maroon ' +
             'hover:bg-maroon/15'
           }
         >
@@ -74,7 +83,12 @@ export default async function BookingsPage({ searchParams }: { searchParams: Sea
         </Link>
       </p>
 
-      <BookingFilters filter={filter} products={products} />
+      <BookingFilters
+        key={bookingsQuery(filter)}
+        filter={filter}
+        products={products}
+        statuses={BOOKING_STATUSES.map((status) => ({ value: status, label: STATUS_LABELS[status] }))}
+      />
       <BookingList rows={result.rows} filter={filter} />
       <Pagination
         page={result.page}

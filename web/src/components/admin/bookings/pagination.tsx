@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { buttonStyles } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
 
@@ -24,7 +25,7 @@ export function Pagination({
   const hasNext = page < pageCount;
   return (
     <nav aria-label="Pages" className="mt-6 flex flex-wrap items-center justify-between gap-3">
-      <p className="text-sm text-mute" aria-live="polite">
+      <p className="text-base sm:text-sm text-mute" aria-live="polite">
         {total.toLocaleString('en-GB')} {noun} · page {page} of {pageCount}
       </p>
       <div className="flex gap-2">

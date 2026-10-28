@@ -1,16 +1,27 @@
+import { Suspense } from 'react';
+import { AdminPageError } from '@/components/admin/dashboard/page-error';
+import { AdminPageLoading } from '@/components/admin/dashboard/page-loading';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { type Kpi, KpiTiles } from '@/components/admin/dashboard/kpi-tiles';
-import { formatCount, formatShortDay, formatToday } from '@/components/admin/dashboard/format';
+import { type Kpi } from '@/components/admin/dashboard/kpi-tiles';
+import { KpiTiles } from '@/components/admin/dashboard/kpi-tiles';
+import { formatCount } from '@/components/admin/dashboard/format';
+import { formatShortDay } from '@/components/admin/dashboard/format';
+import { formatToday } from '@/components/admin/dashboard/format';
 import { RankedList } from '@/components/admin/dashboard/ranked-list';
 import { SetupChecklistCard } from '@/components/admin/dashboard/setup-checklist-card';
 import { UpcomingVisits } from '@/components/admin/dashboard/upcoming-visits';
 import { VisitorsChart } from '@/components/admin/dashboard/visitors-chart';
 import { PageHeader } from '@/components/admin/page-header';
 import { BarList } from '@/components/admin/visitors/bar-list';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
-import { buildSetupChecklist, openSetupItems } from '@/lib/admin/setup-checklist';
-import { getDashboardStats, loadSetupInput } from '@/lib/admin/stats';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
+import { buildSetupChecklist } from '@/lib/admin/setup-checklist';
+import { openSetupItems } from '@/lib/admin/setup-checklist';
+import { getDashboardStats } from '@/lib/admin/stats';
+import { loadSetupInput } from '@/lib/admin/stats';
 import { requireRole } from '@/lib/auth/session';
 import { getDb } from '@/lib/db';
 
@@ -28,18 +39,27 @@ const STATUS_LABELS = {
 
 function CardLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <Link href={href} className="shrink-0 text-sm font-medium text-maroon underline-offset-4 hover:underline">
+    <Link
+      href={href}
+      className="inline-flex min-h-11 items-center text-base sm:text-sm font-medium text-maroon hover:underline"
+    >
       {children}
     </Link>
   );
 }
 
-export default async function DashboardPage() {
+async function DashboardContent({ session }: { session: Awaited<ReturnType<typeof requireRole>> }) {
   // Staff and owners both see the dashboard; the setup checklist links to settings only the owner can open.
-  const session = await requireRole('any');
   const now = new Date();
-  const db = await getDb();
-  const [stats, setup] = await Promise.all([getDashboardStats(now, db), loadSetupInput(db)]);
+  const loaded = await getDb().then(async (db) => {
+    const [stats, setup] = await Promise.all([getDashboardStats(now, db), loadSetupInput(db)]);
+    return { stats, setup };
+  }).catch((error: unknown) => {
+    console.error('[admin-dashboard] could not load the dashboard:', error);
+    return null;
+  });
+  if (!loaded) return <AdminPageError />;
+  const { stats, setup } = loaded;
   const checklist = buildSetupChecklist(setup);
   const { visitors, bookings, conversion } = stats;
 
@@ -103,6 +123,8 @@ export default async function DashboardPage() {
         description={`${formatToday(now)}. Welcome back, ${session.name.split(' ')[0]}.`}
       />
 
+      <KpiTiles items={[kpis[2], kpis[0], kpis[1], ...kpis.slice(3)]} />
+
       <SetupChecklistCard
         items={openSetupItems(checklist)}
         done={checklist.done}
@@ -110,11 +132,9 @@ export default async function DashboardPage() {
         isOwner={session.role === 'owner'}
       />
 
-      <KpiTiles items={kpis} />
-
       <div className="grid gap-6 lg:grid-cols-[3fr_2fr]">
-        <Card>
-          <CardHeader>
+        <Card className="min-w-0">
+          <CardHeader className="flex-wrap">
             <CardTitle>Visitors, last 7 days</CardTitle>
             <CardLink href="/admin/visitors/">Full report</CardLink>
           </CardHeader>
@@ -123,8 +143,8 @@ export default async function DashboardPage() {
           </CardBody>
         </Card>
 
-        <Card>
-          <CardHeader>
+        <Card className="min-w-0">
+          <CardHeader className="flex-wrap">
             <CardTitle>Bookings by status</CardTitle>
             <CardLink href="/admin/bookings/">All bookings</CardLink>
           </CardHeader>
@@ -141,20 +161,20 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
-          <CardHeader>
+        <Card className="min-w-0">
+          <CardHeader className="flex-wrap">
             <CardTitle>Upcoming visits</CardTitle>
-            <CardLink href="/admin/bookings/">Calendar</CardLink>
+            <CardLink href="/admin/bookings/calendar/">Calendar</CardLink>
           </CardHeader>
           <CardBody className="py-2">
             <UpcomingVisits visits={stats.upcoming} today={stats.today} />
           </CardBody>
         </Card>
 
-        <Card>
-          <CardHeader>
+        <Card className="min-w-0">
+          <CardHeader className="flex-wrap">
             <CardTitle>Most viewed products</CardTitle>
-            <span className="text-sm text-mute">Last 7 days</span>
+            <span className="text-base sm:text-sm text-mute">Last 7 days</span>
           </CardHeader>
           <CardBody>
             <RankedList
@@ -170,10 +190,10 @@ export default async function DashboardPage() {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
+      <Card className="min-w-0">
+        <CardHeader className="flex-wrap">
           <CardTitle>Top chatbot questions</CardTitle>
-          <span className="text-sm text-mute">Last 30 days</span>
+          <span className="text-base sm:text-sm text-mute">Last 30 days</span>
         </CardHeader>
         <CardBody>
           <RankedList
@@ -187,5 +207,14 @@ export default async function DashboardPage() {
         </CardBody>
       </Card>
     </div>
+  );
+}
+
+export default async function DashboardPage() {
+  const session = await requireRole('any');
+  return (
+    <Suspense fallback={<AdminPageLoading label="dashboard" />}>
+      <DashboardContent session={session} />
+    </Suspense>
   );
 }

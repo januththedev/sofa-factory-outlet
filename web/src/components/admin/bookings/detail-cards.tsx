@@ -1,16 +1,21 @@
 import Link from 'next/link';
-import { Mail, MessageCircle, Phone } from 'lucide-react';
-import { BookingLinks, InvoiceLinks } from '@/components/admin/bookings/history';
-import { ItemThumb, itemAlt } from '@/components/admin/bookings/item-thumb';
+import { Mail } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
+import { Phone } from 'lucide-react';
+import { BookingLinks } from '@/components/admin/bookings/history';
+import { InvoiceLinks } from '@/components/admin/bookings/history';
+import { ItemThumb } from '@/components/admin/bookings/item-thumb';
+import { itemAlt } from '@/components/admin/bookings/item-thumb';
 import { Transcript } from '@/components/admin/bookings/transcript';
 import { buttonStyles } from '@/components/ui/button';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  formatColomboDateTime,
-  PREFERRED_CONTACT_LABELS,
-  type BookingDetail,
-  type ItemView,
-} from '@/lib/admin/bookings';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
+import { formatColomboDateTime } from '@/lib/admin/bookings';
+import { PREFERRED_CONTACT_LABELS } from '@/lib/admin/bookings';
+import { type BookingDetail } from '@/lib/admin/bookings';
+import { type ItemView } from '@/lib/admin/bookings';
 import { formatLkr } from '@/lib/money';
 
 const HEX = /^#[0-9a-f]{3,8}$/i;
@@ -31,12 +36,15 @@ export function Swatch({ hex }: { hex: string | null }) {
 export function CustomerCard({ detail, whatsappHref }: { detail: BookingDetail; whatsappHref: string | null }) {
   const { customer, visit, customerNotes } = detail.sheet;
   return (
-    <Card>
-      <CardHeader>
+    <Card className="min-w-0">
+      <CardHeader className="flex-wrap">
         <CardTitle>Customer</CardTitle>
         <Link
           href={`/admin/customers/${detail.customerId}/`}
-          className="text-sm font-semibold text-maroon hover:underline"
+          className={
+            'inline-flex min-h-11 min-w-11 items-center text-base font-semibold text-maroon ' +
+            'hover:underline sm:text-sm'
+          }
         >
           Customer record
         </Link>
@@ -61,15 +69,17 @@ export function CustomerCard({ detail, whatsappHref }: { detail: BookingDetail; 
             </a>
           ) : null}
         </div>
-        {whatsappHref ? null : <p className="text-sm text-mute">No WhatsApp number is saved for this customer.</p>}
-        <dl className="grid gap-x-6 gap-y-4 text-sm sm:grid-cols-2 lg:grid-cols-1">
+        {whatsappHref ? null : (
+          <p className="text-base text-mute sm:text-sm">No WhatsApp number is saved for this customer.</p>
+        )}
+        <dl className="grid gap-x-6 gap-y-4 text-base sm:text-sm sm:grid-cols-2 lg:grid-cols-1">
           <div>
             <dt className="eyebrow">Email</dt>
             <dd className="mt-1 break-all">
               {customer.email ? (
                 <a
                   href={`mailto:${customer.email}`}
-                  className="inline-flex items-center gap-1.5 hover:text-maroon hover:underline"
+                  className="inline-flex min-h-11 items-center gap-1.5 hover:text-maroon hover:underline"
                 >
                   <Mail className="size-4 shrink-0 text-mute" aria-hidden />
                   {customer.email}
@@ -125,44 +135,55 @@ export function ProductsCard({
   totalMinor: number | null;
 }) {
   return (
-    <Card>
-      <CardHeader>
+    <Card className="min-w-0">
+      <CardHeader className="flex-wrap">
         <CardTitle>Products selected</CardTitle>
-        <span className="text-sm text-mute">
+        <span className="text-base sm:text-sm text-mute">
           {pieces} {pieces === 1 ? 'piece' : 'pieces'}
         </span>
       </CardHeader>
       {items.length === 0 ? (
         <CardBody>
-          <p className="text-sm text-mute">No pieces were chosen. They booked a visit without a cart.</p>
+          <p className="text-base sm:text-sm text-mute">No pieces were chosen. They booked a visit without a cart.</p>
         </CardBody>
       ) : (
         <>
           <ul className="divide-y divide-line">
             {items.map((item) => (
-              <li key={item.id} className="flex gap-4 p-4">
-                <ItemThumb image={item.image} alt={itemAlt(item)} className="size-20" />
+              <li key={item.id} className="grid grid-cols-[4rem_minmax(0,1fr)] gap-3 p-4 sm:flex sm:gap-4">
+                <ItemThumb image={item.image} alt={itemAlt(item)} className="size-16 sm:size-20" />
                 <div className="min-w-0 flex-1">
                   {item.productId !== null && item.slug ? (
-                    <Link href={`/product/${item.slug}/`} className="font-medium text-maroon hover:underline">
+                    <Link
+                      href={`/product/${item.slug}/`}
+                      className={
+                        'inline-flex min-h-11 min-w-11 items-center break-words font-medium text-maroon ' +
+                        'hover:underline'
+                      }
+                    >
                       {item.name}
                     </Link>
                   ) : (
                     <span className="font-medium">{item.name}</span>
                   )}
-                  <p className="mt-1.5 flex items-center gap-2 text-sm text-ink-2">
+                  <p className="mt-1.5 flex items-center gap-2 text-base sm:text-sm text-ink-2">
                     <Swatch hex={item.hex} />
                     {item.colourName ?? 'Colour not chosen'}
                   </p>
-                  <p className="mt-1 text-sm text-mute">Quantity {item.quantity}</p>
+                  <p className="mt-1 text-base sm:text-sm text-mute">Quantity {item.quantity}</p>
                 </div>
-                <div className="shrink-0 text-right text-sm">
+                <div className="col-start-2 min-w-0 text-base sm:shrink-0 sm:text-right sm:text-sm">
                   <ItemPrice item={item} />
                 </div>
               </li>
             ))}
           </ul>
-          <div className="flex items-center justify-between gap-4 border-t border-line px-4 py-3 text-sm">
+          <div
+            className={
+              'flex flex-wrap items-center justify-between gap-4 border-t border-line px-4 py-3 ' +
+              'text-base sm:text-sm'
+            }
+          >
             <span className="font-semibold">Total</span>
             {totalMinor === null ? (
               <span className="text-mute">Not shown: some prices are on request</span>
@@ -180,12 +201,12 @@ export function VisitCard({ detail }: { detail: BookingDetail }) {
   const { visit } = detail.sheet;
   const tags = Object.entries(detail.utm ?? {});
   return (
-    <Card>
-      <CardHeader>
+    <Card className="min-w-0">
+      <CardHeader className="flex-wrap">
         <CardTitle>Visit</CardTitle>
       </CardHeader>
       <CardBody className="space-y-5">
-        <dl className="grid gap-x-6 gap-y-4 text-sm sm:grid-cols-2">
+        <dl className="grid gap-x-6 gap-y-4 text-base sm:text-sm sm:grid-cols-2">
           <div>
             <dt className="eyebrow">Date</dt>
             <dd className="mt-1 font-medium">{visit.dateLabel}</dd>
@@ -234,8 +255,8 @@ export function VisitCard({ detail }: { detail: BookingDetail }) {
 
 export function HistoryCard({ detail }: { detail: BookingDetail }) {
   return (
-    <Card>
-      <CardHeader>
+    <Card className="min-w-0">
+      <CardHeader className="flex-wrap">
         <CardTitle>Past bookings and invoices</CardTitle>
       </CardHeader>
       <CardBody className="space-y-6">

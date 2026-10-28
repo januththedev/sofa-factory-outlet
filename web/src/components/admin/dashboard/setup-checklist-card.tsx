@@ -1,12 +1,19 @@
 'use client';
 
-import { CircleCheck, EyeOff } from 'lucide-react';
+import { CircleCheck } from 'lucide-react';
+import { EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { useSyncExternalStore } from 'react';
+import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Button, buttonStyles } from '@/components/ui/button';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
-import type { SetupGroup, SetupItem } from '@/lib/admin/setup-checklist';
+import { Button } from '@/components/ui/button';
+import { buttonStyles } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
+import type { SetupGroup } from '@/lib/admin/setup-checklist';
+import type { SetupItem } from '@/lib/admin/setup-checklist';
 
 const STORAGE_KEY = 'sfo-admin-setup-hidden';
 const CHANGE_EVENT = 'sfo-admin-setup-hidden-change';
@@ -70,7 +77,7 @@ function ItemRow({ item, hidden, canOpen, onToggle }: ItemRowProps) {
           {item.label}
           <Badge tone="neutral">{GROUP_LABELS[item.group]}</Badge>
         </p>
-        {hidden ? null : <p className="mt-0.5 text-sm text-mute">{item.detail}</p>}
+        {hidden ? null : <p className="mt-0.5 text-base sm:text-sm text-mute">{item.detail}</p>}
       </div>
       <div className="flex shrink-0 items-center gap-2">
         {canOpen ? (
@@ -103,6 +110,7 @@ type CardProps = {
 };
 
 export function SetupChecklistCard({ items, done, total, isOwner }: CardProps) {
+  const [expanded, setExpanded] = useState(false);
   const canOpen = (item: SetupItem) => isOwner || !item.href.startsWith('/admin/settings/');
   const raw = useSyncExternalStore(subscribe, readHidden, () => '');
   const hiddenIds = new Set(parseHidden(raw));
@@ -118,10 +126,10 @@ export function SetupChecklistCard({ items, done, total, isOwner }: CardProps) {
 
   if (items.length === 0) {
     return (
-      <Card>
+      <Card className="min-w-0">
         <CardBody className="flex items-center gap-3">
           <CircleCheck className="size-5 shrink-0 text-good" aria-hidden />
-          <p className="text-sm">All {total} setup items are done. Nothing is waiting on the client.</p>
+          <p className="text-base sm:text-sm">All {total} setup items are done. Nothing is waiting on the client.</p>
         </CardBody>
       </Card>
     );
@@ -129,10 +137,10 @@ export function SetupChecklistCard({ items, done, total, isOwner }: CardProps) {
 
   return (
     <Card className="border-warn/40">
-      <CardHeader>
+      <CardHeader className="flex-wrap">
         <div className="min-w-0">
           <CardTitle>Setup checklist</CardTitle>
-          <p className="mt-1 text-sm text-mute">
+          <p className="mt-1 text-base sm:text-sm text-mute">
             {done} of {total} done. These are still placeholders or missing, so the public site holds them back.
           </p>
         </div>
@@ -147,7 +155,18 @@ export function SetupChecklistCard({ items, done, total, isOwner }: CardProps) {
           <div className="h-2 rounded-full bg-good" style={{ width: `${Math.round((done / total) * 100)}%` }} />
         </div>
       </CardHeader>
-      <CardBody className="space-y-3 py-3">
+      <div className="px-4 py-3 lg:hidden">
+        <Button
+          variant="subtle"
+          className="w-full"
+          aria-expanded={expanded}
+          aria-controls="setup-items"
+          onClick={() => setExpanded((previous) => !previous)}
+        >
+          {expanded ? 'Hide setup checklist' : `Show setup checklist (${items.length} remaining)`}
+        </Button>
+      </div>
+      <CardBody id="setup-items" className={expanded ? 'space-y-3 py-3' : 'hidden space-y-3 py-3 lg:block'}>
         {shown.length > 0 ? (
           <ul className="divide-y divide-line">
             {shown.slice(0, SHOWN_AT_FIRST).map((item) => (
@@ -161,11 +180,11 @@ export function SetupChecklistCard({ items, done, total, isOwner }: CardProps) {
             ))}
           </ul>
         ) : (
-          <p className="py-2 text-sm text-mute">Every open item is hidden for now.</p>
+          <p className="py-2 text-base sm:text-sm text-mute">Every open item is hidden for now.</p>
         )}
         {shown.length > SHOWN_AT_FIRST ? (
           <details>
-            <summary className="cursor-pointer text-sm font-medium text-maroon">
+            <summary className="min-h-11 cursor-pointer py-3 text-base sm:text-sm font-medium text-maroon">
               Show {shown.length - SHOWN_AT_FIRST} more
             </summary>
             <ul className="divide-y divide-line">
@@ -183,7 +202,7 @@ export function SetupChecklistCard({ items, done, total, isOwner }: CardProps) {
         ) : null}
         {hidden.length > 0 ? (
           <details className="rounded-xl bg-bone-2/60 px-4 py-2">
-            <summary className="flex cursor-pointer items-center gap-2 text-sm font-medium">
+            <summary className="flex min-h-11 cursor-pointer py-3 items-center gap-2 text-base sm:text-sm font-medium">
               <EyeOff className="size-4" aria-hidden />
               Hidden for now ({hidden.length})
             </summary>

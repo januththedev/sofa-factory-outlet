@@ -1,6 +1,12 @@
 'use client';
 
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Bar } from 'recharts';
+import { BarChart } from 'recharts';
+import { CartesianGrid } from 'recharts';
+import { ResponsiveContainer } from 'recharts';
+import { Tooltip } from 'recharts';
+import { XAxis } from 'recharts';
+import { YAxis } from 'recharts';
 import { NoData } from '@/components/admin/visitors/no-data';
 
 export type VisitorBar = { date: string; label: string; visitors: number };
@@ -24,9 +30,9 @@ export function VisitorsChart({ data, summary }: { data: VisitorBar[]; summary: 
           </BarChart>
         </ResponsiveContainer>
       </div>
-      <details className="mt-3 text-sm">
-        <summary className="cursor-pointer text-mute">View as table</summary>
-        <table className="mt-2 w-full border-collapse text-left text-sm">
+      <details className="mt-3 text-base sm:text-sm">
+        <summary className="min-h-11 cursor-pointer py-3 text-mute">View as table</summary>
+        <table className="mt-2 w-full border-collapse text-left text-base sm:text-sm">
           <caption className="sr-only">Visitors per day</caption>
           <thead className="border-b border-line text-xs uppercase tracking-wider text-mute">
             <tr>

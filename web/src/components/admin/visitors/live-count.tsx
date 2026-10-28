@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useState } from 'react';
 import { pollWhenVisible } from '@/lib/polling';
 
 /** Live "on the site now" count, refreshed every 30 seconds. */
