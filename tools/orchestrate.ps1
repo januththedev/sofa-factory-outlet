@@ -38,7 +38,7 @@ function Log([string]$Message) {
   Write-Host $line
 }
 
-function Git([string[]]$Arguments) {
+function Invoke-Git([string[]]$Arguments) {
   $output = & git -C $repo @Arguments 2>&1
   [pscustomobject]@{ Code = $LASTEXITCODE; Text = (($output | ForEach-Object { "$_" }) -join "`n").Trim() }
 }
@@ -151,19 +151,19 @@ function Test-Main([string]$Tag) {
 
 function Merge-Task($task) {
   $id = $task.id
-  if ((Git @('status', '--porcelain', '--untracked-files=no')).Text -ne '') {
+  if ((Invoke-Git @('status', '--porcelain', '--untracked-files=no')).Text -ne '') {
     Log "main has uncommitted tracked changes, will try to merge $id again later"
     return 'retry'
   }
   if ($task.tool -eq 'claude') {
-    $result = Git @('merge', '--no-ff', '-q', $task.branch, '-m', "Merge $id")
+    $result = Invoke-Git @('merge', '--no-ff', '-q', $task.branch, '-m', "Merge $id")
   } else {
     & "$PSScriptRoot\merge-worktree.ps1" -Id $id -Writer $task.writer -Message $task.message | Out-Null
-    $result = Git @('merge-base', '--is-ancestor', "wt/$id", 'HEAD')
+    $result = Invoke-Git @('merge-base', '--is-ancestor', "wt/$id", 'HEAD')
   }
-  $conflicts = (Git @('diff', '--name-only', '--diff-filter=U')).Text
+  $conflicts = (Invoke-Git @('diff', '--name-only', '--diff-filter=U')).Text
   if ($conflicts) {
-    Git @('merge', '--abort') | Out-Null
+    Invoke-Git @('merge', '--abort') | Out-Null
     Log "merge conflict in ${id}: $conflicts"
     return 'conflict'
   }
@@ -173,9 +173,9 @@ function Merge-Task($task) {
   }
   $problem = Test-Main "main-$id"
   if ($problem) {
-    $revert = Git @('revert', '-m', '1', '--no-edit', 'HEAD')
+    $revert = Invoke-Git @('revert', '-m', '1', '--no-edit', 'HEAD')
     if ($revert.Code -ne 0) {
-      Git @('revert', '--abort') | Out-Null
+      Invoke-Git @('revert', '--abort') | Out-Null
       Log "CRITICAL: main is red after merging $id ($problem) and the revert failed: needs a person"
       $script:halt = $true
     } else {
@@ -183,7 +183,7 @@ function Merge-Task($task) {
     }
     return 'red'
   }
-  Log "merged $id at $((Git @('rev-parse', '--short', 'HEAD')).Text), main gate green"
+  Log "merged $id at $((Invoke-Git @('rev-parse', '--short', 'HEAD')).Text), main gate green"
   return 'merged'
 }
 
@@ -267,7 +267,7 @@ while ($true) {
       }
       'waiting' {
         $count = 0
-        [void][int]::TryParse((Git @('rev-list', '--count', "main..$($task.branch)")).Text, [ref]$count)
+        [void][int]::TryParse((Invoke-Git @('rev-list', '--count', "main..$($task.branch)")).Text, [ref]$count)
         if ($count -gt 0) {
           $entry.status = 'verified'
           Log "$id has $count commit(s) ready to merge"
