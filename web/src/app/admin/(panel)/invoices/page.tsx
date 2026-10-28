@@ -78,7 +78,7 @@ function Tabs({ active, values }: { active: Tab; values: InvoiceFilterValues }) 
           key={item.key}
           href={tabHref(item.key, values)}
           aria-current={active === item.key ? 'page' : undefined}
-          className={`-mb-px border-b-2 pb-3 text-base sm:text-sm font-semibold ${
+          className={`-mb-px inline-flex min-h-11 items-center border-b-2 pb-1 text-base sm:text-sm font-semibold ${
             active === item.key
               ? 'border-maroon text-ink'
               : 'border-transparent text-mute hover:text-ink'

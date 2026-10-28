@@ -5,6 +5,8 @@
 // edge) were found this way.
 //   node scripts/qa-mobile-audit.mjs http://localhost:3000 test-results/qa --shots
 //   AUDIT_PAGES=/,/shop/ node scripts/qa-mobile-audit.mjs ...   (comma separated; on Git Bash set MSYS_NO_PATHCONV=1)
+//   AUDIT_ADMIN_EMAIL=... AUDIT_ADMIN_PASSWORD=... also signs in and audits every admin page (use a local or test
+//   account, never the production owner).
 import fs from 'node:fs';
 import path from 'node:path';
 import { chromium, devices } from 'playwright-core';
@@ -17,6 +19,11 @@ fs.mkdirSync(out, { recursive: true });
 const pages = process.env.AUDIT_PAGES ? process.env.AUDIT_PAGES.split(',') : [
   '/', '/shop/', '/sofas/', '/sofas/l-shape/', '/product/luxury-emerald-green-l-shape-sofa-modern-furniture-colombo/', '/cart/', '/book-visit/', '/visit/', '/about-us/', '/factory/', '/trade/',
   '/guides/', '/privacy/', '/admin/login/',
+];
+const adminLogin = process.env.AUDIT_ADMIN_EMAIL && process.env.AUDIT_ADMIN_PASSWORD;
+const adminPages = [
+  '/admin/', '/admin/bookings/', '/admin/bookings/calendar/', '/admin/customers/', '/admin/visitors/', '/admin/products/',
+  '/admin/categories/', '/admin/invoices/', '/admin/settings/', '/admin/seo/', '/admin/chat/', '/admin/knowledge/',
 ];
 const viewports = [
   { name: 'phone-390', width: 390, height: 844, mobile: true },
@@ -36,7 +43,16 @@ for (const vp of viewports) {
     userAgent: vp.mobile ? devices['Pixel 7'].userAgent : undefined,
   });
   await context.addInitScript(() => { try { sessionStorage.setItem('sfo-pre', '1'); } catch { /* ignore */ } });
-  for (const p of pages) {
+  if (adminLogin) {
+    const loginPage = await context.newPage();
+    await loginPage.goto(`${base}/admin/login/`, { waitUntil: 'load' });
+    await loginPage.getByLabel('Email').fill(process.env.AUDIT_ADMIN_EMAIL);
+    await loginPage.getByLabel('Password').fill(process.env.AUDIT_ADMIN_PASSWORD);
+    await loginPage.getByRole('button', { name: 'Sign in' }).click();
+    await loginPage.waitForURL(/\/admin\/?$/, { timeout: 15000 }).catch(() => {});
+    await loginPage.close();
+  }
+  for (const p of adminLogin && !process.env.AUDIT_PAGES ? [...pages, ...adminPages] : pages) {
     const page = await context.newPage();
     const errors = [];
     page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text().slice(0, 140)); });
