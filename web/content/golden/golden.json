@@ -1,0 +1,602 @@
+[
+  {
+    "id": "g01",
+    "question": "showroom eka koheda thiyenne",
+    "expect": {
+      "intent": "store_info",
+      "facts": ["67 Pallidora Road", "Dehiwala"],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g02",
+    "question": "mata visit ekak book karanna one saturday",
+    "expect": {
+      "intent": "booking",
+      "facts": ["time slot", "team follows up"],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g03",
+    "question": "how to book a showroom visit",
+    "expect": {
+      "intent": "booking",
+      "facts": ["book a showroom visit", "date and a time slot"],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g04",
+    "question": "booking eken passe mokada wade",
+    "expect": {
+      "intent": "booking",
+      "facts": ["SFO-B-0042", "calendar file", "WhatsApp button"],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g05",
+    "question": "delivery eka gapa dinna kiyada",
+    "expect": {
+      "intent": "store_info",
+      "facts": ["10 to 15 working days"],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g06",
+    "question": "kandy ekata danawada delivery",
+    "expect": {
+      "intent": "store_info",
+      "facts": ["across Sri Lanka", "confirmed at the visit"],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g07",
+    "question": "delivery free da",
+    "expect": {
+      "intent": "store_info",
+      "facts": ["free delivery"],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g08",
+    "question": "whatsapp number eka mokakda",
+    "expect": {
+      "intent": "store_info",
+      "facts": ["+94 76 671 1711"],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g09",
+    "question": "online payment ekak karanna puluwanda",
+    "expect": {
+      "intent": "store_info",
+      "facts": ["no online payment"],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g10",
+    "question": "sofa eka pay karanne kohomada",
+    "expect": {
+      "intent": "store_info",
+      "facts": ["showroom visit", "nothing is charged"],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g11",
+    "question": "gihin passe repair karanda puluwanda da",
+    "expect": {
+      "intent": "store_info",
+      "facts": ["repairs, adjustments and inquiries"],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g12",
+    "question": "gana eka kiyanna oyage",
+    "expect": {
+      "intent": "store_info",
+      "facts": ["artisanal sofa manufacturer", "Sri Lanka"],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g13",
+    "question": "sofas theliyanne koheda",
+    "expect": {
+      "intent": "store_info",
+      "facts": ["Colombo workshop", "not imported"],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g14",
+    "question": "visit ekata mokakda ganne",
+    "expect": {
+      "intent": "booking",
+      "facts": ["room measurements", "rough budget"],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g15",
+    "question": "insta page eka da",
+    "expect": {
+      "intent": "store_info",
+      "facts": ["@sofa_factory_outlet"],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g16",
+    "question": "green l shape sofa ekak thiyenawada",
+    "expect": {
+      "intent": "find_products",
+      "facts": [],
+      "products": ["luxury-emerald-green-l-shape-sofa-modern-furniture-colombo", "green-l-shape-sofa-with-ottoman-modern-furniture-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g17",
+    "question": "dusty pink l shape eka",
+    "expect": {
+      "intent": "find_products",
+      "facts": [],
+      "products": ["dusty-pink-l-shape-sofa-modern-luxury-furniture-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g18",
+    "question": "u shape sofa ekak thiyenawada da",
+    "expect": {
+      "intent": "find_products",
+      "facts": [],
+      "products": ["u-shape-modular-sofa-in-caramel-brown-luxury-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g19",
+    "question": "leather sofa set ekak wena thiyenawada",
+    "expect": {
+      "intent": "find_products",
+      "facts": [],
+      "products": ["maroon-leather-sofa-set-321-premium-furniture-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g20",
+    "question": "corduroy sofa eka hariyeda",
+    "expect": {
+      "intent": "find_products",
+      "facts": [],
+      "products": ["beige-corduroy-l-shape-sofa-with-ottoman-furniture-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g21",
+    "question": "grey sofa set with coffee table",
+    "expect": {
+      "intent": "find_products",
+      "facts": [],
+      "products": ["grey-fabric-sofa-set-321-with-coffee-table-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g22",
+    "question": "7 seater sofa set ekak",
+    "expect": {
+      "intent": "find_products",
+      "facts": [],
+      "products": ["luxury-blue-fabric-sofa-set-premium-living-room-furniture-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g23",
+    "question": "velvet sofa eka grey colour eken",
+    "expect": {
+      "intent": "find_products",
+      "facts": [],
+      "products": ["dual-tone-velvet-sofa-set-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g24",
+    "question": "cream l shape ekk kanawa",
+    "expect": {
+      "intent": "find_products",
+      "facts": [],
+      "products": ["cream-l-shape-sectional-sofa-modern-luxury-furniture-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g25",
+    "question": "light blue corner sofa eka thiyenawada",
+    "expect": {
+      "intent": "find_products",
+      "facts": [],
+      "products": ["premium-light-blue-l-shape-sofa-luxury-corner-lounge-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g26",
+    "question": "chesterfield style eka thiyenawada da",
+    "expect": {
+      "intent": "find_products",
+      "facts": [],
+      "products": ["chesterfield-l-shape-sofa-set-with-wing-chair-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g27",
+    "question": "beige sofa set with ottomans",
+    "expect": {
+      "intent": "find_products",
+      "facts": [],
+      "products": ["beige-fabric-sofa-set-with-ottomans-living-room-furniture-sri-lanka"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g28",
+    "question": "apartment ekata podi sofa ekak one",
+    "expect": {
+      "intent": "find_products",
+      "facts": [],
+      "products": ["dusty-pink-l-shape-sofa-modern-luxury-furniture-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g29",
+    "question": "1.5 lakhs ekata l shape ekak one",
+    "expect": {
+      "intent": "find_products",
+      "facts": ["on request", "showroom visit"],
+      "products": ["luxury-emerald-green-l-shape-sofa-modern-furniture-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g30",
+    "question": "mattress cover single size ekak one",
+    "expect": {
+      "intent": "find_products",
+      "facts": ["single"],
+      "products": ["velvet-soft-fitted-sheet-mattress-cover"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g31",
+    "question": "emerald l shape eke price eka",
+    "expect": {
+      "intent": "product_question",
+      "facts": ["on request"],
+      "products": ["luxury-emerald-green-l-shape-sofa-modern-furniture-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g32",
+    "question": "maroon leather set eke headrest ekak thiyenawada",
+    "expect": {
+      "intent": "product_question",
+      "facts": ["headrest"],
+      "products": ["maroon-leather-sofa-set-321-premium-furniture-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g33",
+    "question": "dual tone velvet set eke colour ekak mokakda",
+    "expect": {
+      "intent": "product_question",
+      "facts": ["light grey and dark charcoal"],
+      "products": ["dual-tone-velvet-sofa-set-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g34",
+    "question": "chesterfield set ekak wing chair ekak enawada",
+    "expect": {
+      "intent": "product_question",
+      "facts": ["burgundy wingback chair"],
+      "products": ["chesterfield-l-shape-sofa-set-with-wing-chair-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g35",
+    "question": "mattress cover eka Rs 12,490 da",
+    "expect": {
+      "intent": "product_question",
+      "facts": ["Rs. 12,490", "Rs. 15,000"],
+      "products": ["velvet-soft-fitted-sheet-mattress-cover"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g36",
+    "question": "grey 321 set ekata coffee table ekak wenawa da",
+    "expect": {
+      "intent": "product_question",
+      "facts": ["wooden coffee table"],
+      "products": ["grey-fabric-sofa-set-321-with-coffee-table-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g37",
+    "question": "emerald green sofa eka foam monawada",
+    "expect": {
+      "intent": "product_question",
+      "facts": ["High-density foam"],
+      "products": ["luxury-emerald-green-l-shape-sofa-modern-furniture-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g38",
+    "question": "beige corduroy ekat ottoman ekk wenawada",
+    "expect": {
+      "intent": "product_question",
+      "facts": ["matching square ottoman"],
+      "products": ["beige-corduroy-l-shape-sofa-with-ottoman-furniture-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g39",
+    "question": "cart eke emerald l shape thiyenawada, mokakda ada karanna?",
+    "expect": {
+      "intent": "cart_pairing",
+      "facts": [],
+      "products": ["luxury-emerald-green-l-shape-sofa-modern-furniture-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g40",
+    "question": "maroon leather set ekat match karana pieces mokakda",
+    "expect": {
+      "intent": "cart_pairing",
+      "facts": [],
+      "products": ["maroon-leather-sofa-set-321-premium-furniture-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g41",
+    "question": "cream l shape ekat cushions match wena one or two",
+    "expect": {
+      "intent": "cart_pairing",
+      "facts": [],
+      "products": ["cream-l-shape-sectional-sofa-modern-luxury-furniture-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g42",
+    "question": "grey set ekat ottoman ekak add karadda",
+    "expect": {
+      "intent": "cart_pairing",
+      "facts": [],
+      "products": ["grey-fabric-sofa-set-321-with-coffee-table-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g43",
+    "question": "u shape caramel brown ekat cushions wedi karanda",
+    "expect": {
+      "intent": "cart_pairing",
+      "facts": [],
+      "products": ["u-shape-modular-sofa-in-caramel-brown-luxury-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g44",
+    "question": "dusty pink l shape ekat ottoman ekak pair karanda dada",
+    "expect": {
+      "intent": "cart_pairing",
+      "facts": [],
+      "products": ["dusty-pink-l-shape-sofa-modern-luxury-furniture-colombo"],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g45",
+    "question": "velvet sofa ekak sej weather ekata hariyada?",
+    "expect": {
+      "intent": "product_question",
+      "facts": ["vacuum"],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g46",
+    "question": "kajan ekta leather sofa utumada",
+    "expect": {
+      "intent": "product_question",
+      "facts": ["wipes clean"],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g47",
+    "question": "l shape ekak da u shape ekak da 321 da kanne",
+    "expect": {
+      "intent": "product_question",
+      "facts": ["U-shape seats the most"],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g48",
+    "question": "sofa eka room ekata onnat measure karanne kohomada",
+    "expect": {
+      "intent": "product_question",
+      "facts": ["Measure the wall or corner length"],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g49",
+    "question": "sofa colour eka wall ekak match karanne",
+    "expect": {
+      "intent": "product_question",
+      "facts": ["lead colour"],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g50",
+    "question": "humidity eken sofa eka protect karanne",
+    "expect": {
+      "intent": "product_question",
+      "facts": ["let air circulate"],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g51",
+    "question": "hii",
+    "expect": {
+      "intent": "small_talk",
+      "facts": [],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g52",
+    "question": "ayubowan",
+    "expect": {
+      "intent": "small_talk",
+      "facts": [],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g53",
+    "question": "thanks!",
+    "expect": {
+      "intent": "small_talk",
+      "facts": [],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g54",
+    "question": "you a real person or robot?",
+    "expect": {
+      "intent": "small_talk",
+      "facts": [],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g55",
+    "question": "pizza ekak order karanna one",
+    "expect": {
+      "intent": "off_topic",
+      "facts": [],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g56",
+    "question": "weather eka kohomada danne nane",
+    "expect": {
+      "intent": "off_topic",
+      "facts": [],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g57",
+    "question": "cricket match eka kalise aawada",
+    "expect": {
+      "intent": "off_topic",
+      "facts": [],
+      "products": [],
+      "handoff": false
+    }
+  },
+  {
+    "id": "g58",
+    "question": "opening hours eka keyada",
+    "expect": {
+      "intent": "store_info",
+      "facts": [],
+      "products": [],
+      "handoff": true
+    }
+  },
+  {
+    "id": "g59",
+    "question": "delivery eke exact charge eka",
+    "expect": {
+      "intent": "store_info",
+      "facts": [],
+      "products": [],
+      "handoff": true
+    }
+  },
+  {
+    "id": "g60",
+    "question": "return policy eka mokakda",
+    "expect": {
+      "intent": "store_info",
+      "facts": [],
+      "products": [],
+      "handoff": true
+    }
+  }
+]

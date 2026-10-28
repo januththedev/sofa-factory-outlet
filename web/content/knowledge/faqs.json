@@ -1,0 +1,482 @@
+[
+  {
+    "q": "Where is your showroom?",
+    "alt": ["showroom eka koheda", "your address", "where in colombo is the shop", "dehiwala shop", "adress eka mokakda"],
+    "a": "The showroom is at 67 Pallidora Road, Dehiwala, Colombo. The address comes from the old site's map, so the team reconfirms it when you book a visit.",
+    "tags": ["store_info"]
+  },
+  {
+    "q": "How do I visit the showroom?",
+    "alt": ["can i visit the showroom", "visit eka book karanna", "how to come see sofas", "walk in puluwanda da"],
+    "a": "You book a showroom visit on this site: pick a date and a time slot, and the team follows up to confirm. Prices and terms are confirmed at the visit.",
+    "tags": ["booking"]
+  },
+  {
+    "q": "What are your opening hours?",
+    "alt": ["opening hours", "what time you open", "open on saturday", "showroom time eka"],
+    "a": "Opening hours are not confirmed for the new site yet, so the team will confirm the days and times when you book a visit or message on WhatsApp.",
+    "tags": ["store_info"]
+  },
+  {
+    "q": "Are you open on Sundays?",
+    "alt": ["open sunday", "sunday eka open da", "weekend open", "holiday eka open"],
+    "a": "Sunday opening is not published, so we can't confirm it — the team will confirm the days and times when you book a visit.",
+    "tags": ["store_info"]
+  },
+  {
+    "q": "How do I book a showroom visit?",
+    "alt": ["booking karannas", "visit ekak book", "how to book showroom", "appointment ganna", "book karanna one mokakda"],
+    "a": "Book a showroom visit right here on the site: choose a date and a time slot, and the team follows up to confirm. There is no online payment.",
+    "tags": ["booking"]
+  },
+  {
+    "q": "What happens after I book a visit?",
+    "alt": ["after booking what", "booking eken passe mokakda", "do i get a confirmation", "booking reference eka"],
+    "a": "Your booking gets a reference like SFO-B-0042, a calendar file and a WhatsApp button, and the team follows up to confirm the details.",
+    "tags": ["booking"]
+  },
+  {
+    "q": "Can I walk in without an appointment?",
+    "alt": ["walk in allowed", "appointment nathiwe aawada", "just come and see", "booking eka nasithemawada"],
+    "a": "Visits run on booked date and time slots, so a booking is the sure way to see the team. If you'd rather check before coming, ask on WhatsApp first.",
+    "tags": ["booking"]
+  },
+  {
+    "q": "Can I reschedule my visit?",
+    "alt": ["reschedule booking", "visit eka wenas karanna", "change my booking date", "postpone the visit"],
+    "a": "There is no published reschedule rule — WhatsApp the team with your booking reference (like SFO-B-0042) and they'll sort it out with you.",
+    "tags": ["booking"]
+  },
+  {
+    "q": "Do you have a WhatsApp number?",
+    "alt": ["whatsapp number eka", "whatsapp mokakda", "wa no", "94766711711", "whatsapp eken contact karanda"],
+    "a": "Yes — WhatsApp +94 76 671 1711, and the team replies from that number.",
+    "tags": ["store_info"]
+  },
+  {
+    "q": "What is your phone number or email?",
+    "alt": ["phone number", "contact number eka", "email address eka", "mobile no", "tel eka kiyada"],
+    "a": "The confirmed contact is WhatsApp +94 76 671 1711; no landline or email is published, so WhatsApp or Instagram is the way to reach us.",
+    "tags": ["store_info"]
+  },
+  {
+    "q": "How much is delivery?",
+    "alt": ["delivery eka kiyada", "how much is delivary", "courier charge eka", "delivery charge mokakda"],
+    "a": "Delivery charges are not published, so the team confirms the charge for your area at your showroom visit or on WhatsApp.",
+    "tags": ["delivery"]
+  },
+  {
+    "q": "How long does delivery take?",
+    "alt": ["how many days delivery", "delivery time eka", "katada denawa", "lead time", "10 days yanawada"],
+    "a": "Our published claim is delivery across Sri Lanka within 10 to 15 working days; the exact date for your order is confirmed at your visit.",
+    "tags": ["delivery"]
+  },
+  {
+    "q": "Is delivery free?",
+    "alt": ["free delivery da", "islandwide free ekak da", "delivery free or paid", "shipping free da"],
+    "a": "Our current information is free delivery islandwide, published on the old site. The team confirms charges and dates for your area at your visit.",
+    "tags": ["delivery"]
+  },
+  {
+    "q": "Can you deliver outside Colombo?",
+    "alt": ["delivery to kandy", "anuradhapura ekata danawada", "outstation delivery", "matara ekata denawada", "island wide da"],
+    "a": "Delivery across Sri Lanka is the published claim, so outside Colombo is included. Dates and charges for your district are confirmed at the visit.",
+    "tags": ["delivery"]
+  },
+  {
+    "q": "Do you have online payment?",
+    "alt": ["online pay karanna", "card payment", "can i pay online", "payment online da"],
+    "a": "There is no online payment on this site. You pick the pieces, book a showroom visit, and prices and terms are confirmed at the visit.",
+    "tags": ["buying"]
+  },
+  {
+    "q": "How do I pay for my sofa?",
+    "alt": ["how to pay", "payment method eka", "card ekak ok da", "cash da", "pay karanne kohomada"],
+    "a": "No payment happens online, so how you pay is confirmed at your showroom visit — nothing is charged when you book.",
+    "tags": ["buying"]
+  },
+  {
+    "q": "What is your returns policy?",
+    "alt": ["returns", "refund karanda puluwanda", "return policy eka", "exchange karanda", "money back"],
+    "a": "We don't have a published returns, refund or exchange policy, so the team will confirm what is possible on WhatsApp or at your visit.",
+    "tags": ["buying"]
+  },
+  {
+    "q": "Do you do repairs after buying?",
+    "alt": ["repair service ekak", "welda karanawada", "after sales", "fix broken sofa", "service ekak thiyenawada"],
+    "a": "After-sales support is published as part of what we offer — repairs, adjustments and inquiries. Ask the team on WhatsApp or at the visit.",
+    "tags": ["about"]
+  },
+  {
+    "q": "What does the warranty cover?",
+    "alt": ["warranty mokakda", "guarantee kiyada", "10 years denawada", "warrantee keyada"],
+    "a": "Our current information is a 10-year structural warranty; the terms are confirmed at your visit.",
+    "tags": ["warranty"]
+  },
+  {
+    "q": "Tell me about the company.",
+    "alt": ["about you", "company gana kiyanna", "who are you", "your story", "company eka gana"],
+    "a": "Sofa Factory Outlet describes itself as an artisanal sofa manufacturer creating unique pieces, one of Sri Lanka's trusted furniture manufacturers.",
+    "tags": ["about"]
+  },
+  {
+    "q": "Why buy from you and not a furniture shop?",
+    "alt": ["why buy from you", "advantage mokakda", "shop vs factory", "mokakda wadi valui"],
+    "a": "Sofas are built in our own Colombo workshop and sold factory-direct — no middleman, no showroom markup — with custom design options and after-sales support.",
+    "tags": ["about"]
+  },
+  {
+    "q": "Where are the sofas made?",
+    "alt": ["made in colombo", "hadanne koheda", "where manufactured", "made where", "factory eka koheda"],
+    "a": "Every piece is built at our own Colombo workshop.",
+    "tags": ["about"]
+  },
+  {
+    "q": "Are your sofas imported?",
+    "alt": ["imported da", "china eken", "foreign made", "local factory da"],
+    "a": "No — pieces are built at our own workshop in Colombo, not imported.",
+    "tags": ["about"]
+  },
+  {
+    "q": "Do you have Instagram or Facebook?",
+    "alt": ["insta page eka", "social media", "facebook kiyada", "ig eken contact"],
+    "a": "Yes — Instagram @sofa_factory_outlet and a Facebook page called Sofa Factory Outlet.",
+    "tags": ["about"]
+  },
+  {
+    "q": "What should I bring to a showroom visit?",
+    "alt": ["visit ekata ganna monada", "what to bring", "bring measurements", "koyada ganna visit ekata"],
+    "a": "Nothing is required, but your room measurements, photos and a rough budget help — prices and terms are confirmed at the visit.",
+    "tags": ["booking"]
+  },
+  {
+    "q": "Do you deliver the velvet mattress cover?",
+    "alt": ["mattress cover delivery", "imas cover eka dananna", "free delivery for bed sheet", "cover ekak deliver karawada"],
+    "a": "Yes — the velvet fitted mattress cover is published with island-wide free delivery, and it is the one product with a listed price, Rs. 12,490.",
+    "tags": ["delivery", "products"]
+  },
+  {
+    "q": "What does Sofa Factory Outlet sell?",
+    "alt": ["what do you sell", "products mokakda", "koyada thiyenne", "shop eke items", "catalogue eka"],
+    "a": "Sofas, beds and bedding, chairs, tables, ottomans and pillows or cushions — in shapes like L-shape, U-shape, 3+2+1, wing-chair sets and Chesterfield-style.",
+    "tags": ["products"]
+  },
+  {
+    "q": "Do you make recliners?",
+    "alt": ["recliner thiyenawada", "reclining sofa", "leh thilana sofas", "recliner ekak hadanda"],
+    "a": "The old site listed a recliner sofa collection, but no recliner is published on this site right now — the team can advise at the visit.",
+    "tags": ["products"]
+  },
+  {
+    "q": "Do you sell beds?",
+    "alt": ["bed thiyenawada", "kattil", "bed category eka", "double bed da"],
+    "a": "Beds and bedding is one of our listed categories — the velvet fitted mattress cover is the published priced example, and the team can show the rest at the visit.",
+    "tags": ["products"]
+  },
+  {
+    "q": "Do you make coffee tables?",
+    "alt": ["coffee table eka", "centre table", "teapoy", "tea table", "mesa ekak"],
+    "a": "Tables are a listed category, and some sofa sets come with a matching wooden coffee table — like the grey 3+2+1 set with coffee table.",
+    "tags": ["products"]
+  },
+  {
+    "q": "Do you sell ottomans?",
+    "alt": ["ottoman thiyenawada", "pouf", "footstool", "ottaman eka"],
+    "a": "Yes — ottomans are a listed category, and several sofa sets also come with matching ottomans included.",
+    "tags": ["products"]
+  },
+  {
+    "q": "Do you have L-shape sofas?",
+    "alt": ["l shape sofa", "corner sofa ekak", "l shaped eka thiyenawada", "sectional sofa", "chaise sofa"],
+    "a": "Yes — L-shape styles with chaise ends in emerald green, lime green with an ottoman, dusty pink, cream, light blue and beige corduroy.",
+    "tags": ["products"]
+  },
+  {
+    "q": "Do you have U-shape sofas?",
+    "alt": ["u shape sofa", "u shaped eka", "ushape modular", "u ekak thiyenawada"],
+    "a": "Yes — a caramel brown U-shape modular sofa with chaise sections on both ends, made for big families and frequent hosting.",
+    "tags": ["products"]
+  },
+  {
+    "q": "Do you have Chesterfield-style sofas?",
+    "alt": ["chesterfield sofa", "button sofa", "chester field", "tufted sofa"],
+    "a": "Yes — a cream, button-tufted Chesterfield-style L-shape set with a matching tufted ottoman and a burgundy wingback chair.",
+    "tags": ["products"]
+  },
+  {
+    "q": "Do sofa sets come with wing chairs?",
+    "alt": ["wing chair sofa set", "wingback chairs", "blue set with chairs", "wing chairs 2ka"],
+    "a": "Yes — a deep blue fabric arrangement includes a three-seater, a two-seater and two wingback armchairs, and the Chesterfield set adds a burgundy wing chair.",
+    "tags": ["products"]
+  },
+  {
+    "q": "What is a 3+2+1 sofa set, and do you have them?",
+    "alt": ["3+2+1 sofa set", "321 set eka", "3 pe 2 ka 1", "three two one set"],
+    "a": "A 3+2+1 set is a three-seater, a two-seater and a single armchair sold together. We build several — grey fabric, maroon leather and dual-tone velvet.",
+    "tags": ["products"]
+  },
+  {
+    "q": "Which sofa is best for a big family?",
+    "alt": ["big family sofa", "family of 6 sofa", "7 seater thiyenawada", "large family ekata sofa"],
+    "a": "The U-shape modular sofa is built for big families and frequent entertaining, with chaise sections on both ends and a full middle run of seating. The 3+2+1 sets are another roomy option.",
+    "tags": ["buying", "products"]
+  },
+  {
+    "q": "How many seats does the blue sofa set have?",
+    "alt": ["7 seater sofa", "blue sofa seats", "how many seats", "seating capacity eka"],
+    "a": "The deep blue fabric set seats seven — one three-seater, one two-seater and two wingback armchairs.",
+    "tags": ["products"]
+  },
+  {
+    "q": "Do you have a green sofa?",
+    "alt": ["green sofa", "green l shape", "horen sofa", "emerald green", "green ekak thiyenawada"],
+    "a": "Yes — a deep emerald green L-shape with a chaise, and a lime green L-shape that comes with a matching square ottoman.",
+    "tags": ["products"]
+  },
+  {
+    "q": "Do you have leather sofas?",
+    "alt": ["leather sofa", "leather set eka", "maroon leather", "leather ekak thiyenawada"],
+    "a": "Yes — a maroon leather three-piece set: a three-seater, a two-seater and a single armchair, built at the Colombo workshop.",
+    "tags": ["products"]
+  },
+  {
+    "q": "Do you have velvet sofas?",
+    "alt": ["velvet sofa", "velvet eka", "grey velvet sofa", "charcoal sofa"],
+    "a": "Yes — the dual-tone three-piece set is upholstered in light grey and dark charcoal velvet.",
+    "tags": ["products"]
+  },
+  {
+    "q": "Do you have sofas in soft colours, like pink?",
+    "alt": ["pink sofa", "dusty pink", "light pink l shape", "soft colour sofa"],
+    "a": "Yes — a dusty pink L-shape in a smooth matte fabric, made to suit compact apartments and larger living rooms.",
+    "tags": ["products"]
+  },
+  {
+    "q": "Do you have corduroy sofas?",
+    "alt": ["corduroy sofa", "beige corduroy", "ribbed fabric sofa", "corduroy eka"],
+    "a": "Yes — a beige corduroy L-shape with a left-side chaise and a separate matching square ottoman.",
+    "tags": ["products"]
+  },
+  {
+    "q": "Can I order a sofa in a custom size?",
+    "alt": ["custom size", "size eka wenas karanda", "made to measure", "mage size ekata"],
+    "a": "Yes — custom orders let you choose the size along with the fabric, colour and layout. The workshop makes it to order, and details are confirmed at your visit.",
+    "tags": ["custom"]
+  },
+  {
+    "q": "Can I choose my own fabric and colour?",
+    "alt": ["fabric eka theranne", "choose my colour", "my own fabric", "colour eka millanna"],
+    "a": "Yes — fabric, colour and size are all your choice on a custom order; the old homepage published 1000+ colours and designs.",
+    "tags": ["custom", "colour"]
+  },
+  {
+    "q": "Can I get a sofa built to my own layout?",
+    "alt": ["custom layout", "sectional layout eka", "own design ekak", "layout ekak hadanna"],
+    "a": "Yes — layout is one of the choices on a custom order, along with fabric, size and colour. The team confirms the details at your visit.",
+    "tags": ["custom"]
+  },
+  {
+    "q": "How much is an L-shape sofa?",
+    "alt": ["l shape price eka", "l shape kiyada", "sofa price eka", "how much l shape", "sofa set mila"],
+    "a": "L-shapes are price on request — nothing is listed online except the velvet mattress cover. The team confirms the price at your showroom visit.",
+    "tags": ["pricing"]
+  },
+  {
+    "q": "How much is a 3+2+1 sofa set?",
+    "alt": ["3+2+1 price eka", "set ekak kiyada", "how much full set", "master set mila"],
+    "a": "The 3+2+1 sets are price on request — the team confirms the set price at your showroom visit.",
+    "tags": ["pricing"]
+  },
+  {
+    "q": "Do you have any discounts or offers?",
+    "alt": ["discount thiyenawada", "offer ekak da", "sale ekak da", "discounts mokakda"],
+    "a": "The old homepage ran promotions like up to 23% off a budget 3+2+1 set and up to 15% off a luxury sofa set, but past promotions are not standing offers — current offers are confirmed at the showroom visit.",
+    "tags": ["pricing"]
+  },
+  {
+    "q": "Can I pay in instalments?",
+    "alt": ["instalment", "12 months", "kisti", "monthly payment ekak", "installment 12"],
+    "a": "The old site offered 12 months instalments with terms and conditions, but past promotions are not standing offers — the team confirms what is possible now at the visit or on WhatsApp.",
+    "tags": ["pricing"]
+  },
+  {
+    "q": "How much is the velvet fitted mattress cover?",
+    "alt": ["mattress cover kiyada", "imas cover price eka", "bed sheet price", "rs 12490 da"],
+    "a": "It is Rs. 12,490, down from the usual Rs. 15,000 — the only product with a listed price on this site.",
+    "tags": ["pricing", "products"]
+  },
+  {
+    "q": "What sizes does the velvet mattress cover come in?",
+    "alt": ["mattress cover sizes", "king size thiyenawada", "queen cover ekak", "super king size"],
+    "a": "It comes in single, queen, king and super king sizes.",
+    "tags": ["products", "pricing"]
+  },
+  {
+    "q": "Is the mattress cover easy to wash?",
+    "alt": ["wash karanda", "easy to wash da", "maskhala puluwanda", "cover washable da"],
+    "a": "Its published copy says fade-resistant and easy to wash, with stretchable elastic edges for a snug fit.",
+    "tags": ["products", "care"]
+  },
+  {
+    "q": "What is your cheapest sofa?",
+    "alt": ["cheapest sofa", "lagga adu sofa", "budget sofa", "low price set ekak"],
+    "a": "Sofa prices are on request, so we can't name a cheapest piece online — only the velvet mattress cover (Rs. 12,490) has a listed price. Your budget helps the team quote at the visit.",
+    "tags": ["pricing"]
+  },
+  {
+    "q": "Why are most prices not shown online?",
+    "alt": ["why no price", "price online na", "mila place eka nathi", "why not give the price"],
+    "a": "Only the velvet mattress cover (Rs. 12,490) has a listed price. The sofas are price on request, and the team confirms prices at the showroom visit.",
+    "tags": ["pricing"]
+  },
+  {
+    "q": "Can I get a good sofa under 2 lakhs?",
+    "alt": ["under 2 lakhs", "2 lakhs veta", "budget eka 200000", "budget eken sofa ekak"],
+    "a": "The team can quote to your budget at the visit, because sofa prices are on request. A budget 3+2+1 set was promoted in the past, but past promotions are not standing offers.",
+    "tags": ["pricing"]
+  },
+  {
+    "q": "How do I get an exact quotation?",
+    "alt": ["quotation", "quote ekak ganna", "exact price ganna", "estimate ekak"],
+    "a": "Book a showroom visit or WhatsApp +94 76 671 1711 with the piece, colour and rough size you want — prices and terms are confirmed at the visit.",
+    "tags": ["pricing", "booking"]
+  },
+  {
+    "q": "What materials are the sofas made of?",
+    "alt": ["materials mokakda", "fabric types", "mokakda mahuna", "upholstery eka"],
+    "a": "Velvet, leather, corduroy and fabric are the upholstery materials in the published copy, with durable fabrics, strong wooden frames and high-density cushioning named about the build.",
+    "tags": ["materials"]
+  },
+  {
+    "q": "Is velvet okay in Sri Lanka's humidity?",
+    "alt": ["velvet humid weather", "velvet ekata humid", "velvet eka weather eke", "velvet goda temp"],
+    "a": "In general, velvet is fine with regular care: vacuum softly, keep it away from damp walls and let air circulate. That is general furniture advice, not a factory specification.",
+    "tags": ["materials", "care"]
+  },
+  {
+    "q": "Is leather good in hot weather?",
+    "alt": ["leather hot weather", "leather eka heat eke", "leather sunny", "hot weather sofa"],
+    "a": "In general, leather warms up in direct sun but wipes clean easily, which suits busy homes. The team can advise which material fits your room at the visit.",
+    "tags": ["materials"]
+  },
+  {
+    "q": "Is corduroy durable?",
+    "alt": ["corduroy durable da", "corduroy strong da", "ribbed fabric strong", "corduroy eka hariyeda"],
+    "a": "In general, corduroy's ribbed weave holds up well in daily use and feels soft, though the ribs can catch pet claws. That is general furniture advice.",
+    "tags": ["materials"]
+  },
+  {
+    "q": "What is suede-feel fabric?",
+    "alt": ["suede fabric means", "suede feel eka mokakda", "sude fabric", "suede material"],
+    "a": "It is a fabric with the soft feel of suede without the leather cost — the grey 3+2+1 set's upholstery is described as a mid-grey suede-feel fabric.",
+    "tags": ["materials", "products"]
+  },
+  {
+    "q": "Leather or fabric with kids at home?",
+    "alt": ["kids leather sofa", "children aaghayada", "podiyan innawa kotuwe", "kids safe fabric"],
+    "a": "Generally, leather wipes clean after spills while fabric may need stain care; both are available, so look at both at the visit. That is general advice, not a factory rule.",
+    "tags": ["materials", "buying"]
+  },
+  {
+    "q": "What fabric works with pets?",
+    "alt": ["pets sofa", "dog eke upparadi", "cat srached sofa", "pet friendly fabric"],
+    "a": "In general, tight weaves and leather cope better with claws than loose plush fabrics, and washable pieces help. The team can advise per piece at the visit.",
+    "tags": ["materials", "buying"]
+  },
+  {
+    "q": "Are the frames strong?",
+    "alt": ["frame strong da", "wood eken monawada", "wana frame eka", "wood species", "teak da"],
+    "a": "The About page names durable fabrics, strong wooden frames and high-density cushioning about the build. The wood species is not published, so ask the team at the visit.",
+    "tags": ["materials"]
+  },
+  {
+    "q": "How do I clean a velvet sofa?",
+    "alt": ["clean velvet sofa", "velvet wash karanne", "velvet clean karanna", "sofa wash karanne"],
+    "a": "In general, vacuum with the soft brush head, blot spills straight away and keep harsh cleaners off the pile. That is general furniture advice, not a factory specification.",
+    "tags": ["care"]
+  },
+  {
+    "q": "How do I clean a leather sofa?",
+    "alt": ["clean leather sofa", "leather polish karanne", "leather wipe karanne", "leather clear"],
+    "a": "In general, dust it down, wipe with a barely damp cloth and keep it out of direct sunlight. That is general furniture advice, not a factory specification.",
+    "tags": ["care"]
+  },
+  {
+    "q": "How do I stop cushions from going flat?",
+    "alt": ["cushion flatten eka", "seat eka down wenawa", "cushions flat venne na", "keep cushions fluffy"],
+    "a": "High-density cushioning is part of the published build, and in general, plumping and rotating cushions weekly helps them hold their shape.",
+    "tags": ["care"]
+  },
+  {
+    "q": "Will sunlight fade my sofa?",
+    "alt": ["sun fade eka", "sunlight sofa eka", "sofa colour fade", "window eke sofa"],
+    "a": "In general, direct sun fades fabrics over time, so place the sofa away from full afternoon sun or use curtains. That is general furniture advice.",
+    "tags": ["care"]
+  },
+  {
+    "q": "How do I protect a sofa from humidity?",
+    "alt": ["humidity eken sofa", "aridu valin beregena", "damp eka sofa", "moisture protect"],
+    "a": "In general, let air circulate around the piece, keep fabric clear of damp walls and wipe spills dry. That is general furniture advice, not a factory specification.",
+    "tags": ["care"]
+  },
+  {
+    "q": "Is there a guide on choosing fabric for humid weather?",
+    "alt": ["fabric care guide", "fabric guide eka", "humid weather guide", "fabric blog eka"],
+    "a": "Yes — Sofa fabrics for Sri Lanka's humid climate is a guide on this site, covering fabric care and choices for this weather.",
+    "tags": ["care", "materials"]
+  },
+  {
+    "q": "L-shape, U-shape or 3+2+1 — what should I pick?",
+    "alt": ["l shape vs u shape", "3+2+1 or l shape da", "which sofa shape", "shape eka therena"],
+    "a": "An L-shape uses a corner well, a U-shape seats the most for big families and hosting, and a 3+2+1 splits across a standard room. Measure the room and let the team advise at the visit.",
+    "tags": ["buying"]
+  },
+  {
+    "q": "What sofa suits a small room?",
+    "alt": ["small room sofa", "podi room ekata", "apartment ekata sofa", "kompact sofa"],
+    "a": "In general, a compact L-shape anchored to a corner or a two-seater with an armchair keeps a small room open — custom sizes are made, so the piece can fit your measurements.",
+    "tags": ["buying"]
+  },
+  {
+    "q": "How do I measure my room for a sofa?",
+    "alt": ["measure room", "meters eka", "room size eka", "haraya measure karanna"],
+    "a": "Measure the wall or corner length and the depth you can spare, keep a walkway clear, and note the doorway the sofa must pass through. General advice — the team can double-check fits at the visit.",
+    "tags": ["buying"]
+  },
+  {
+    "q": "Will a sofa fit through my door?",
+    "alt": ["door fit eka", "hallway eken yanawada", "lift eka yanda", "door eken entrance"],
+    "a": "Check the door width, hallway and lift before ordering. Because sofas are made to order, the team can advise on sizes that fit at the visit.",
+    "tags": ["buying"]
+  },
+  {
+    "q": "How do I match a sofa colour to my walls?",
+    "alt": ["colour match", "wall colour eka", "colour combo eka", "match karanna colour"],
+    "a": "Generally, pick one lead colour from the room — curtains, artwork or floor — and stay with quieter fabrics elsewhere. That is general advice, not a factory rule.",
+    "tags": ["colour", "buying"]
+  },
+  {
+    "q": "Do you have buying guides on the site?",
+    "alt": ["guide ekak", "blog ekak", "buying guide", "tips thiyenawada"],
+    "a": "Yes — Sofa fabrics for Sri Lanka's humid climate, and L-shape, U-shape or 3+2+1: which fits your living room.",
+    "tags": ["buying"]
+  },
+  {
+    "q": "Can I see fabric samples before ordering?",
+    "alt": ["fabric sample", "swatch ekak", "sample ekak ganna", "fabric ekak touch"],
+    "a": "A swatch service is not published, but you can see fabrics at the showroom visit, and the team can talk through choices on WhatsApp +94 76 671 1711.",
+    "tags": ["buying", "custom"]
+  },
+  {
+    "q": "Is there anything to pay when I book the visit?",
+    "alt": ["booking eka charge ekak", "pay to book", "advance ekak da", "deposit ekak da"],
+    "a": "No — there is no online payment, so nothing is charged when you book. Prices and terms are confirmed at the visit.",
+    "tags": ["booking", "pricing"]
+  },
+  {
+    "q": "What happens at the showroom visit?",
+    "alt": ["visit eka wada", "what at showroom", "showroom visit eke mokada wada", "viewing eka"],
+    "a": "You see the pieces and fabrics in person, and prices, terms and any custom options are confirmed with the team. After-sales support — repairs, adjustments and inquiries — is part of what we publish.",
+    "tags": ["booking", "about"]
+  }
+]
