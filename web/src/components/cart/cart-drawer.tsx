@@ -11,20 +11,21 @@ import { cn } from '@/lib/cn';
 import { CartEmpty } from './cart-empty';
 import { CartLineList, CartTotals } from './cart-lines';
 import { SuggestionTiles, useCartSuggestions } from './cart-suggestions';
+import { CartUndoNotice, useCartUndo } from './cart-undo';
 import { CloseIcon } from './icons';
 
-const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
+const FOCUSABLE = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(', ');
 const noSubscription = () => () => {};
-/** False on the server and during hydration, so the drawer adds nothing to the server-rendered HTML. */
-const useIsClient = () =>
-  useSyncExternalStore(
-    noSubscription,
-    () => true,
-    () => false,
-  );
+const isClientSnapshot = () => true;
+const isServerSnapshot = () => false;
 
-/** Stops the page behind the drawer from scrolling (Lenis and the native scrollbar) without the layout shifting sideways. */
 function lockScroll(): () => void {
   const root = document.documentElement;
   const { overflow, paddingRight } = root.style;
@@ -39,14 +40,9 @@ function lockScroll(): () => void {
   };
 }
 
-/**
- * The slide-in cart. Mounted once in the site layout; opens whenever `useCart().drawerOpen`
- * is true (adding to the cart, or the header cart button). A modal dialog: Esc and the
- * overlay close it, Tab stays inside it, focus returns to where it was, the page behind
- * cannot scroll. It stays out of the way on /cart/, which shows the same lines in full.
- */
+/** Bottom sheet on phones, side drawer on larger screens; both use the same modal focus trap. */
 export function CartDrawer() {
-  const isClient = useIsClient();
+  const isClient = useSyncExternalStore(noSubscription, isClientSnapshot, isServerSnapshot);
   const pathname = usePathname();
   const titleId = useId();
   const lines = useCart((state) => state.lines);
@@ -54,22 +50,16 @@ export function CartDrawer() {
   const closeDrawer = useCart((state) => state.closeDrawer);
   const panel = useRef<HTMLDivElement>(null);
   const lastPath = useRef(pathname);
-  // The lines (and their thumbnails) are only built once the drawer has been opened for the first time.
   const [primed, setPrimed] = useState(false);
-
+  const { removed, remember, undo } = useCartUndo();
   const open = drawerOpen && !isCartPath(pathname);
   const count = cartCount(lines);
   const { suggestions, pending } = useCartSuggestions(open);
 
-  useEffect(
-    () =>
-      useCart.subscribe((state) => {
-        if (state.drawerOpen) setPrimed(true);
-      }),
-    [],
-  );
+  useEffect(() => useCart.subscribe((state) => {
+    if (state.drawerOpen) setPrimed(true);
+  }), []);
 
-  // Going to another page (a link in the drawer, or the back button) closes it.
   useEffect(() => {
     if (lastPath.current === pathname) return;
     lastPath.current = pathname;
@@ -81,7 +71,6 @@ export function CartDrawer() {
     const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const unlock = lockScroll();
     panel.current?.focus({ preventScroll: true });
-
     const onKeyDown = (event: KeyboardEvent) => {
       const dialog = panel.current;
       if (!dialog) return;
@@ -91,7 +80,8 @@ export function CartDrawer() {
         return;
       }
       if (event.key !== 'Tab') return;
-      const items = [...dialog.querySelectorAll<HTMLElement>(FOCUSABLE)].filter((item) => item.getClientRects().length > 0);
+      const items = [...dialog.querySelectorAll<HTMLElement>(FOCUSABLE)]
+        .filter((item) => item.getClientRects().length > 0);
       const first = items[0];
       const last = items[items.length - 1];
       if (!first || !last) {
@@ -101,12 +91,10 @@ export function CartDrawer() {
       }
       const active = document.activeElement;
       const inside = dialog.contains(active);
-      if (event.shiftKey) {
-        if (!inside || active === first || active === dialog) {
-          event.preventDefault();
-          last.focus();
-        }
-      } else if (!inside || active === last) {
+      if (event.shiftKey && (!inside || active === first || active === dialog)) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (!inside || active === last)) {
         event.preventDefault();
         first.focus();
       }
@@ -120,18 +108,26 @@ export function CartDrawer() {
   }, [open, closeDrawer]);
 
   if (!isClient) return null;
-
   const showContent = primed || open;
-  // A removed line (or an added suggestion) takes its own button with it: park focus on the dialog.
   const parkFocus = () => panel.current?.focus({ preventScroll: true });
 
   return (
     <div
-      className={cn('fixed inset-0 z-[100] transition-[visibility] duration-0', open ? 'visible delay-0' : 'invisible pointer-events-none delay-500')}
+      className={cn(
+        'fixed inset-0 z-[100] transition-[visibility] duration-0',
+        open ? 'visible' : 'invisible pointer-events-none delay-200',
+      )}
       aria-hidden={open ? undefined : true}
       inert={!open}
     >
-      <div aria-hidden onClick={closeDrawer} className={cn('absolute inset-0 bg-ink/45 transition-opacity duration-500 motion-reduce:transition-none', open ? 'opacity-100' : 'opacity-0')} />
+      <div
+        aria-hidden
+        onClick={closeDrawer}
+        className={cn(
+          'absolute inset-0 bg-ink/45 transition-opacity duration-200 motion-reduce:transition-none',
+          open ? 'opacity-100' : 'opacity-0',
+        )}
+      />
       <div
         ref={panel}
         role="dialog"
@@ -139,48 +135,81 @@ export function CartDrawer() {
         aria-labelledby={titleId}
         tabIndex={-1}
         className={cn(
-          'absolute right-0 top-0 flex h-full w-full max-w-[28.75rem] flex-col border-l border-line bg-bone shadow-[-24px_0_60px_-30px_rgba(20,18,17,0.4)] outline-none',
-          'transition-transform duration-500 ease-[var(--ease-out-expo)] motion-reduce:transition-none',
-          open ? 'translate-x-0' : 'translate-x-full',
+          'absolute inset-x-0 bottom-0 flex max-h-[92dvh] w-full flex-col rounded-t-3xl border border-line',
+          'bg-bone shadow-xl outline-none sm:inset-x-auto sm:right-0 sm:top-0 sm:h-dvh sm:max-h-dvh',
+          'sm:max-w-[28.75rem] sm:rounded-none transition-transform duration-200 motion-reduce:transition-none',
+          open ? 'translate-y-0 sm:translate-x-0' : 'translate-y-full sm:translate-y-0 sm:translate-x-full',
         )}
       >
-        <div className="flex shrink-0 items-start justify-between gap-4 border-b border-line px-5 py-4 sm:px-6">
+        <div aria-hidden className="flex h-6 shrink-0 items-center justify-center sm:hidden">
+          <span className="h-1 w-12 rounded-full bg-ink/20" />
+        </div>
+        <div className="flex shrink-0 items-start justify-between gap-4 border-b border-line px-4 py-3 sm:px-6">
           <div>
-            <h2 id={titleId} className="font-display text-2xl">
-              Your cart
-            </h2>
-            <p role="status" className="text-sm text-mute">
+            <h2 id={titleId} className="font-display text-2xl">Your cart</h2>
+            <p role="status" className="text-base text-mute">
               {count === 0 ? 'Nothing in your cart yet' : `${count} ${count === 1 ? 'item' : 'items'}`}
             </p>
           </div>
-          <button type="button" onClick={closeDrawer} aria-label="Close cart" className="-mr-2 grid size-11 place-items-center rounded-full transition-colors hover:bg-bone-2">
+          <button
+            type="button"
+            onClick={closeDrawer}
+            aria-label="Close cart"
+            className="grid size-11 shrink-0 place-items-center rounded-full hover:bg-bone-2"
+          >
             <CloseIcon />
           </button>
         </div>
-
-        <div data-lenis-prevent className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 sm:px-6">
+        <div data-lenis-prevent className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 sm:px-6">
+          <CartUndoNotice removed={removed} undo={undo} />
           {showContent ? (
             lines.length ? (
               <>
-                <CartLineList lines={lines} layout="drawer" onRemoved={parkFocus} onNavigate={closeDrawer} />
-                <div className="py-8">
-                  <SuggestionTiles suggestions={suggestions} pending={pending} layout="drawer" headingLevel={3} onAdded={parkFocus} onNavigate={closeDrawer} />
+                <CartLineList
+                  lines={lines}
+                  layout="drawer"
+                  onRemoved={(line) => {
+                    remember(line);
+                    parkFocus();
+                  }}
+                  onNavigate={closeDrawer}
+                />
+                <div className="py-6">
+                  <SuggestionTiles
+                    suggestions={suggestions}
+                    pending={pending}
+                    layout="drawer"
+                    headingLevel={3}
+                    onAdded={parkFocus}
+                    onNavigate={closeDrawer}
+                  />
                 </div>
               </>
-            ) : (
-              <CartEmpty onNavigate={closeDrawer} />
-            )
+            ) : <CartEmpty onNavigate={closeDrawer} />
           ) : null}
         </div>
-
         {showContent ? (
-          <div className="shrink-0 space-y-4 border-t border-line bg-bone px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 sm:px-6">
+          <div
+            data-sticky-bar={open ? true : undefined}
+            className={[
+              'shrink-0 space-y-3 border-t border-line bg-bone px-4 pt-3 sm:px-6',
+              'pb-[max(0.75rem,env(safe-area-inset-bottom))]',
+            ].join(' ')}
+          >
             <CartTotals lines={lines} />
-            <TLink href="/book-visit/" onClick={closeDrawer} className={cn(buttonStyles({ variant: 'primary', size: 'lg' }), 'w-full')}>
+            <TLink
+              href="/book-visit/"
+              onClick={closeDrawer}
+              className={cn(buttonStyles({ variant: 'primary', size: 'lg' }), 'w-full')}
+            >
               Book a visit
             </TLink>
             {lines.length ? (
-              <TLink href="/cart/" onClick={closeDrawer} className={cn(buttonStyles({ variant: 'ghost', size: 'lg' }), 'w-full')}>
+              <TLink
+                href="/cart/"
+                onClick={closeDrawer}
+                className={cn(buttonStyles({ variant: 'ghost', size: 'md' }), 'w-full')}
+              >
                 View cart
               </TLink>
             ) : null}

@@ -8,11 +8,7 @@ import { cartCount, isCartPath } from '@/lib/cart/types';
 import { cn } from '@/lib/cn';
 import { BagIcon } from './icons';
 
-/**
- * Header cart link with an item badge. A plain click opens the cart drawer; the link to /cart/
- * still works for new-tab clicks, without JavaScript, and when already on the cart page.
- * The count is in the accessible name, and changes are announced politely.
- */
+/** Header cart link; plain clicks open the drawer and modified clicks keep normal navigation. */
 export function CartButton() {
   const count = useCartCount();
   const pathname = usePathname();
@@ -20,19 +16,17 @@ export function CartButton() {
   const badge = useRef<HTMLSpanElement>(null);
   const [announcement, setAnnouncement] = useState('');
 
-  useEffect(
-    () =>
-      useCart.subscribe((state, previous) => {
-        const next = cartCount(state.lines);
-        // Restoring the saved cart after page load is not something the visitor did: stay quiet.
-        if (next === cartCount(previous.lines) || !useCart.persist.hasHydrated()) return;
-        setAnnouncement(next === 0 ? 'Your cart is empty' : `Cart updated, ${next} ${next === 1 ? 'item' : 'items'}`);
-        if (next > 0 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          badge.current?.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.4)' }, { transform: 'scale(1)' }], { duration: 400, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' });
-        }
-      }),
-    [],
-  );
+  useEffect(() => useCart.subscribe((state, previous) => {
+    const next = cartCount(state.lines);
+    if (next === cartCount(previous.lines) || !useCart.persist.hasHydrated()) return;
+    setAnnouncement(next === 0 ? 'Your cart is empty' : `Cart updated, ${next} ${next === 1 ? 'item' : 'items'}`);
+    if (next > 0 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      badge.current?.animate(
+        [{ transform: 'scale(1)' }, { transform: 'scale(1.4)' }, { transform: 'scale(1)' }],
+        { duration: 200, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+      );
+    }
+  }), []);
 
   return (
     <span className="relative inline-flex">
@@ -45,23 +39,26 @@ export function CartButton() {
           event.preventDefault();
           openDrawer();
         }}
-        className="relative grid h-11 w-11 place-items-center rounded-full border border-ink/15 transition-colors duration-300 hover:bg-ink hover:text-bone"
+        className={[
+          'relative grid size-11 place-items-center rounded-full border border-ink/15',
+          'transition-colors duration-200 hover:bg-ink hover:text-bone',
+        ].join(' ')}
       >
         <BagIcon />
         <span
           ref={badge}
           aria-hidden
           className={cn(
-            'absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-maroon px-1 text-[0.7rem] font-semibold leading-none text-bone transition-[transform,opacity] duration-300 motion-reduce:transition-none',
+            'absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-maroon px-1',
+            'text-xs font-semibold leading-none text-bone transition-[transform,opacity] duration-200',
+            'motion-reduce:transition-none',
             count > 0 ? 'scale-100 opacity-100' : 'scale-0 opacity-0',
           )}
         >
           {count > 99 ? '99+' : count || ''}
         </span>
       </TLink>
-      <span role="status" className="sr-only">
-        {announcement}
-      </span>
+      <span role="status" className="sr-only">{announcement}</span>
     </span>
   );
 }

@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { trackEvent } from '@/lib/analytics/client';
 import { useCart } from '@/lib/cart/store';
+import { clearBookingDraft } from './draft';
 
 /**
  * Runs once per booking, the first time its confirmation page opens in this
@@ -21,6 +22,8 @@ export function ConfirmationEffects({ reference, pieces }: { reference: string; 
     } catch {
       // Storage is blocked: fall through and run once for this page view.
     }
+    clearBookingDraft();
+    // No visual effects or animation: confirmation text is readable immediately, including with reduced motion.
     // Restore the saved cart first, so a late restore cannot bring the old lines back after the clear.
     void Promise.resolve(useCart.persist.rehydrate()).then(() => clear());
     trackEvent('booking_submit', { value: { reference, pieces } });
