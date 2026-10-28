@@ -30,6 +30,15 @@ $forbidden = '^(package\.json|package-lock\.json|next\.config\.ts|src/app/global
 $bad = @($changed | Where-Object { $_ -match $forbidden })
 if ($bad.Count) { '--- FORBIDDEN EDITS'; $bad | ForEach-Object { "  $_" } }
 
+$dense = @($changed | Where-Object { $_ -match '\.(ts|tsx)$' } | ForEach-Object {
+  $path = Join-Path $wt "web\$_"
+  if (Test-Path $path) {
+    $long = @(Get-Content $path | Where-Object { $_.Length -gt 140 }).Count
+    if ($long -gt 3) { "  $_ : $long lines over 140 characters" }
+  }
+})
+if ($dense.Count) { '--- DENSE CODE (rewrite in house style)'; $dense }
+
 function Invoke-Check([string]$Name, [string]$Arguments) {
   $log = "$logs\$Id.$Name.log"
   $bat = "$logs\$Id.$Name.cmd"

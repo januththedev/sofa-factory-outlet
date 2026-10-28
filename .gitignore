@@ -33,3 +33,4 @@ Thumbs.db
 
 # Harness-managed agent worktrees
 .claude/worktrees/
+web/docs/tasks/_fix-*.md

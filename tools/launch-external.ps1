@@ -8,7 +8,8 @@
 param(
   [Parameter(Mandatory)][ValidateSet('codex', 'opencode')][string]$Tool,
   [Parameter(Mandatory)][string]$Id,
-  [string]$Model = ''
+  [string]$Model = '',
+  [string]$Message = ''   # replaces the default instruction, e.g. for a second pass on an existing worktree
 )
 $ErrorActionPreference = 'Stop'
 $repo = 'D:\Sofa_Factory'
@@ -22,7 +23,7 @@ if (-not (Test-Path $modules)) { New-Item -ItemType Junction -Path $modules -Tar
 
 $task = "web/docs/tasks/$Id.md"
 if (-not (Test-Path "$wt\$task")) { throw "Task file missing in the worktree: $task" }
-$message = "Read $task and web/docs/BUILD-GUIDE.md and complete the task exactly as specified. Follow every rule in them. Do not commit."
+$message = if ($Message) { $Message } else { "Read $task and web/docs/BUILD-GUIDE.md and complete the task exactly as specified. Follow every rule in them. You cannot run Node or any shell command in this sandbox: that is expected and is not a reason to skip or shorten anything. Finish every deliverable, including every test listed in the spec's Tests section (the integrator runs tsc, eslint and vitest afterwards and sends failures back). Write in the house style of src/lib/bookings: one statement per line, one import per line, lines under 120 characters. Do not commit." }
 
 if ($Tool -eq 'codex') {
   $exe = "$env:USERPROFILE\.codex\packages\app-server-daemon\current\bin\codex.exe"
