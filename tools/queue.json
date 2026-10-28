@@ -29,10 +29,9 @@
   },
   {
     "id": "m-pages",
-    "tool": "opencode",
-    "model": "opencode-go/qwen3.8-max",
+    "tool": "codex",
     "allowShared": true,
-    "writer": "OpenCode (qwen3.8-max)",
+    "writer": "Codex",
     "message": "feat(mobile): visit, about, factory, trade, guides, privacy and review form for phones"
   },
   {
@@ -45,10 +44,16 @@
   },
   {
     "id": "m-admin-ops",
-    "tool": "opencode",
-    "model": "opencode-go/minimax-m3",
+    "tool": "codex",
     "allowShared": true,
-    "writer": "OpenCode (minimax-m3)",
+    "writer": "Codex",
     "message": "feat(mobile): admin products, invoices, settings, SEO, chat and knowledge for phones"
+  },
+  {
+    "id": "m-admin-core-2",
+    "tool": "codex",
+    "allowShared": true,
+    "writer": "Codex",
+    "message": "feat(mobile): admin login, dashboard, bookings, customers and visitors for phones"
   }
 ]
