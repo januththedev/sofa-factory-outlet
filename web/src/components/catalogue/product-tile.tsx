@@ -16,7 +16,7 @@ export function ProductTile({
   const fit = product.image?.cutout ? 'object-contain mix-blend-multiply' : 'object-cover';
   return (
     <article className="group relative">
-      <TLink href={product.href} aria-label={product.name} data-cursor="view" className="block min-h-11 min-w-11">
+      <TLink href={product.href} data-cursor="view" className="block min-h-11 min-w-11">
         <div className="relative aspect-square overflow-hidden rounded-[var(--radius-card)] bg-paper">
           {product.image ? (
             <Picture

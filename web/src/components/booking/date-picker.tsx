@@ -150,7 +150,7 @@ export function DatePicker({ availability, value, onChange, describedBy }: DateP
                       >
                         <span>{Number(date.slice(8))}</span>
                         {state !== 'open' ? (
-                          <span className="text-xs leading-4">
+                          <span aria-hidden className="text-xs leading-4">
                             {state === 'full' ? 'Full' : state === 'closed' ? 'Closed' : '—'}
                           </span>
                         ) : null}

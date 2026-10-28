@@ -20,7 +20,7 @@ test('owner manages a booking and edits a product, then signs out', async ({ pag
   await page.keyboard.press('Enter');
   await page.getByRole('link', { name: publishedProduct.name }).click();
   const title = `${publishedProduct.name} E2E`;
-  await page.getByLabel('Name').fill(title);
+  await page.getByLabel('Name', { exact: true }).fill(title);
   await page.getByLabel('Slug').fill(publishedProduct.slug);
   await page.getByRole('button', { name: 'Save product' }).click();
   await expect(page.getByText('Saved.', { exact: true })).toBeVisible();
@@ -31,7 +31,7 @@ test('owner manages a booking and edits a product, then signs out', async ({ pag
   await page.getByLabel('Search products').fill(title);
   await page.keyboard.press('Enter');
   await page.getByRole('link', { name: title }).click();
-  await page.getByLabel('Name').fill(publishedProduct.name);
+  await page.getByLabel('Name', { exact: true }).fill(publishedProduct.name);
   await page.getByLabel('Slug').fill(publishedProduct.slug);
   await page.getByRole('button', { name: 'Save product' }).click();
   await expect(page.getByText('Saved.', { exact: true })).toBeVisible();
