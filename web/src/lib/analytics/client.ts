@@ -44,6 +44,11 @@ function stored(storage: Storage, key: string): string {
   }
 }
 
+/** Staff pages and API routes are not visitors: they are never tracked. */
+export function isTrackedPath(path: string): boolean {
+  return !/^\/(admin|api)(\/|$)/.test(path);
+}
+
 export function getVisitorIds(): { visitorId: string; sessionId: string } {
   return { visitorId: stored(window.localStorage, 'sfo-vid'), sessionId: stored(window.sessionStorage, 'sfo-sid') };
 }

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Fraunces, Inter_Tight } from 'next/font/google';
+import { PageViewTracker } from '@/components/analytics/page-view-tracker';
 import { siteUrl } from '@/lib/env';
 import { preloaderBootScript } from '@/lib/motion/boot';
 import './globals.css';
@@ -41,7 +42,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: preloaderBootScript }} />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <PageViewTracker />
+      </body>
     </html>
   );
 }
