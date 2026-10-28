@@ -21,6 +21,7 @@ Spec: `../Plan.md`. Implementation plan: nine phases, one local commit each. Upd
 3. Phase 9: CSP in `next.config.ts` (WebGL, workers, Turnstile, Maps, the head boot script), accessibility pass, re-check the claims in `docs/DEPLOY.md` (cron auth, `test:urls` base URL, admin Setup checklist), refresh the placeholder register below.
 4. Style debt: several external modules are dense (lines over 140 characters; `tools/verify-worktree.ps1` lists them) and no formatter is installed.
 5. Known behaviour: with `DATABASE_URL` set and no Turnstile secret, bookings are refused (fail closed); the booking rate limit is best-effort, not atomic.
+6. Auth notes: production needs an AUTH_SECRET of 32+ characters or sign-in stays closed (make sure scripts/e2e-server.mjs sets one for the e2e run); orbidden() is not used because it needs experimental.authInterrupts, staff are sent to /admin/?notice=owner-only instead; the login rate limiter is per instance. <CartHydrator /> is not mounted in the site layout until integration-wiring has run.
 
 **Machine limits:** 7.7 GB RAM and about 25 GB commit limit, nearly all in use: Codex and OpenCode crash at start-up with "insufficient system resources" when too many agents run. Heavy checks go through `scripts/check.mjs` (2-slot queue); never run several `next build` or `next dev` at once, and never two processes on the same PGlite folder. Close Edge, Manus and ChatGPT before a build.
 
