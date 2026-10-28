@@ -1,0 +1,22 @@
+[
+  {
+    "q": "Example question: how long does delivery take?",
+    "alt": [
+      "example: delivery time",
+      "example: when will my sofa arrive",
+      "example: how many days for delivery"
+    ],
+    "a": "Replace this with the real answer. Put the answer itself in the first sentence, then add one fact per sentence.",
+    "tags": ["delivery"]
+  },
+  {
+    "q": "Example question: can I see the sofas before I buy?",
+    "alt": [
+      "example: can I visit the showroom",
+      "example: do you have a shop",
+      "example: where can I see the sofas"
+    ],
+    "a": "Replace this with the real answer, and say who confirms any detail that is not settled.",
+    "tags": ["store_info"]
+  }
+]
