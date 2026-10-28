@@ -4,8 +4,10 @@ import * as s from '../db/schema';
 import { DEFAULT_SETTINGS } from './defaults';
 import type { SettingsKey, SettingsMap } from './types';
 
+// A stored null is a choice (a closed day, a cleared number) and wins over the default; only a missing key falls back.
 function merge<T>(base: T, override: unknown): T {
-  if (override === null || override === undefined) return base;
+  if (override === undefined) return base;
+  if (override === null) return null as T;
   if (typeof base !== 'object' || base === null || Array.isArray(base)) return override as T;
   if (typeof override !== 'object' || Array.isArray(override)) return override as T;
   const out: Record<string, unknown> = { ...(base as Record<string, unknown>) };
