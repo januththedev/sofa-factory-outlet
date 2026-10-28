@@ -26,20 +26,16 @@ import {
   toBookingFormData,
 } from './schema';
 import { SlotPicker } from './slot-picker';
-import { TurnstileWidget } from './turnstile-widget';
 
 type BookingFormProps = {
   availability: DayAvailability[];
-  /** Public Turnstile site key, or null when the check is not configured (local mode). */
-  turnstileSiteKey: string | null;
   businessName: string;
   /** wa.me link to the showroom, offered when something goes wrong. */
   whatsappHref: string | null;
 };
 
-const TOKEN_ERROR_ID = 'bv-turnstile-error';
 /** Failures where messaging the showroom is the useful next step. */
-const WHATSAPP_CODES: ReadonlyArray<NonNullable<BookingFormState>['code']> = ['verification', 'rate_limited', 'unknown'];
+const WHATSAPP_CODES: ReadonlyArray<NonNullable<BookingFormState>['code']> = ['rate_limited', 'unknown'];
 
 /** Moves the keyboard focus to the first control of a field, so a screen reader announces its error. */
 function focusField(form: HTMLFormElement | null, name: DetailField) {
@@ -93,13 +89,11 @@ function Step({ id, number, title, children }: { id: string; number: number; tit
   );
 }
 
-export function BookingForm({ availability: initialAvailability, turnstileSiteKey, businessName, whatsappHref }: BookingFormProps) {
+export function BookingForm({ availability: initialAvailability, businessName, whatsappHref }: BookingFormProps) {
   const [state, formAction, pending] = useActionState(submitBooking, null);
   const lines = useCart((cart) => cart.lines);
   const formRef = useRef<HTMLFormElement>(null);
   const noticeRef = useRef<HTMLDivElement>(null);
-  const [token, setToken] = useState('');
-  const [tokenError, setTokenError] = useState<string | null>(null);
   const [clientNotice, setClientNotice] = useState<string | null>(null);
   // The server result the visitor has already acted on, so its message is no longer shown.
   const [dismissed, setDismissed] = useState<BookingFormState>(null);
@@ -166,14 +160,7 @@ export function BookingForm({ availability: initialAvailability, turnstileSiteKe
   const onValid = (details: BookingDetails) => {
     setDismissed(state);
     setClientNotice(null);
-    if (turnstileSiteKey && !token) {
-      setTokenError('Please wait for the quick check below to finish, then try again.');
-      return;
-    }
-    setTokenError(null);
-    const formData = toBookingFormData(details, { items: toCartRef(lines), turnstileToken: token, meta: collectMeta() });
-    // A token works once; the widget issues a new one after this attempt.
-    setToken('');
+    const formData = toBookingFormData(details, { items: toCartRef(lines), meta: collectMeta() });
     startTransition(() => formAction(formData));
   };
 
@@ -289,18 +276,6 @@ export function BookingForm({ availability: initialAvailability, turnstileSiteKe
             </p>
           ) : null}
         </div>
-
-        {turnstileSiteKey ? (
-          <div>
-            <p className="mb-1.5 text-sm font-medium text-ink-2">Quick check</p>
-            <TurnstileWidget siteKey={turnstileSiteKey} token={token} onToken={setToken} resetKey={state} describedBy={tokenError ? TOKEN_ERROR_ID : undefined} />
-            {tokenError ? (
-              <p id={TOKEN_ERROR_ID} className="mt-1.5 text-sm text-bad">
-                {tokenError}
-              </p>
-            ) : null}
-          </div>
-        ) : null}
 
         {notice ? (
           <div ref={noticeRef} role="alert" tabIndex={-1} className="rounded-xl border border-bad/30 bg-bad/5 p-4 text-sm outline-none">

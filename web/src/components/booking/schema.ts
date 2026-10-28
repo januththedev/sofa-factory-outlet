@@ -12,7 +12,6 @@ export type ContactMethod = (typeof CONTACT_METHODS)[number];
 export const CONTACT_LABELS: Record<ContactMethod, string> = { whatsapp: 'WhatsApp', call: 'Phone call', email: 'Email' };
 
 export const MAX_ITEMS = 20;
-export const TURNSTILE_FIELD = 'cf-turnstile-response';
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const emailSchema = z.email();
@@ -93,7 +92,7 @@ export function fieldErrorsFromZod(error: z.ZodError): Record<string, string> {
 
 /** What the server action sends back when a booking does not go through (success redirects instead). */
 export type BookingFormState = null | {
-  code: 'invalid' | 'verification' | 'rate_limited' | 'slot_full' | 'slot_closed' | 'unknown';
+  code: 'invalid' | 'rate_limited' | 'slot_full' | 'slot_closed' | 'unknown';
   /** Always a sentence written for the visitor, never raw error text. */
   error: string;
   fieldErrors?: Record<string, string>;
@@ -114,7 +113,7 @@ const metaSchema = z.object({
     .optional(),
 });
 
-export function toBookingFormData(details: BookingDetails, extras: { items: BookingItemInput[]; turnstileToken?: string; meta?: BookingMeta }): FormData {
+export function toBookingFormData(details: BookingDetails, extras: { items: BookingItemInput[]; meta?: BookingMeta }): FormData {
   const formData = new FormData();
   formData.set('name', details.name);
   formData.set('phone', details.phone);
@@ -127,7 +126,6 @@ export function toBookingFormData(details: BookingDetails, extras: { items: Book
   formData.set('preferredContact', details.preferredContact);
   formData.set('consent', String(details.consent));
   formData.set('items', JSON.stringify(extras.items));
-  formData.set(TURNSTILE_FIELD, extras.turnstileToken ?? '');
   const { visitorId, sourcePage, referrer, utm } = extras.meta ?? {};
   if (visitorId) formData.set('visitorId', visitorId);
   if (sourcePage) formData.set('sourcePage', sourcePage);
@@ -146,7 +144,7 @@ function parseJson(text: string): unknown {
 }
 
 /** Reads a submitted form back into a plain object for `bookingSubmissionSchema` (nothing is trusted yet). */
-export function readBookingFormData(formData: FormData): { raw: Record<string, unknown>; turnstileToken: string; meta: BookingMeta } {
+export function readBookingFormData(formData: FormData): { raw: Record<string, unknown>; meta: BookingMeta } {
   const text = (key: string) => {
     const value = formData.get(key);
     return typeof value === 'string' ? value : '';
@@ -168,7 +166,6 @@ export function readBookingFormData(formData: FormData): { raw: Record<string, u
       consent: text('consent') === 'true',
       items: parseJson(text('items')),
     },
-    turnstileToken: text(TURNSTILE_FIELD),
     // Meta never blocks a booking: anything malformed is simply dropped.
     meta: meta.success ? meta.data : {},
   };

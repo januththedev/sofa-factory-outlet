@@ -135,7 +135,6 @@ describe('booking submission schema (items)', () => {
 describe('form data round trip', () => {
   const extras = {
     items: [item],
-    turnstileToken: 'token-abc',
     meta: { visitorId: 'v-1', sourcePage: '/cart/', referrer: 'https://www.google.com/', utm: { source: 'facebook' } },
   };
 
@@ -144,7 +143,6 @@ describe('form data round trip', () => {
     const parsed = bookingSubmissionSchema.safeParse(read.raw);
     expect(parsed.success).toBe(true);
     if (parsed.success) expect(parsed.data).toEqual({ ...valid, items: [item] });
-    expect(read.turnstileToken).toBe('token-abc');
     expect(read.meta).toEqual(extras.meta);
   });
 
@@ -166,9 +164,7 @@ describe('form data round trip', () => {
     const formData = toBookingFormData(valid, extras);
     formData.set('items', '[{"productId":');
     formData.delete('slotId');
-    formData.delete('cf-turnstile-response');
     const read = readBookingFormData(formData);
-    expect(read.turnstileToken).toBe('');
     const result = bookingSubmissionSchema.safeParse(read.raw);
     expect(result.success).toBe(false);
     expect(pathsOf(result)).toEqual(expect.arrayContaining(['slotId', 'items']));
@@ -236,82 +232,6 @@ afterEach(() => {
   vi.unstubAllGlobals();
   vi.restoreAllMocks();
   vi.doUnmock('resend');
-});
-
-describe('Turnstile verification', () => {
-  const load = async (env: Record<string, string | undefined>) => {
-    freshEnvironment(env);
-    return import('@/lib/turnstile');
-  };
-  const respond = (body: unknown, status = 200) => vi.fn().mockResolvedValue(new Response(typeof body === 'string' ? body : JSON.stringify(body), { status }));
-
-  it('is skipped in local mode (no secret and no remote database)', async () => {
-    const fetchMock = respond({ success: true });
-    vi.stubGlobal('fetch', fetchMock);
-    const { verifyTurnstile, isTurnstileSkipped } = await load({ TURNSTILE_SECRET_KEY: undefined, DATABASE_URL: undefined });
-    expect(isTurnstileSkipped()).toBe(true);
-    expect(await verifyTurnstile(undefined)).toEqual({ ok: true, skipped: true });
-    expect(fetchMock).not.toHaveBeenCalled();
-  });
-
-  it('is not skipped when a remote database is configured but the secret is missing', async () => {
-    const fetchMock = respond({ success: true });
-    vi.stubGlobal('fetch', fetchMock);
-    const logged = vi.spyOn(console, 'error').mockImplementation(() => {});
-    const { verifyTurnstile } = await load({ TURNSTILE_SECRET_KEY: undefined, DATABASE_URL: 'postgres://example.invalid/db' });
-    expect(await verifyTurnstile('any-token')).toEqual({ ok: false, reason: 'unavailable' });
-    expect(fetchMock).not.toHaveBeenCalled();
-    expect(logged).toHaveBeenCalled();
-  });
-
-  it('accepts a token Cloudflare approves, sending the secret, token and address', async () => {
-    const fetchMock = respond({ success: true });
-    vi.stubGlobal('fetch', fetchMock);
-    const { verifyTurnstile } = await load({ TURNSTILE_SECRET_KEY: 'secret-key', DATABASE_URL: undefined });
-    expect(await verifyTurnstile('token-123', '203.0.113.9')).toEqual({ ok: true, skipped: false });
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
-    expect(url).toBe('https://challenges.cloudflare.com/turnstile/v0/siteverify');
-    expect(init.method).toBe('POST');
-    const body = new URLSearchParams(String(init.body));
-    expect(body.get('secret')).toBe('secret-key');
-    expect(body.get('response')).toBe('token-123');
-    expect(body.get('remoteip')).toBe('203.0.113.9');
-  });
-
-  it('rejects a token Cloudflare refuses', async () => {
-    vi.stubGlobal('fetch', respond({ success: false, 'error-codes': ['invalid-input-response'] }));
-    const { verifyTurnstile } = await load({ TURNSTILE_SECRET_KEY: 'secret-key' });
-    expect(await verifyTurnstile('stale-token')).toEqual({ ok: false, reason: 'rejected' });
-  });
-
-  it('fails closed on a network error without throwing', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('network down')));
-    const logged = vi.spyOn(console, 'error').mockImplementation(() => {});
-    const { verifyTurnstile } = await load({ TURNSTILE_SECRET_KEY: 'secret-key' });
-    await expect(verifyTurnstile('token-123')).resolves.toEqual({ ok: false, reason: 'unavailable' });
-    expect(logged).toHaveBeenCalled();
-  });
-
-  it('fails closed on an HTTP error or an unreadable answer', async () => {
-    vi.spyOn(console, 'error').mockImplementation(() => {});
-    vi.stubGlobal('fetch', respond('Bad gateway', 502));
-    const { verifyTurnstile } = await load({ TURNSTILE_SECRET_KEY: 'secret-key' });
-    expect(await verifyTurnstile('token-123')).toEqual({ ok: false, reason: 'unavailable' });
-    vi.stubGlobal('fetch', respond('<html>not json</html>'));
-    expect(await verifyTurnstile('token-123')).toEqual({ ok: false, reason: 'unavailable' });
-    vi.stubGlobal('fetch', respond({ unexpected: true }));
-    expect(await verifyTurnstile('token-123')).toEqual({ ok: false, reason: 'unavailable' });
-  });
-
-  it('asks for a token without calling Cloudflare when none was sent', async () => {
-    const fetchMock = respond({ success: true });
-    vi.stubGlobal('fetch', fetchMock);
-    const { verifyTurnstile } = await load({ TURNSTILE_SECRET_KEY: 'secret-key' });
-    for (const token of [undefined, null, '', '   ']) expect(await verifyTurnstile(token)).toEqual({ ok: false, reason: 'missing' });
-    expect(await verifyTurnstile('x'.repeat(5000))).toEqual({ ok: false, reason: 'rejected' });
-    expect(fetchMock).not.toHaveBeenCalled();
-  });
 });
 
 describe('owner booking email', () => {

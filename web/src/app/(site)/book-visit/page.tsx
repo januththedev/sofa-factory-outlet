@@ -3,7 +3,6 @@ import { BookingForm } from '@/components/booking/booking-form';
 import { cellState } from '@/components/booking/calendar';
 import { VisitTimesNotice } from '@/components/booking/unavailable';
 import { type DayAvailability, getAvailability } from '@/lib/bookings/api';
-import { env } from '@/lib/env';
 import { pageMetadata } from '@/lib/seo/metadata';
 import { getSettings, whatsappLink } from '@/lib/settings/get';
 
@@ -54,7 +53,7 @@ export default async function BookVisitPage() {
         </header>
         <div className="lg:col-span-8">
           {availability && hasOpenTimes ? (
-            <BookingForm availability={availability} turnstileSiteKey={env.TURNSTILE_SITE_KEY ?? null} businessName={business.name} whatsappHref={whatsappHref} />
+            <BookingForm availability={availability} businessName={business.name} whatsappHref={whatsappHref} />
           ) : (
             <VisitTimesNotice kind={availability ? 'none' : 'error'} whatsappHref={whatsappHref} />
           )}

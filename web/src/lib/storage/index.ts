@@ -47,7 +47,7 @@ const blobDriver: StorageDriver = {
   async put(key, data, { contentType }) {
     const { put } = await import('@vercel/blob');
     await put(cleanKey(key), Buffer.from(data), {
-      access: 'public',
+      access: env.BLOB_ACCESS,
       contentType,
       addRandomSuffix: false,
       allowOverwrite: true,
@@ -56,6 +56,11 @@ const blobDriver: StorageDriver = {
     });
   },
   async get(key) {
+    if (env.BLOB_ACCESS === 'private') {
+      const { get } = await import('@vercel/blob');
+      const blob = await get(cleanKey(key), { access: 'private', token: env.BLOB_READ_WRITE_TOKEN });
+      return blob?.statusCode === 200 ? Buffer.from(await new Response(blob.stream).arrayBuffer()) : null;
+    }
     const response = await fetch(`${mediaBase()}/${cleanKey(key)}`);
     return response.ok ? Buffer.from(await response.arrayBuffer()) : null;
   },
@@ -74,6 +79,7 @@ export const storage = (): StorageDriver => (env.BLOB_READ_WRITE_TOKEN ? blobDri
 
 /** Public base URL that stored keys are served from. */
 export function mediaBase(): string {
+  if (env.BLOB_READ_WRITE_TOKEN && env.BLOB_ACCESS === 'private') return '/blob';
   if (env.BLOB_BASE_URL) return env.BLOB_BASE_URL.replace(/\/+$/, '');
   if (env.BLOB_READ_WRITE_TOKEN) {
     // Tokens look like vercel_blob_rw_<storeId>_<secret>.

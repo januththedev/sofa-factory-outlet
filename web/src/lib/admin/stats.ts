@@ -279,7 +279,7 @@ export async function getDashboardStats(now: Date = new Date(), handle?: Db): Pr
 // Setup checklist input
 
 export type ServiceStatus = {
-  id: 'search-console' | 'openrouter' | 'resend' | 'indexnow' | 'turnstile';
+  id: 'search-console' | 'openrouter' | 'resend' | 'indexnow';
   label: string;
   configured: boolean;
   /** Names of the environment variables to set on the host. Never their values. */
@@ -317,13 +317,6 @@ export function getServiceStatus(): ServiceStatus[] {
       configured: Boolean(env.INDEXNOW_KEY),
       vars: ['INDEXNOW_KEY'],
       effect: 'Tells search engines at once when a page changes (switch it on above).',
-    },
-    {
-      id: 'turnstile',
-      label: 'Cloudflare Turnstile',
-      configured: Boolean(env.TURNSTILE_SECRET_KEY && env.TURNSTILE_SITE_KEY),
-      vars: ['TURNSTILE_SITE_KEY', 'TURNSTILE_SECRET_KEY'],
-      effect: 'Spam protection on the booking form.',
     },
   ];
 }

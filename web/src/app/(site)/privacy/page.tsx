@@ -143,10 +143,6 @@ export default async function PrivacyPage() {
               <strong>Vercel</strong> hosts the site and reports the country and city of a request.
             </li>
             <li>
-              <strong>Cloudflare Turnstile</strong> checks that forms are filled in by a person, not a
-              bot, when it is enabled.
-            </li>
-            <li>
               <strong>Google Maps</strong> shows the showroom map when you open it on the visit section.
             </li>
             <li>

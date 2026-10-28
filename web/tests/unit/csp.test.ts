@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BLOB_IMAGE_ORIGIN, buildContentSecurityPolicy, MAP_ORIGINS, TURNSTILE_ORIGIN } from '@/lib/security/csp';
+import { BLOB_IMAGE_ORIGIN, buildContentSecurityPolicy, MAP_ORIGINS } from '@/lib/security/csp';
 
 function directive(policy: string, name: string): string[] {
   const found = policy.split('; ').find((part) => part === name || part.startsWith(`${name} `));
@@ -31,10 +31,9 @@ describe('buildContentSecurityPolicy', () => {
     expect(scripts).toContain("'self'");
   });
 
-  it('lets Turnstile load its script, frame and connection', () => {
-    expect(directive(policy, 'script-src')).toContain(TURNSTILE_ORIGIN);
-    expect(directive(policy, 'frame-src')).toContain(TURNSTILE_ORIGIN);
-    expect(directive(policy, 'connect-src')).toContain(TURNSTILE_ORIGIN);
+  it('keeps script and connection sources local', () => {
+    expect(directive(policy, 'script-src')).toEqual(["'self'", "'unsafe-inline'"]);
+    expect(directive(policy, 'connect-src')).toEqual(["'self'"]);
   });
 
   it('lets the Google Maps embeds load, and only as frames', () => {

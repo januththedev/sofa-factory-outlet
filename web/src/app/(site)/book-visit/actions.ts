@@ -1,6 +1,5 @@
 'use server';
 
-import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { after } from 'next/server';
 import {
@@ -15,7 +14,6 @@ import { hasEmail } from '@/lib/env';
 import { sendOwnerBookingEmail } from '@/lib/notify/email';
 import { normaliseLkPhone } from '@/lib/phone';
 import { isRateLimited, phoneKey, visitorKey } from '@/lib/rate-limit';
-import { verifyTurnstile } from '@/lib/turnstile';
 
 type FailureCode = NonNullable<BookingFormState>['code'];
 
@@ -29,12 +27,6 @@ const MESSAGES = {
   slotFull: 'Sorry, that time has just been taken. Please choose another time.',
   slotClosed: 'That time is no longer available. Please choose another day or time.',
   unknown: 'We could not save your booking just now. Please try again, or message us on WhatsApp.',
-} as const;
-
-const VERIFICATION_MESSAGES = {
-  missing: 'Please wait for the quick check to finish, then try again.',
-  rejected: 'The quick check did not pass. Please try again, or message us on WhatsApp.',
-  unavailable: 'We could not run the quick check just now. Please try again in a moment, or message us on WhatsApp.',
 } as const;
 
 // What the visitor sees when the booking core rejects a field. The core's own wording is never shown.
@@ -95,11 +87,6 @@ function fromBookingResult(result: Extract<BookingResult, { ok: false }>): Promi
   }
 }
 
-async function clientIp(): Promise<string | null> {
-  const requestHeaders = await headers();
-  return requestHeaders.get('x-forwarded-for')?.split(',')[0]?.trim() || requestHeaders.get('x-real-ip') || null;
-}
-
 async function tooManyRecent(phone: string, visitorId: string | undefined): Promise<boolean> {
   try {
     const keys = [phoneKey(phone), ...(visitorId ? [visitorKey(visitorId)] : [])];
@@ -138,21 +125,18 @@ function alertOwner(booking: { reference: string; bookingId: number }, details: 
 }
 
 /**
- * Book a Visit submit. Validates, checks Turnstile, applies the rate limit and
+ * Book a Visit submit. Validates, applies the rate limit and
  * saves the booking through the booking core. Success redirects to the
  * confirmation page; every expected failure comes back as a state object the
  * form shows (never raw error text).
  */
 export async function submitBooking(_previous: BookingFormState, formData: FormData): Promise<BookingFormState> {
-  const { raw, turnstileToken, meta } = readBookingFormData(formData);
+  const { raw, meta } = readBookingFormData(formData);
   const parsed = bookingSubmissionSchema.safeParse(raw);
   if (!parsed.success) return invalid(fieldErrorsFromZod(parsed.error));
   const details = parsed.data;
   const phone = normaliseLkPhone(details.phone);
   if (!phone) return invalid({ phone: FIELD_FALLBACKS.phone });
-
-  const verdict = await verifyTurnstile(turnstileToken, await clientIp());
-  if (!verdict.ok) return failure('verification', VERIFICATION_MESSAGES[verdict.reason]);
 
   if (await tooManyRecent(phone, meta.visitorId)) return failure('rate_limited', MESSAGES.rateLimited);
 

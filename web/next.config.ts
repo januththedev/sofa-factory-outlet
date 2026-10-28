@@ -2,9 +2,7 @@ import type { NextConfig } from 'next';
 import { legacyRedirects } from './src/lib/seo/legacy-redirects';
 import { buildContentSecurityPolicy } from './src/lib/security/csp';
 
-// Without DATABASE_URL the app uses PGlite, which only one process may open.
-// `next build` defaults to several worker processes, so pin it to one.
-const usingPglite = !process.env.DATABASE_URL;
+// Bound build memory and database connections. PGlite also requires a single worker.
 
 const servedOverHttps = (process.env.NEXT_PUBLIC_SITE_URL ?? '').startsWith('https://');
 
@@ -44,7 +42,7 @@ const nextConfig: NextConfig = {
     },
   },
   experimental: {
-    ...(usingPglite ? { cpus: 1 } : {}),
+    cpus: 1,
     serverActions: { bodySizeLimit: '12mb' },
   },
   async redirects() {

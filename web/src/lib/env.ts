@@ -14,6 +14,7 @@ const schema = z.object({
   PGLITE_DIR: withDefault('.data/pglite'),
 
   BLOB_READ_WRITE_TOKEN: optional,
+  BLOB_ACCESS: z.enum(['public', 'private']).default('public'),
   BLOB_BASE_URL: optional,
   LOCAL_BLOB_DIR: withDefault('.data/blob'),
 
@@ -27,9 +28,6 @@ const schema = z.object({
     'google/gemma-4-31b-it:free,google/gemma-4-26b-a4b-it:free,nvidia/nemotron-3.5-lightning:free',
   ),
   OPENROUTER_EMBED_MODEL: optional,
-
-  TURNSTILE_SITE_KEY: optional,
-  TURNSTILE_SECRET_KEY: optional,
 
   RESEND_API_KEY: optional,
   ADMIN_ALERT_EMAIL: optional,
