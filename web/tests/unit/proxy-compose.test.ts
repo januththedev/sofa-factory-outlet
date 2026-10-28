@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { composeProxy, config } from '@/proxy';
 import { RedirectCache, type RedirectEntry } from '@/lib/seo/redirects';
 
@@ -15,9 +15,18 @@ describe('proxy composition', () => {
   });
 
   it('lets the admin login page pass through', async () => {
-    const response = await composeProxy(request('/admin/login/'), redirectMap());
+    const load = vi.fn(async () => []);
+    const response = await composeProxy(request('/admin/login/'), new RedirectCache(load));
 
     expect(response.headers.get('x-middleware-next')).toBe('1');
+    expect(load).not.toHaveBeenCalled();
+  });
+
+  it('does not load public redirects for API requests', async () => {
+    const load = vi.fn(async () => []);
+    const response = await composeProxy(request('/api/track/'), new RedirectCache(load));
+    expect(response.headers.get('x-middleware-next')).toBe('1');
+    expect(load).not.toHaveBeenCalled();
   });
 
   it('answers a legacy URL with a 301 redirect', async () => {
@@ -36,5 +45,9 @@ describe('proxy composition', () => {
     expect(matches('/blob/product-photo')).toBe(false);
     expect(matches('/images/sofa.webp')).toBe(false);
     expect(matches('/api/cron/digest/')).toBe(false);
+    expect(matches('/api/track/')).toBe(false);
+    expect(matches('/api/admin/notifications/')).toBe(false);
+    expect(matches('/admin/products/')).toBe(true);
+    expect(matches('/shop/')).toBe(true);
   });
 });

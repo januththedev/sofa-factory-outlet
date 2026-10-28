@@ -61,6 +61,13 @@ function Sofa({ color }: { color: string }) {
   const { invalidate } = useThree();
   const first = useRef(true);
 
+  useEffect(() => () => {
+    fabric.bumpMap?.dispose();
+    fabric.dispose();
+    accent.dispose();
+    wood.dispose();
+  }, [fabric, accent, wood]);
+
   useEffect(() => {
     if (first.current) {
       first.current = false;
@@ -112,9 +119,9 @@ export default function ColourSofaScene({ color, autoRotate, interactive, paused
     <Canvas
       shadows
       dpr={[1, 1.75]}
-      frameloop={paused ? 'never' : 'always'}
+      frameloop={paused ? 'never' : autoRotate ? 'always' : 'demand'}
       camera={{ position: [4.9, 2.3, 5.8], fov: 30 }}
-      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+      gl={{ antialias: true, alpha: true, powerPreference: 'default' }}
       onCreated={() => onReady?.()}
       style={{ position: 'absolute', inset: 0 }}
     >
@@ -126,7 +133,8 @@ export default function ColourSofaScene({ color, autoRotate, interactive, paused
         <Lightformer form="rect" intensity={1.1} position={[5, 1.5, -1]} scale={[3, 5, 1]} rotation-y={-Math.PI / 2} />
       </Environment>
       <Sofa color={color} />
-      <ContactShadows position={[0, 0.001, 0]} opacity={0.4} scale={9} blur={2.6} far={2.2} resolution={512} />
+      {/* The sofa geometry never moves: reuse its shadow rather than render and blur it every frame. */}
+      <ContactShadows frames={1} position={[0, 0.001, 0]} opacity={0.4} scale={9} blur={2.6} far={2.2} resolution={512} />
       <OrbitControls
         target={[0, 0.7, 0]}
         enabled={interactive}

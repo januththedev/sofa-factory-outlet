@@ -48,7 +48,7 @@ export async function submitBooking(page: Page, sequence: number) {
   const dateName = await openDate.getAttribute('aria-label');
   await openDate.click();
 
-  const slots = page.getByRole('radio');
+  const slots = page.getByRole('group', { name: 'Time slot', exact: true }).getByRole('radio');
   let slot = slots.first();
   for (let index = 0; index < await slots.count(); index += 1) {
     const candidate = slots.nth(index);
@@ -63,6 +63,12 @@ export async function submitBooking(page: Page, sequence: number) {
   const slotName = await slot.evaluate((element) => element.parentElement?.textContent?.trim() ?? '');
   const remaining = Number(slotName.match(/(\d+) places? left/)?.[1]);
   await page.getByLabel(/I agree that/).check();
+  // Loading the widget is lazy. Wait for its result rather than racing Cloudflare's test widget.
+  const verification = page.getByRole('group', { name: 'Quick check', exact: true });
+  if (await verification.count()) {
+    await verification.scrollIntoViewIfNeeded();
+    await expect(verification.locator('input[name="cf-turnstile-response"]').first()).not.toHaveValue('', { timeout: 30_000 });
+  }
   await page.getByRole('button', { name: 'Book my visit' }).click();
   await expect(page).toHaveURL(/\/book-visit\/done\/SFO-B-\d+\/$/);
   const reference = page.url().match(/(SFO-B-\d+)/)?.[1];

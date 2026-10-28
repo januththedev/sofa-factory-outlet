@@ -14,22 +14,26 @@ export class RedirectCache {
   private map: RedirectMap = new Map();
   private fetchedAt = Number.NEGATIVE_INFINITY;
   private pending?: Promise<void>;
+  private retryAt = Number.NEGATIVE_INFINITY;
 
   constructor(private readonly load: () => Promise<RedirectEntry[]>, private readonly ttlMs = 30_000, private readonly now = Date.now) {}
 
   private async refresh(): Promise<void> {
     if (!this.pending) {
-      this.pending = this.load().then((rows) => { this.map = buildRedirectMap(rows); this.fetchedAt = this.now(); }).finally(() => { this.pending = undefined; });
+      this.pending = this.load().then((rows) => {
+        this.map = buildRedirectMap(rows);
+        this.fetchedAt = this.now();
+        this.retryAt = Number.NEGATIVE_INFINITY;
+      }).catch(() => {
+        // Keep the last good map during an outage and avoid a retry on every incoming request.
+        this.retryAt = this.now() + Math.min(this.ttlMs, 5000);
+      }).finally(() => { this.pending = undefined; });
     }
     await this.pending;
   }
 
   async get(path: string): Promise<Omit<RedirectEntry, 'from'> | undefined> {
-    const key = normaliseRedirectPath(path);
-    const stale = this.now() - this.fetchedAt >= this.ttlMs;
-    if (stale) await this.refresh();
-    const hit = this.map.get(key);
-    if (!hit && !stale && this.now() - this.fetchedAt >= this.ttlMs) await this.refresh();
-    return this.map.get(key);
+    if (this.now() - this.fetchedAt >= this.ttlMs && this.now() >= this.retryAt) await this.refresh();
+    return this.map.get(normaliseRedirectPath(path));
   }
 }

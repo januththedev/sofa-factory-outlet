@@ -8,6 +8,7 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from '
 import { cn } from '@/lib/cn';
 import type { BellItem, BellPayload } from '@/lib/auth/notifications';
 import { safeAdminPath } from '@/lib/auth/paths';
+import { pollWhenVisible } from '@/lib/polling';
 
 const ENDPOINT = '/api/admin/notifications/';
 const POLL_MS = 20_000;
@@ -155,12 +156,12 @@ export function Bell({ onBookings }: { onBookings?: (count: number) => void }) {
   // Poll every 20 seconds, pause while the tab is hidden (unless desktop alerts are on,
   // which only matter when it is hidden) and catch up as soon as it is visible again.
   useEffect(() => {
-    const controller = new AbortController();
     let stopped = false;
-    const poll = async () => {
-      if (stopped || (document.hidden && !flags.current.desktop)) return;
+    const poll = async (signal: AbortSignal) => {
+      if (stopped) return;
       try {
-        const response = await fetch(ENDPOINT, { cache: 'no-store', credentials: 'same-origin', signal: controller.signal, headers: { Accept: 'application/json' } });
+        const response = await fetch(ENDPOINT, { cache: 'no-store', credentials: 'same-origin', signal, headers: { Accept: 'application/json' } });
+        if (signal.aborted) return;
         if (response.status === 401 || response.status === 403 || response.redirected) {
           stopped = true; // signed out: the next admin page load goes to the login page
           setState((current) => ({ ...current, signedOut: true }));
@@ -168,22 +169,15 @@ export function Bell({ onBookings }: { onBookings?: (count: number) => void }) {
         }
         if (!response.ok) return;
         const data: unknown = await response.json();
-        if (isPayload(data)) apply(data);
+        if (!signal.aborted && isPayload(data)) apply(data);
       } catch {
         // offline or aborted: the next tick tries again
       }
     };
-    void poll();
-    const timer = window.setInterval(() => void poll(), POLL_MS);
-    const onVisible = () => {
-      if (!document.hidden) void poll();
-    };
-    document.addEventListener('visibilitychange', onVisible);
+    const stop = pollWhenVisible(poll, POLL_MS, { background: () => flags.current.desktop });
     return () => {
       stopped = true;
-      controller.abort();
-      window.clearInterval(timer);
-      document.removeEventListener('visibilitychange', onVisible);
+      stop();
     };
   }, [apply]);
 

@@ -16,8 +16,9 @@ test('a slot at capacity is disabled', async ({ page }) => {
   }
   await page.goto('/book-visit/');
   await page.getByRole('button', { name: first.dateName }).click();
-  const time = first.slotName.match(/\d{1,2}:\d{2}\s*[AP]M\s*–\s*\d{1,2}:\d{2}\s*[AP]M/i)?.[0] ?? '';
-  const fullSlot = page.getByRole('radio', { name: new RegExp(time, 'i') });
+  const time = first.slotName.replace(/\s*\d+ places? left\s*$/, '').trim();
+  expect(time).not.toBe('');
+  const fullSlot = page.getByRole('group', { name: 'Time slot', exact: true }).getByRole('radio', { name: new RegExp(`^${time}`) });
   await expect(fullSlot).toBeDisabled();
 });
 

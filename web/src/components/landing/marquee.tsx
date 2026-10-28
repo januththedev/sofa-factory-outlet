@@ -28,7 +28,15 @@ export function Marquee() {
     () => {
       const mm = gsap.matchMedia();
       mm.add(MOTION_ANY, () => {
-        const loop = gsap.to(track.current, { xPercent: -50, ease: 'none', duration: 55, repeat: -1 });
+        const loop = gsap.to(track.current, { xPercent: -50, ease: 'none', duration: 55, repeat: -1, paused: true });
+        let onScreen = false;
+        const updateActivity = () => loop.paused(!onScreen || document.hidden);
+        const observer = new IntersectionObserver(([entry]) => {
+          onScreen = entry.isIntersecting;
+          updateActivity();
+        });
+        if (root.current) observer.observe(root.current);
+        document.addEventListener('visibilitychange', updateActivity);
         const trigger = ScrollTrigger.create({
           trigger: root.current,
           start: 'top bottom',
@@ -44,6 +52,8 @@ export function Marquee() {
         return () => {
           trigger.kill();
           loop.kill();
+          observer.disconnect();
+          document.removeEventListener('visibilitychange', updateActivity);
         };
       });
     },

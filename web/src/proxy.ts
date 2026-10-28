@@ -7,6 +7,7 @@ import { RedirectCache, type RedirectEntry } from '@/lib/seo/redirects';
 async function loadRedirects(): Promise<RedirectEntry[]> {
   const response = await fetch(new URL('/api/internal/redirects/', `${siteUrl()}/`), {
     headers: { authorization: `Bearer ${env.CRON_SECRET ?? ''}` },
+    signal: AbortSignal.timeout(2000),
   });
   if (!response.ok) throw new Error(`Redirect service returned ${response.status}`);
   const data = await response.json() as { redirects?: RedirectEntry[] };
@@ -18,6 +19,9 @@ const redirects = new RedirectCache(loadRedirects);
 export async function composeProxy(request: NextRequest, redirectMap: RedirectCache): Promise<NextResponse> {
   const gated = adminGate(request);
   if (gated) return gated;
+  // Redirects describe public pages. APIs authenticate in their own handlers.
+  const path = request.nextUrl.pathname;
+  if (path === '/api' || path.startsWith('/api/') || path === '/admin' || path.startsWith('/admin/')) return NextResponse.next();
   if (request.nextUrl.pathname === '/' && ['265', '267'].includes(request.nextUrl.searchParams.get('p') ?? '')) {
     return NextResponse.redirect(new URL('/', request.url), 301);
   }
@@ -45,5 +49,5 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 }
 
 export const config = {
-  matcher: ['/((?!_next/|blob/|api/cron(?:/|$)|api/internal/|.*\\.[^/]+$).*)'],
+  matcher: ['/((?!_next/|blob/|api(?:/|$)|.*\\.[^/]+$).*)'],
 };

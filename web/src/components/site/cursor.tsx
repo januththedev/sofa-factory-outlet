@@ -15,6 +15,7 @@ export function Cursor() {
 
   useEffect(() => {
     if (!active || !dot.current || !ring.current) return;
+    const elements = [dot.current, ring.current, label.current];
     document.documentElement.classList.add('has-cursor');
     const dotX = gsap.quickTo(dot.current, 'x', { duration: 0.08, ease: 'power3' });
     const dotY = gsap.quickTo(dot.current, 'y', { duration: 0.08, ease: 'power3' });
@@ -23,6 +24,7 @@ export function Cursor() {
     gsap.set([dot.current, ring.current], { xPercent: -50, yPercent: -50, opacity: 0 });
 
     let visible = false;
+    let previousMode = '';
     const move = (event: PointerEvent) => {
       if (!visible) {
         visible = true;
@@ -35,6 +37,9 @@ export function Cursor() {
 
       const el = (event.target as Element | null)?.closest<HTMLElement>('[data-cursor], a, button, [role="button"], input, textarea, select');
       const mode = el?.dataset.cursor ?? (el ? 'link' : 'default');
+      // Position uses reusable tweens; appearance only changes when entering a different kind of target.
+      if (mode === previousMode) return;
+      previousMode = mode;
       const view = mode === 'view';
       gsap.to(ring.current, {
         width: view ? 88 : mode === 'link' ? 56 : 36,
@@ -58,6 +63,11 @@ export function Cursor() {
       document.documentElement.classList.remove('has-cursor');
       window.removeEventListener('pointermove', move);
       document.documentElement.removeEventListener('pointerleave', leave);
+      dotX.tween.kill();
+      dotY.tween.kill();
+      ringX.tween.kill();
+      ringY.tween.kill();
+      gsap.killTweensOf(elements);
     };
   }, [active]);
 

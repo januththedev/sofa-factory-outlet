@@ -10,7 +10,7 @@ test('health reports the seeded catalogue', async ({ request }) => {
 });
 
 test('the page renders product photos served from local storage', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/shop/');
   await expect(page).toHaveTitle(/Sofa Factory Outlet/);
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   const first = page.locator('picture img').first();

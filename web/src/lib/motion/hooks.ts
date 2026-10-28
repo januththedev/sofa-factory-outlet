@@ -22,6 +22,27 @@ export function useMediaQuery(query: string, serverValue = false): boolean {
 export const usePrefersReducedMotion = () => useMediaQuery('(prefers-reduced-motion: reduce)');
 export const useFinePointer = () => useMediaQuery('(hover: hover) and (pointer: fine)');
 
+function subscribeVisibility(notify: () => void) {
+  document.addEventListener('visibilitychange', notify);
+  return () => document.removeEventListener('visibilitychange', notify);
+}
+
+/** Stop decorative rendering while the browser tab is in the background. */
+export const usePageVisible = () => useSyncExternalStore(subscribeVisibility, () => !document.hidden, () => false);
+
+/** Unlike useNearViewport, this also becomes false after an element leaves the screen. */
+export function useInViewport<T extends Element>(): [React.RefCallback<T>, boolean] {
+  const [node, setNode] = useState<T | null>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    if (!node) return;
+    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting));
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [node]);
+  return [setNode, visible];
+}
+
 /** True once the page has loaded and the browser is idle, so heavy code never competes with the first paint. */
 export function useIdleAfterLoad(timeoutMs = 2500): boolean {
   const [ready, setReady] = useState(false);
@@ -70,7 +91,10 @@ export function hasWebGL(): boolean {
   if (webglSupport !== undefined) return webglSupport;
   try {
     const canvas = document.createElement('canvas');
-    webglSupport = Boolean(canvas.getContext('webgl2') || canvas.getContext('webgl'));
+    const context = canvas.getContext('webgl2') || canvas.getContext('webgl');
+    webglSupport = Boolean(context);
+    // The probe must not keep an extra GPU context alive alongside the actual scenes.
+    context?.getExtension('WEBGL_lose_context')?.loseContext();
   } catch {
     webglSupport = false;
   }

@@ -79,8 +79,8 @@ export function TurnstileWidget({ siteKey, token, onToken, resetKey, describedBy
           size: 'flexible',
           callback: (value: string) => onToken(value),
           'expired-callback': () => onToken(''),
-          'timeout-callback': () => onToken(''),
-          'error-callback': () => onToken(''),
+          'timeout-callback': () => { onToken(''); setFailed(true); },
+          'error-callback': () => { onToken(''); setFailed(true); },
         });
         setReady(true);
       })

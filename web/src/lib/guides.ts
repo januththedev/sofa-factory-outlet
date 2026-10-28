@@ -186,7 +186,8 @@ function byNewestFirst(a: Guide, b: Guide): number {
 export async function loadGuidesReport(
   dir: string = GUIDES_DIR,
 ): Promise<{ guides: Guide[]; skipped: SkippedGuide[] }> {
-  const entries = await readdir(dir, { withFileTypes: true });
+  // The directory is injectable for tests. Production Markdown files are included explicitly in next.config.ts.
+  const entries = await readdir(/* turbopackIgnore: true */ dir, { withFileTypes: true });
   // Read in name order so a duplicate slug is always taken by the same file.
   entries.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
   const guides: Guide[] = [];
@@ -196,7 +197,8 @@ export async function loadGuidesReport(
     // Files starting with an underscore are notes for editors, not guides.
     if (!entry.isFile() || !entry.name.endsWith('.md') || entry.name.startsWith('_')) continue;
     try {
-      const guide = parseGuide(await readFile(path.join(dir, entry.name), 'utf8'), entry.name);
+      const file = path.join(/* turbopackIgnore: true */ dir, entry.name);
+      const guide = parseGuide(await readFile(/* turbopackIgnore: true */ file, 'utf8'), entry.name);
       if (slugs.has(guide.slug)) {
         skipped.push({ file: entry.name, reason: `duplicate slug "${guide.slug}" already belongs to another guide` });
         continue;

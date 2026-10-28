@@ -1,10 +1,10 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { TLink } from '@/components/site/transition';
 import type { Swatch } from '@/lib/catalogue/cached';
-import { useFinePointer, useNearViewport, usePrefersReducedMotion, useWebGL } from '@/lib/motion/hooks';
+import { useFinePointer, useNearViewport, usePageVisible, usePrefersReducedMotion, useWebGL } from '@/lib/motion/hooks';
 import { accentFor, SofaSvg } from './sofa-svg';
 
 const ColourSofaScene = dynamic(() => import('@/components/webgl/colour-sofa-scene'), { ssr: false });
@@ -23,9 +23,14 @@ export function ColourExplorer({ swatches }: { swatches: Swatch[] }) {
   const webgl = useWebGL();
   const reduced = usePrefersReducedMotion();
   const fine = useFinePointer();
+  const visible = usePageVisible();
 
   // Pause rendering while the stage is off screen.
   const [node, setNode] = useState<HTMLDivElement | null>(null);
+  const stageRef = useCallback((el: HTMLDivElement | null) => {
+    stage(el);
+    setNode(el);
+  }, [stage]);
   useEffect(() => {
     if (!node) return;
     const observer = new IntersectionObserver((entries) => setOnScreen(entries.some((e) => e.isIntersecting)), { threshold: 0.05 });
@@ -79,10 +84,7 @@ export function ColourExplorer({ swatches }: { swatches: Swatch[] }) {
 
         <div className="lg:col-span-7">
           <div
-            ref={(el) => {
-              stage(el);
-              setNode(el);
-            }}
+            ref={stageRef}
             data-explorer-stage
             className="relative aspect-[5/4] overflow-hidden rounded-[var(--radius-card)] bg-gradient-to-b from-paper to-bone-2"
           >
@@ -91,7 +93,7 @@ export function ColourExplorer({ swatches }: { swatches: Swatch[] }) {
             </div>
             {use3d ? (
               <div className={`absolute inset-0 transition-opacity duration-700 ${ready ? 'opacity-100' : 'opacity-0'}`}>
-                <ColourSofaScene color={current.hex} autoRotate interactive={fine} paused={!onScreen} onReady={() => setReady(true)} />
+                <ColourSofaScene color={current.hex} autoRotate interactive={fine} paused={!onScreen || !visible} onReady={() => setReady(true)} />
               </div>
             ) : null}
             {use3d && ready && fine ? <p className="pointer-events-none absolute bottom-4 left-5 text-xs uppercase tracking-[0.16em] text-ink/45">Drag to turn</p> : null}

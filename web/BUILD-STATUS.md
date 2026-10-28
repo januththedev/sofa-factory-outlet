@@ -2,9 +2,19 @@
 
 Spec: `../Plan.md`. Implementation plan: nine phases, one local commit each. Updated after every phase, and the way to resume after a context reset.
 
-**Last updated:** 28 Oct 2026: the autopilot (`tools/orchestrate.ps1`) is running the remaining queue. The phase table further down is from the end of Phase 1; **the Handoff section is current.**
+**Last updated:** 28 Oct 2026: the feature queue has finished and the project has been pushed to GitHub. The phase table and earlier handoff below are historical.
 
-## Handoff (read this first when resuming)
+## Current handoff
+
+- Repository: `https://github.com/januththedev/sofa-factory-outlet`, branch `main`. New commits use Januth Nimnal <nimnaljanuth@gmail.com>.
+- Resource fixes preserve the page layout and visible effects: pause the hero ripple, marquee and sofa rendering when out of view or in a hidden tab; reuse the static sofa contact shadow; release owned GPU textures/materials; avoid repeated cursor appearance tweens.
+- Admin polling is single-flight, aborts on unmount and pauses in hidden tabs, except when desktop notifications are explicitly enabled. Public redirect lookups skip APIs and the admin login page, time out after two seconds, and retain the last good map with a five-second retry backoff during failures.
+- Booking browser tests now wait for the Turnstile token, scope radios to visit slots and accept the actual slot-label format. The photo test uses the shop instead of mistaking the homepage hero for a product photo. Turnstile errors/timeouts expose the existing retry control.
+- Guide Markdown files are explicitly included in deployment traces instead of allowing the injectable test directory to trigger tracing of the whole project. The guide-page trace dropped from 1,055 to 487 files, and the Search Console cron trace from 916 to 348; both still include the two guides.
+- Verification: TypeScript, lint and a fresh production build passed; 160 targeted unit tests passed. The final build has no whole-project tracing warnings and still packages both guide Markdown files. Browser tests and before/after CPU/GPU measurements still need a fresh run. The six saved failures in `test-results` predate these fixes and must not be reported as passing.
+- Hosted services and production configuration still need the steps in `docs/DEPLOY.md`; a GitHub push does not complete a Vercel deployment.
+
+## Earlier build handoff
 
 **Merged on `main` (local only, nothing pushed):** Phase 1 foundations, Phase 2 landing page and chrome, the agent infrastructure, then module by module: colour engine, bookings core, invoices core, knowledge pack, FAQs and golden set, guides, store (search, shop, hubs), product page, SEO core (JSON-LD, sitemaps, robots, proxy redirects, OG images, URL test), cart UI, chat widget, auth shell, booking UI, public pages (About, Factory, Visit, Trade, Guides), invoices UI. Gate on `main` on 28 Oct at 12:54, after auth shell and booking UI were put back (see "Reverted merges" below): tsc 0, lint 0, vitest all green. `git log --oneline` shows every merge.
 

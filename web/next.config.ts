@@ -36,6 +36,8 @@ const nextConfig: NextConfig = {
   // Lets the e2e server build into its own folder while `next dev` keeps running.
   distDir: process.env.NEXT_DIST_DIR || '.next',
   serverExternalPackages: ['@electric-sql/pglite', '@electric-sql/pglite-pgvector'],
+  // The guide loader accepts a test directory; do not trace the whole project for that dynamic path.
+  outputFileTracingIncludes: { '/*': ['./content/guides/**/*.md'] },
   turbopack: {
     rules: {
       '*.css': { loaders: ['@tailwindcss/turbopack'], as: '*.css' },

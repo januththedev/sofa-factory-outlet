@@ -14,6 +14,7 @@ type SceneProps = {
   fit?: 'cover' | 'contain';
   /** bend mode: whether the card is hovered */
   active?: boolean;
+  paused?: boolean;
   onReady?: () => void;
 };
 
@@ -25,8 +26,10 @@ function configureTexture(texture: Texture) {
   texture.needsUpdate = true;
 }
 
-function ImagePlane({ src, mode, fit, active = false, onReady }: SceneProps) {
-  const texture = useLoader(TextureLoader, src);
+function ImagePlane({ src, mode, fit, active = false, paused = false, onReady }: SceneProps) {
+  const loadedTexture = useLoader(TextureLoader, src);
+  // Keep the cached source image, but own and release this canvas's GPU texture.
+  const texture = useMemo(() => loadedTexture.clone(), [loadedTexture]);
   const { size, invalidate, gl } = useThree();
   const material = useRef<ShaderMaterial>(null);
   const strength = useRef(0);
@@ -38,6 +41,7 @@ function ImagePlane({ src, mode, fit, active = false, onReady }: SceneProps) {
   useEffect(() => {
     configureTexture(texture);
     invalidate();
+    return () => texture.dispose();
   }, [texture, invalidate]);
 
   const uniforms = useMemo(
@@ -56,7 +60,7 @@ function ImagePlane({ src, mode, fit, active = false, onReady }: SceneProps) {
 
   // Track the pointer over the whole canvas area (the canvas itself sits under page content).
   useEffect(() => {
-    if (mode !== 'ripple') return;
+    if (mode !== 'ripple' || paused) return;
     const canvas = gl.domElement;
     const onMove = (event: PointerEvent) => {
       const rect = canvas.getBoundingClientRect();
@@ -69,11 +73,11 @@ function ImagePlane({ src, mode, fit, active = false, onReady }: SceneProps) {
     };
     window.addEventListener('pointermove', onMove, { passive: true });
     return () => window.removeEventListener('pointermove', onMove);
-  }, [gl, invalidate, mode]);
+  }, [gl, invalidate, mode, paused]);
 
   useEffect(() => {
     invalidate();
-  }, [active, invalidate]);
+  }, [active, paused, invalidate]);
 
   useFrame((state, delta) => {
     const m = material.current;
@@ -113,10 +117,10 @@ export default function ImageScene(props: SceneProps) {
     <Canvas
       flat
       orthographic
-      frameloop="demand"
+      frameloop={props.paused ? 'never' : 'demand'}
       dpr={[1, 1.5]}
       camera={{ position: [0, 0, 10], zoom: 1, near: 0.1, far: 100 }}
-      gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
+      gl={{ antialias: false, alpha: true, powerPreference: 'default' }}
       style={{ position: 'absolute', inset: 0 }}
     >
       <Suspense fallback={null}>
