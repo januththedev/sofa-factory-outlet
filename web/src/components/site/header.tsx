@@ -81,11 +81,14 @@ export function Header({ whatsapp }: { whatsapp?: string | null }) {
           </nav>
 
           <div className="flex shrink-0 items-center gap-2">
-            <Magnetic className="hidden sm:inline-block">
-              <TLink href="/book-visit/" className="btn-primary whitespace-nowrap">
-                Book a visit
-              </TLink>
-            </Magnetic>
+            {/* Magnetic always sets display, so the hiding lives on a plain wrapper (phones book from the menu). */}
+            <div className="hidden sm:block">
+              <Magnetic>
+                <TLink href="/book-visit/" className="btn-primary whitespace-nowrap">
+                  Book a visit
+                </TLink>
+              </Magnetic>
+            </div>
             <CartButton />
             <button
               type="button"
