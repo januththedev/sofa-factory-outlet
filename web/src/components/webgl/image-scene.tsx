@@ -5,15 +5,8 @@ import { Suspense, useEffect, useMemo, useRef } from 'react';
 import { LinearFilter, SRGBColorSpace, type ShaderMaterial, type Texture, TextureLoader, Vector2 } from 'three';
 import { imageFragment, imageVertex } from './shaders';
 
-type Mode = 'ripple' | 'bend';
-
 type SceneProps = {
   src: string;
-  mode: Mode;
-  /** cover = fill the box; contain = whole photo on white (pair with CSS multiply). Defaults by mode. */
-  fit?: 'cover' | 'contain';
-  /** bend mode: whether the card is hovered */
-  active?: boolean;
   paused?: boolean;
   onReady?: () => void;
 };
@@ -26,14 +19,13 @@ function configureTexture(texture: Texture) {
   texture.needsUpdate = true;
 }
 
-function ImagePlane({ src, mode, fit, active = false, paused = false, onReady }: SceneProps) {
+function ImagePlane({ src, paused = false, onReady }: SceneProps) {
   const loadedTexture = useLoader(TextureLoader, src);
   // Keep the cached source image, but own and release this canvas's GPU texture.
   const texture = useMemo(() => loadedTexture.clone(), [loadedTexture]);
   const { size, invalidate, gl } = useThree();
   const material = useRef<ShaderMaterial>(null);
   const strength = useRef(0);
-  const bend = useRef(0);
   const mouse = useRef(new Vector2(0.5, 0.5));
   const ready = useRef(false);
 
@@ -52,15 +44,13 @@ function ImagePlane({ src, mode, fit, active = false, paused = false, onReady }:
       uMouse: { value: new Vector2(0.5, 0.5) },
       uTime: { value: 0 },
       uStrength: { value: 0 },
-      uBend: { value: 0 },
-      uFit: { value: (fit ?? (mode === 'bend' ? 'contain' : 'cover')) === 'contain' ? 1 : 0 },
     }),
-    [texture, mode, fit],
+    [texture],
   );
 
   // Track the pointer over the whole canvas area (the canvas itself sits under page content).
   useEffect(() => {
-    if (mode !== 'ripple' || paused) return;
+    if (paused) return;
     const canvas = gl.domElement;
     const onMove = (event: PointerEvent) => {
       const rect = canvas.getBoundingClientRect();
@@ -73,11 +63,11 @@ function ImagePlane({ src, mode, fit, active = false, paused = false, onReady }:
     };
     window.addEventListener('pointermove', onMove, { passive: true });
     return () => window.removeEventListener('pointermove', onMove);
-  }, [gl, invalidate, mode, paused]);
+  }, [gl, invalidate, paused]);
 
   useEffect(() => {
     invalidate();
-  }, [active, paused, invalidate]);
+  }, [paused, invalidate]);
 
   useFrame((state, delta) => {
     const m = material.current;
@@ -85,17 +75,10 @@ function ImagePlane({ src, mode, fit, active = false, paused = false, onReady }:
     m.uniforms.uPlane.value.set(size.width, size.height);
     m.uniforms.uTime.value += delta;
 
-    if (mode === 'ripple') {
-      strength.current *= Math.exp(-delta * 2.2);
-      m.uniforms.uMouse.value.lerp(mouse.current, 1 - Math.exp(-delta * 14));
-      m.uniforms.uStrength.value = strength.current;
-      if (strength.current > 0.003) state.invalidate();
-    } else {
-      const target = active ? 1 : 0;
-      bend.current += (target - bend.current) * (1 - Math.exp(-delta * 7));
-      m.uniforms.uBend.value = bend.current;
-      if (Math.abs(target - bend.current) > 0.002) state.invalidate();
-    }
+    strength.current *= Math.exp(-delta * 2.2);
+    m.uniforms.uMouse.value.lerp(mouse.current, 1 - Math.exp(-delta * 14));
+    m.uniforms.uStrength.value = strength.current;
+    if (strength.current > 0.003) state.invalidate();
 
     if (!ready.current) {
       ready.current = true;

@@ -25,7 +25,7 @@ export function HeroRipple({ src }: { src: string }) {
   if (!(idle && fine && wide && webgl && !reduced)) return null;
   return (
     <div ref={stage} aria-hidden data-hero-canvas className={`pointer-events-none absolute inset-0 transition-opacity duration-1000 ${ready ? 'opacity-100' : 'opacity-0'}`}>
-      <ImageScene src={src} mode="ripple" paused={!visible || !onScreen} onReady={() => setReady(true)} />
+      <ImageScene src={src} paused={!visible || !onScreen} onReady={() => setReady(true)} />
     </div>
   );
 }

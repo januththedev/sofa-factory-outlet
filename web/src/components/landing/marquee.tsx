@@ -19,7 +19,7 @@ function Row({ hidden }: { hidden?: boolean }) {
   );
 }
 
-/** Endless category strip. It skews and speeds up with scroll velocity. */
+/** Endless category strip. It speeds up with scroll velocity. */
 export function Marquee() {
   const root = useRef<HTMLDivElement>(null);
   const track = useRef<HTMLDivElement>(null);
@@ -43,7 +43,6 @@ export function Marquee() {
           end: 'bottom top',
           onUpdate: (self) => {
             const velocity = self.getVelocity();
-            gsap.to(track.current, { skewX: gsap.utils.clamp(-9, 9, velocity / -280), duration: 0.35, overwrite: 'auto' });
             // Speed up while scrolling, then ease back to the idle pace.
             loop.timeScale(1 + Math.min(Math.abs(velocity) / 450, 5));
             gsap.to(loop, { timeScale: 1, duration: 1.1, ease: 'power2.out', overwrite: 'auto' });

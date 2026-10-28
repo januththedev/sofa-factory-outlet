@@ -1,17 +1,15 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { Picture } from '@/components/picture';
 import { TLink } from '@/components/site/transition';
 import type { CollectionTile } from '@/lib/catalogue/cached';
 import { gsap, MOTION_DESKTOP } from '@/lib/motion/gsap';
-import { HoverBend } from './hover-bend';
 
 export function Collections({ tiles }: { tiles: CollectionTile[] }) {
   const root = useRef<HTMLElement>(null);
   const track = useRef<HTMLUListElement>(null);
-  const [hovered, setHovered] = useState<string | null>(null);
 
   // Desktop with motion: pin the section and scrub the rail sideways. Elsewhere it is a native swipe rail.
   useGSAP(
@@ -59,23 +57,14 @@ export function Collections({ tiles }: { tiles: CollectionTile[] }) {
         <ul ref={track} className="flex w-max gap-5 px-5 sm:px-8 lg:gap-8 lg:px-12">
           {tiles.map((tile, index) => (
             <li key={tile.id} className="w-[76vw] shrink-0 snap-start sm:w-[44vw] lg:w-[27vw] xl:w-[23vw]">
-              <TLink
-                href={tile.href}
-                data-cursor="view"
-                onPointerEnter={() => setHovered(tile.id)}
-                onPointerLeave={() => setHovered((h) => (h === tile.id ? null : h))}
-                className="group block"
-              >
+              <TLink href={tile.href} data-cursor="view" className="group block">
                 <div className="relative aspect-[4/5] overflow-hidden rounded-[var(--radius-card)] bg-paper">
                   {tile.image ? (
-                    <>
-                      <Picture
-                        data={tile.image}
-                        sizes="(min-width: 1280px) 23vw, (min-width: 1024px) 27vw, (min-width: 640px) 44vw, 76vw"
-                        imgClassName={`h-full w-full ${tile.image.cutout ? 'object-contain mix-blend-multiply' : 'object-cover'} transition-transform duration-700 ease-out group-hover:scale-[1.03]`}
-                      />
-                      <HoverBend src={tile.image.src} hovered={hovered === tile.id} cutout={tile.image.cutout} />
-                    </>
+                    <Picture
+                      data={tile.image}
+                      sizes="(min-width: 1280px) 23vw, (min-width: 1024px) 27vw, (min-width: 640px) 44vw, 76vw"
+                      imgClassName={`h-full w-full ${tile.image.cutout ? 'object-contain mix-blend-multiply' : 'object-cover'} transition-transform duration-700 ease-out group-hover:scale-[1.03]`}
+                    />
                   ) : null}
                   <span className="absolute left-4 top-4 rounded-full bg-bone/90 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-wider">
                     {tile.count} {tile.count === 1 ? 'piece' : 'pieces'}
