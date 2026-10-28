@@ -158,7 +158,7 @@ function Test-Exhausted([string]$Id) {
     }
   }
   if ($bytes -gt 8192) { return $false }
-  [bool]($text -match 'hit your usage limit|usage limit has been reached|usage limit reached|usage_limit_reached|insufficient_quota|exceeded your current quota|quota exceeded|credit balance')
+  [bool]($text -match 'hit your usage limit|usage limit has been reached|usage limit reached|usage limit exceeded|usage_limit_reached|insufficient_quota|exceeded your current quota|quota exceeded|credit balance')
 }
 
 # Empties the previous run's output so a quota message is acted on once, not on every poll.
@@ -276,6 +276,8 @@ $queue = @()
 foreach ($item in $parsed) { $queue += $item }
 $state = Load-State
 $toolDown = @{ codex = $false; opencode = $false }
+# When a tool is out of allowance its tasks wait; every 20 minutes the tools are tried again.
+$toolRetryAt = $null
 $halt = $false
 
 foreach ($task in $queue) {
@@ -297,6 +299,13 @@ Log "orchestrator started (dry run: $DryRun)"
 while ($true) {
   if (Test-Path "$logs\STOP") { Log 'STOP file found, leaving'; break }
   if ($halt) { Log 'halting after a critical error'; break }
+  if ($toolRetryAt -and (Get-Date) -gt $toolRetryAt) {
+    $toolDown['codex'] = $false
+    $toolDown['opencode'] = $false
+    $openCodeDown.Clear()
+    $toolRetryAt = $null
+    Log 'trying the agent tools again after the pause'
+  }
 
   foreach ($task in $queue) {
     $id = $task.id
@@ -362,6 +371,7 @@ while ($true) {
           # The run ended on a usage limit, so it did nothing: it costs the task no run, and the task moves on.
           $entry.attempt = [Math]::Max(1, [int]$entry.attempt - 1)
           Reset-RunLogs $id
+          if (-not $toolRetryAt) { $toolRetryAt = (Get-Date).AddMinutes(20) }
           if ($entry.tool -eq 'codex') {
             $toolDown['codex'] = $true
             $entry.tool = 'opencode'
@@ -369,14 +379,19 @@ while ($true) {
             Log "codex looks out of quota, $id moves to opencode"
           } else {
             $openCodeDown[$entry.model] = $true
-            Log "$($entry.model) has used up its free allowance"
+            Log "$($entry.model) has used up its allowance"
+            # The Go models share one plan allowance: when one is out they all are.
+            if ($entry.model -like 'opencode-go/*') {
+              foreach ($model in $openCodeModels) { if ($model -like 'opencode-go/*') { $openCodeDown[$model] = $true } }
+            }
           }
           $entry.model = Get-FreeModel
           if (-not $entry.model) {
             $toolDown['opencode'] = $true
-            $entry.status = 'blocked'
-            $entry.note = 'every free OpenCode model has used up its allowance'
-            Log "$id blocked: $($entry.note)"
+            $entry.status = 'queued'
+            $entry.model = ''
+            $entry.note = 'paused: every OpenCode model is out of allowance, trying again later'
+            Log "$id $($entry.note)"
             break
           }
           Log "$id continues on $($entry.model)"
@@ -443,7 +458,7 @@ while ($true) {
 
   $active = @($state.Values | Where-Object { @('running', 'waiting', 'finished', 'verified') -contains $_.status })
   $queued = @($queue | Where-Object { $state[$_.id].status -eq 'queued' })
-  if ($active.Count -eq 0) {
+  if ($active.Count -eq 0 -and -not ($toolDown.Values -contains $true)) {
     $launchable = @($queued | Where-Object { (Test-Ready $_) -and -not ($toolDown[$state[$_.id].tool] -and $state[$_.id].tool -eq 'opencode') })
     if ($launchable.Count -eq 0) {
       foreach ($task in $queued) {

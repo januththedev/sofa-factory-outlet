@@ -75,6 +75,8 @@ Seed "> build - deepseek-v4.1-flash-free`nError: Free usage limit reached. Conne
 Check 'OpenCode "Free usage limit reached" is detected' (Test-Exhausted 'q')
 Seed "You've hit your usage limit. Try again later."
 Check 'Codex "hit your usage limit" is detected' (Test-Exhausted 'q')
+Seed "> build - kimi-k3`nError: Go usage limit exceeded"
+Check 'OpenCode Go "usage limit exceeded" is detected' (Test-Exhausted 'q')
 Seed ("x" * 20000 + "`nthrow new Error('quota exceeded')`n")
 Check 'a long normal run that prints "quota exceeded" in code is NOT a quota failure' (-not (Test-Exhausted 'q'))
 Seed "all good`ndone"
@@ -85,9 +87,9 @@ Check 'Reset-RunLogs clears the evidence so it is acted on once' (-not (Test-Exh
 
 'Get-FreeModel'
 $openCodeDown = @{}
-Check 'first model is mimo' ((Get-FreeModel) -eq 'opencode/mimo-v2.6-flash-free')
-$openCodeDown['opencode/mimo-v2.6-flash-free'] = $true
-Check 'skips a used-up model' ((Get-FreeModel) -eq 'opencode/glm-5.3-flash-free')
+Check 'first model is kimi-k3' ((Get-FreeModel) -eq 'opencode-go/kimi-k3')
+$openCodeDown['opencode-go/kimi-k3'] = $true
+Check 'skips a used-up model' ((Get-FreeModel) -eq 'opencode-go/glm-5.3')
 foreach ($m in $openCodeModels) { $openCodeDown[$m] = $true }
 Check 'returns empty when every model is used up' ((Get-FreeModel) -eq '')
 
