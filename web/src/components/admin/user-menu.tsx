@@ -25,16 +25,13 @@ export function UserMenu({ user }: { user: MenuUser }) {
         <button
           type="button"
           aria-label={`Account menu for ${user.name}`}
-          className="flex min-h-11 min-w-11 shrink-0 items-center gap-2 rounded-full border border-line bg-paper p-1 text-sm font-medium transition-colors hover:bg-bone-2 sm:pr-3"
+          className="flex h-10 shrink-0 items-center gap-2 rounded-full border border-line bg-paper py-1 pl-1 pr-2.5 text-sm font-medium transition-colors hover:bg-bone-2 sm:pr-3"
         >
-          <span
-            aria-hidden
-            className="flex size-9 items-center justify-center rounded-full bg-maroon text-xs font-semibold text-bone"
-          >
+          <span aria-hidden className="flex size-8 items-center justify-center rounded-full bg-maroon text-xs font-semibold text-bone">
             {initials(user.name)}
           </span>
           <span className="hidden max-w-32 truncate sm:inline">{user.name}</span>
-          <ChevronDown className="hidden size-4 text-mute sm:block" aria-hidden />
+          <ChevronDown className="size-4 text-mute" aria-hidden />
         </button>
       </Popover.Trigger>
       <Popover.Portal>
@@ -50,7 +47,7 @@ export function UserMenu({ user }: { user: MenuUser }) {
             {user.role}
           </Badge>
           <form action={signOutAction} className="mt-4 border-t border-line pt-4">
-            <Button type="submit" variant="ghost" className="w-full">
+            <Button type="submit" variant="ghost" size="sm" className="w-full">
               <LogOut className="size-4" aria-hidden />
               Sign out
             </Button>

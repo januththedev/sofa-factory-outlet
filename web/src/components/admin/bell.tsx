@@ -260,7 +260,7 @@ export function Bell({ onBookings }: { onBookings?: (count: number) => void }) {
 
   const toggleClass = (on: boolean) =>
     cn(
-      'inline-flex min-h-11 items-center gap-1.5 rounded-full border px-3 py-2 text-xs font-semibold transition-colors',
+      'inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors',
       on ? 'border-maroon bg-maroon/10 text-maroon' : 'border-line text-ink-2 hover:bg-bone-2',
     );
 
@@ -274,13 +274,13 @@ export function Bell({ onBookings }: { onBookings?: (count: number) => void }) {
         <button
           type="button"
           aria-label={unread > 0 ? `Notifications, ${unread} unread` : 'Notifications'}
-          className="relative flex size-11 shrink-0 items-center justify-center rounded-full text-ink transition-colors hover:bg-bone-2"
+          className="relative flex size-10 shrink-0 items-center justify-center rounded-full text-ink transition-colors hover:bg-bone-2"
         >
           <BellGlyph className="size-5" aria-hidden />
           {unread > 0 ? (
             <span
               aria-hidden
-              className="absolute right-0 top-0 flex min-w-[1.125rem] items-center justify-center rounded-full bg-maroon px-1 text-xs font-semibold leading-[1.125rem] text-bone"
+              className="absolute right-0.5 top-0.5 flex min-w-[1.125rem] items-center justify-center rounded-full bg-maroon px-1 text-[0.65rem] font-semibold leading-[1.125rem] text-bone"
             >
               {unread > 99 ? '99+' : unread}
             </span>
@@ -300,7 +300,7 @@ export function Bell({ onBookings }: { onBookings?: (count: number) => void }) {
               type="button"
               onClick={markAll}
               disabled={unread === 0}
-              className="inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-maroon transition-colors hover:bg-maroon/10 disabled:pointer-events-none disabled:opacity-40"
+              className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold text-maroon transition-colors hover:bg-maroon/10 disabled:pointer-events-none disabled:opacity-40"
             >
               <CheckCheck className="size-4" aria-hidden />
               Mark all read
