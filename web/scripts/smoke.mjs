@@ -55,6 +55,10 @@ async function run() {
   const home = await fetch(`${base}/`);
   const html = await home.text();
   check('home: 200 with the brand name', home.status === 200 && html.includes('Sofa Factory Outlet'));
+  if (!dev) {
+    const policy = home.headers.get('content-security-policy') ?? '';
+    check('csp: closed down, no eval, no https upgrade on http://localhost', policy.includes("default-src 'self'") && policy.includes("object-src 'none'") && !policy.includes('unsafe-eval') && !policy.includes('upgrade-insecure-requests'), policy.slice(0, 120));
+  }
   const srcMatch = html.match(/<img[^>]+src="(\/blob\/[^"]+\.webp)"/);
   check('home: renders a <picture> with a /blob/ photo', Boolean(srcMatch) && html.includes('<picture'));
   if (srcMatch) {

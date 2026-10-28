@@ -1,15 +1,27 @@
 import type { NextConfig } from 'next';
 import { legacyRedirects } from './src/lib/seo/legacy-redirects';
+import { buildContentSecurityPolicy } from './src/lib/security/csp';
 
 // Without DATABASE_URL the app uses PGlite, which only one process may open.
 // `next build` defaults to several worker processes, so pin it to one.
 const usingPglite = !process.env.DATABASE_URL;
+
+// `next dev` needs eval for React's debugging tools and hot reload, so only built sites get the policy.
+const contentSecurityPolicy = process.env.NODE_ENV === 'production'
+  ? [{
+    key: 'Content-Security-Policy',
+    value: buildContentSecurityPolicy({
+      upgradeInsecure: (process.env.NEXT_PUBLIC_SITE_URL ?? '').startsWith('https://'),
+    }),
+  }]
+  : [];
 
 const securityHeaders = [
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
   { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=()' },
+  ...contentSecurityPolicy,
 ];
 
 const nextConfig: NextConfig = {
