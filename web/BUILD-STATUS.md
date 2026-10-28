@@ -2,7 +2,28 @@
 
 Spec: `../Plan.md`. Implementation plan: nine phases, one local commit each. Updated after every phase, and the way to resume after a context reset.
 
-**Last updated:** 28 Oct 2026: the feature queue has finished and the project has been pushed to GitHub. The phase table and earlier handoff below are historical.
+**Last updated:** 29 Oct 2026: the mobile and UX wave below is finished, verified and committed locally (35 commits ahead of `origin/main`, **not pushed**). The sections after it are historical.
+
+## Mobile and UX wave (29 Oct 2026): read this first
+
+**What changed**
+- **Warp effects removed** everywhere except the hero ripple: the collection-card WebGL bend, the marquee skew, and the bend mode of `webgl/image-scene.tsx` and its shader are deleted.
+- **Visitor tracking** is first-party only (browser -> `/api/track/` -> your database; no outside host anywhere in it). A bug fixed: nothing ever sent `page_view`, so visitors who only read pages were invisible. `components/analytics/page-view-tracker.tsx` (root layout) now sends one per route; admin and API routes are never tracked.
+- **Mobile pass on every screen**, built as seven packages with one spec each (`docs/tasks/m-*.md`) under the shared rules in `docs/MOBILE-UX.md`: header, footer, chat sheet and global CSS (`m-chrome`); home page (`m-landing`: about 5,900 px tall at 390 px instead of 12,700, counters that no longer stay at 0, compact factory carousel, tap-to-load map, flat colour picker on touch); shop and product (`m-shop`: filter bottom sheet, removable chips, two-column grid, sticky Add to cart bar, Back to results); booking and cart (`m-booking-cart`: next-14-days chips, Earliest available, sticky submit, draft saved in the browser, confirmation page, cart sheet); visit, about, factory, trade, guides, privacy and review form (`m-pages`); admin shell, dashboard, bookings, customers, visitors (`m-admin-core`, `m-admin-core-2`); admin products, invoices, settings, SEO, chat, knowledge (`m-admin-ops`).
+- **Bugs found by measuring or by the first real end-to-end run** (all fixed): screen-reader-only counter text made the home page 959 px wide on a phone; the header's menu button sat past the screen edge (`Magnetic` forces `display:inline-block` over `hidden`); a stored `null` setting (closed day, cleared WhatsApp number) reverted to the default on the public site; the admin product editor sent `seats: 0` for an empty field so most seeded products could not be saved; calendar cells and product tiles had accessible names that did not match their visible text; a flaky share-token test (1 run in 16).
+- **Tooling:** `npm run qa:mobile <url> [outDir] [--shots]` audits every page at 360, 390, 768 and 1280 px (sideways scroll, targets under 40 px, controls cut off by the edge, text under 12 px, broken images, console errors; set `AUDIT_ADMIN_EMAIL` and `AUDIT_ADMIN_PASSWORD` to cover the admin with a local test account). `npm run qa:journey <url>` walks a phone visitor through filter, product, cart and booking (creates one booking: use a local or throwaway database). The autopilot (`tools/orchestrate.ps1`) now pauses a task when Codex or OpenCode is out of allowance and retries every 20 minutes instead of blocking; it reverts the merge commit, not HEAD; models come from the user's OpenCode Go plan (`opencode-go/...`).
+
+**Verified on the final code:** `tsc` 0, `eslint` 0, 1,100 tests in 75 files; Playwright 24 passed, 1 skipped (a colour swap needs a product with a second colour variant, which the seed does not have); the phone audit over 26 pages (public and admin) at 3 sizes found no sideways scroll, console error, broken image or cut-off control, and only single inline text links under 40 px; the phone journey passes.
+
+**Not done, and decisions that are the owner's**
+1. **Push and deploy.** Nothing is pushed. `origin/main` has nothing newer, so a push is a clean fast-forward and triggers a Vercel deploy. After deploying, run `npm run qa:mobile https://<live site>` and `npm run qa:journey` against a preview database.
+2. **The live site has not been looked at** (its URL is not in the repo; `sofa-factory-outlet.vercel.app` belongs to another business).
+3. **Product photos carry baked-in claims** ("Free Delivery", "10-Year Warranty", "10,000+ options") that the delivery and warranty settings do not back up. Only clean photos fix that.
+4. **Copy to confirm with the client:** "1000+ colours and designs", "10-year structural warranty", "Islandwide delivery", "factory-direct, no showroom markup", "thousands of families".
+5. **Optional outside services** are all off without keys, but the SEO admin page still advertises Google Search Console: hide it if only OpenRouter, Vercel Blob and Neon are wanted (also Resend and IndexNow, and `vercel.json` still lists the Search Console cron).
+6. Still to run: Lighthouse mobile on the live site, a check on real phones, `npm run eval:chat`, `npm run test:urls`, and a visual pass over the desktop layout.
+7. A booking reference can jump by up to 32 after the database was stopped uncleanly (PostgreSQL pre-logs sequence values). It is harmless.
+
 
 ## Current handoff
 
