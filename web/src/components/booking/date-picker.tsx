@@ -132,7 +132,6 @@ export function DatePicker({ availability, value, onChange, describedBy }: DateP
                         tabIndex={inRange && date === focused ? 0 : -1}
                         disabled={!inRange}
                         aria-disabled={inRange && state !== 'open' ? true : undefined}
-                        aria-label={`${formatVisitDate(date)}${STATE_NOTE[state]}${selected ? ', selected' : ''}`}
                         onClick={() => {
                           if (state === 'open') onChange(date);
                         }}
@@ -148,7 +147,8 @@ export function DatePicker({ availability, value, onChange, describedBy }: DateP
                           !selected && state === 'outside' && 'text-mute/60',
                         )}
                       >
-                        <span>{Number(date.slice(8))}</span>
+                        <span className="sr-only">{`${formatVisitDate(date)}${STATE_NOTE[state]}${selected ? ', selected' : ''}`}</span>
+                        <span aria-hidden>{Number(date.slice(8))}</span>
                         {state !== 'open' ? (
                           <span aria-hidden className="text-xs leading-4">
                             {state === 'full' ? 'Full' : state === 'closed' ? 'Closed' : '—'}

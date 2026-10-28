@@ -22,8 +22,9 @@ test('owner manages a booking and edits a product, then signs out', async ({ pag
   const title = `${publishedProduct.name} E2E`;
   await page.getByLabel('Name', { exact: true }).fill(title);
   await page.getByLabel('Slug').fill(publishedProduct.slug);
+  await expect(page.getByText('Unsaved changes')).toBeVisible();
   await page.getByRole('button', { name: 'Save product' }).click();
-  await expect(page.getByText('Saved.', { exact: true })).toBeVisible();
+  await expect(page.getByText('Saved', { exact: true })).toBeVisible();
   await page.goto('/shop/?q=emerald');
   await expect(page.getByRole('link', { name: title, exact: true })).toBeVisible();
 
@@ -33,8 +34,9 @@ test('owner manages a booking and edits a product, then signs out', async ({ pag
   await page.getByRole('link', { name: title }).click();
   await page.getByLabel('Name', { exact: true }).fill(publishedProduct.name);
   await page.getByLabel('Slug').fill(publishedProduct.slug);
+  await expect(page.getByText('Unsaved changes')).toBeVisible();
   await page.getByRole('button', { name: 'Save product' }).click();
-  await expect(page.getByText('Saved.', { exact: true })).toBeVisible();
+  await expect(page.getByText('Saved', { exact: true })).toBeVisible();
 
   await page.goto('/admin/');
   await page.getByRole('button', { name: /Account menu for/ }).click();
