@@ -1,12 +1,15 @@
 'use client';
 
+import { Modal } from '@/components/admin/knowledge/modal';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { cancelInvoiceAction, convertQuotationAction } from '@/app/admin/(panel)/invoices/actions';
+import { cancelInvoiceAction } from '@/app/admin/(panel)/invoices/actions';
+import { convertQuotationAction } from '@/app/admin/(panel)/invoices/actions';
 import { PaymentDialog } from '@/components/admin/invoices/payment-dialog';
 import { Badge } from '@/components/ui/badge';
-import { Button, buttonStyles } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
+import { buttonStyles } from '@/components/ui/button';
 import { invoiceWhatsappLink } from '@/lib/admin/invoices';
 import type { InvoiceView } from '@/lib/invoices/api';
 
@@ -27,6 +30,7 @@ export function InvoiceActions({
   const [confirming, setConfirming] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const [converting, setConverting] = useState(false);
+  const [notice, setNotice] = useState('');
   const [error, setError] = useState<string | null>(null);
   const customerNumber = invoice.customer.whatsapp || invoice.customer.phone;
   const whatsapp = shareUrl
@@ -96,6 +100,16 @@ export function InvoiceActions({
             Edit draft
           </Link>
         )}
+        {shareable && shareUrl ? (
+          <Button size="sm" variant="ghost" onClick={async () => {
+            try {
+              await navigator.clipboard.writeText(shareUrl);
+              setNotice('Share link copied.');
+            } catch {
+              setNotice('The link could not be copied. Touch and hold the share link below to copy it.');
+            }
+          }}>Copy share link</Button>
+        ) : null}
         {shareable && whatsapp ? (
           <a
             href={whatsapp}
@@ -131,24 +145,21 @@ export function InvoiceActions({
           </Badge>
         ) : null}
       </div>
-      {error ? <p role="alert" className="text-sm text-bad">{error}</p> : null}
+      <p role="status" aria-live="polite">{notice}</p>
+      {shareable && shareUrl ? <a href={shareUrl}
+        className="inline-flex min-h-11 min-w-11 items-center break-all text-maroon underline">Share link</a> : null}
+      {error ? <p role="status" aria-live="polite" className="text-base sm:text-sm text-bad">{error}</p> : null}
       {shareable && !whatsapp ? (
         <p className="text-xs text-mute">Add a WhatsApp or phone number to the customer to share this invoice.</p>
       ) : null}
 
-      {confirming ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/45 p-4">
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="cancel-dialog-title"
-            className="w-full max-w-md rounded-[var(--radius-card)] border border-line bg-paper p-5 shadow-xl"
-          >
-            <h2 id="cancel-dialog-title" className="font-display text-2xl">Cancel this invoice?</h2>
-            <p className="mt-2 text-sm text-ink-2">
+      <Modal open={confirming} onClose={() => {
+        if (!cancelling) setConfirming(false);
+      }} title="Cancel this invoice?">
+            <p className="mt-2 text-base sm:text-sm text-ink-2">
               The invoice is kept with its number and marked cancelled. This cannot be undone.
             </p>
-            {error ? <p role="alert" className="mt-3 text-sm text-bad">{error}</p> : null}
+      {error ? <p role="status" aria-live="polite" className="mt-3 text-base sm:text-sm text-bad">{error}</p> : null}
             <div className="mt-5 flex flex-wrap gap-3">
               <Button variant="danger" onClick={cancelInvoice} disabled={cancelling}>
                 {cancelling ? 'Cancelling…' : 'Yes, cancel invoice'}
@@ -157,9 +168,7 @@ export function InvoiceActions({
                 Keep invoice
               </Button>
             </div>
-          </div>
-        </div>
-      ) : null}
+      </Modal>
     </div>
   );
 }

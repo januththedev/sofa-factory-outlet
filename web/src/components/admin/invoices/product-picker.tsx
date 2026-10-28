@@ -1,13 +1,18 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useState } from 'react';
 import { searchProductsAction } from '@/app/admin/(panel)/invoices/actions';
 import { Button } from '@/components/ui/button';
-import { Field, Input, Label } from '@/components/ui/field';
-import { minorToRupeesInput, type ProductOption } from '@/lib/admin/invoices';
+import { Field } from '@/components/ui/field';
+import { Input } from '@/components/ui/field';
+import { Label } from '@/components/ui/field';
+import { minorToRupeesInput } from '@/lib/admin/invoices';
+import type { ProductOption } from '@/lib/admin/invoices';
 import { formatLkr } from '@/lib/money';
 
-const selectClass = 'w-full rounded-xl border border-line bg-paper px-3 py-2 text-sm text-ink outline-none '
+const selectClass = 'min-h-11 min-w-0 w-full rounded-xl border border-line bg-paper px-3 py-2 '
+  + 'text-base text-ink outline-none '
   + 'focus:border-maroon focus:ring-2 focus:ring-maroon/15';
 
 export type CatalogueLine = {
@@ -21,6 +26,7 @@ export type CatalogueLine = {
 
 export function ProductPicker({ onAdd }: { onAdd: (line: CatalogueLine) => void }) {
   const [query, setQuery] = useState('');
+  const [searchError, setSearchError] = useState('');
   const [result, setResult] = useState<{ term: string; rows: ProductOption[] }>({ term: '', rows: [] });
   const [variantByProduct, setVariantByProduct] = useState<Record<number, number>>({});
   const term = query.trim();
@@ -31,10 +37,16 @@ export function ProductPicker({ onAdd }: { onAdd: (line: CatalogueLine) => void 
     const timer = setTimeout(() => {
       searchProductsAction(term)
         .then((rows) => {
-          if (active) setResult({ term, rows });
+          if (active) {
+            setResult({ term, rows });
+            setSearchError('');
+          }
         })
         .catch(() => {
-          if (active) setResult({ term, rows: [] });
+          if (active) {
+            setResult({ term, rows: [] });
+            setSearchError('The search could not be loaded. Change the search text to try again.');
+          }
         });
     }, 250);
     return () => {
@@ -73,9 +85,12 @@ export function ProductPicker({ onAdd }: { onAdd: (line: CatalogueLine) => void 
           autoComplete="off"
         />
       </Field>
-      <div aria-live="polite" className="text-sm text-mute">
+      <div aria-live="polite" className="text-base sm:text-sm text-mute">
+        {result.term === term ? searchError : null}
         {searching ? 'Searching…' : null}
-        {term.length >= 2 && !searching && rows.length === 0 ? 'No published product matches that name.' : null}
+        {term.length >= 2 && !searching && rows.length === 0 && !searchError
+          ? 'No published product matches that name.'
+          : null}
       </div>
       {rows.length ? (
         <ul className="divide-y divide-line rounded-xl border border-line bg-paper">
@@ -86,7 +101,7 @@ export function ProductPicker({ onAdd }: { onAdd: (line: CatalogueLine) => void 
               <li key={product.id} className="grid gap-3 px-4 py-4 sm:grid-cols-12 sm:items-end">
                 <div className="sm:col-span-5">
                   <p className="font-medium">{product.name}</p>
-                  <p className="text-sm text-mute">
+                  <p className="text-base sm:text-sm text-mute">
                     {product.priceOnRequest
                       ? 'Price on request'
                       : formatLkr(product.priceMinor, { decimals: true })}
@@ -112,7 +127,7 @@ export function ProductPicker({ onAdd }: { onAdd: (line: CatalogueLine) => void 
                         ))}
                       </select>
                     </>
-                  ) : <p className="pb-2 text-sm text-mute">No colour variants</p>}
+                  ) : <p className="pb-2 text-base sm:text-sm text-mute">No colour variants</p>}
                 </div>
                 <div className="sm:col-span-3 sm:text-right">
                   <Button size="sm" onClick={() => addProduct(product)}>Add line</Button>

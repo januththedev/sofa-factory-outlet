@@ -1,11 +1,14 @@
+import { OpsFrame } from '@/components/admin/settings/ops-frame';
 import { PageHeader } from '@/components/admin/page-header';
 import { OverviewTab } from '@/components/admin/seo/overview-tab';
 import { ProductsTab } from '@/components/admin/seo/products-tab';
 import { RedirectsTab } from '@/components/admin/seo/redirects-tab';
 import { ReportTab } from '@/components/admin/seo/report-tab';
 import { RequestsTab } from '@/components/admin/seo/requests-tab';
-import { parseReviewStatus, ReviewsTab } from '@/components/admin/seo/reviews-tab';
-import { parseSeoTab, SeoTabs } from '@/components/admin/seo/tabs';
+import { parseReviewStatus } from '@/components/admin/seo/reviews-tab';
+import { ReviewsTab } from '@/components/admin/seo/reviews-tab';
+import { parseSeoTab } from '@/components/admin/seo/tabs';
+import { SeoTabs } from '@/components/admin/seo/tabs';
 import { requireRole } from '@/lib/auth/session';
 
 export const dynamic = 'force-dynamic';
@@ -21,7 +24,7 @@ export default async function SeoPage({ searchParams }: { searchParams: Promise<
   const tab = parseSeoTab(first(params.tab));
 
   return (
-    <>
+    <OpsFrame>
       <PageHeader
         title="SEO"
         description="How the site is doing in Google, which products need work, redirects and customer reviews."
@@ -39,6 +42,6 @@ export default async function SeoPage({ searchParams }: { searchParams: Promise<
         {tab === 'requests' ? <RequestsTab /> : null}
         {tab === 'report' ? <ReportTab month={first(params.month) ?? ''} /> : null}
       </div>
-    </>
+    </OpsFrame>
   );
 }

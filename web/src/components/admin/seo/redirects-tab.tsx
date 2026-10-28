@@ -1,7 +1,15 @@
-import { RedirectAddForm, RedirectRow } from '@/components/admin/seo/redirect-forms';
+import { RedirectAddForm } from '@/components/admin/seo/redirect-forms';
+import { RedirectRow } from '@/components/admin/seo/redirect-forms';
 import { EmptyNote } from '@/components/admin/seo/ui';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TBody, TH, THead, TR } from '@/components/ui/table';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
+import { Table } from '@/components/ui/table';
+import { TBody } from '@/components/ui/table';
+import { TH } from '@/components/ui/table';
+import { THead } from '@/components/ui/table';
+import { TR } from '@/components/ui/table';
 import { listRedirects } from '@/lib/admin/seo';
 import type { AdminRole } from '@/lib/db/schema/types';
 
@@ -13,7 +21,7 @@ export async function RedirectsTab({ role }: { role: AdminRole }) {
         <CardHeader>
           <div>
             <CardTitle>Add a redirect</CardTitle>
-            <p className="mt-1 text-sm text-mute">
+            <p className="mt-1 text-base sm:text-sm text-mute">
               Send an old address to a page that exists (301), or tell Google a page has gone for good (410). A new
               address cannot itself be redirected, so nobody is sent through two hops.
             </p>
@@ -27,7 +35,7 @@ export async function RedirectsTab({ role }: { role: AdminRole }) {
         <CardHeader>
           <div>
             <CardTitle>Redirects</CardTitle>
-            <p className="mt-1 text-sm text-mute">
+            <p className="mt-1 text-base sm:text-sm text-mute">
               Most visited first. Redirects from hidden or renamed products are added automatically.
               {role === 'owner' ? '' : ' Only an owner can delete a redirect.'}
             </p>

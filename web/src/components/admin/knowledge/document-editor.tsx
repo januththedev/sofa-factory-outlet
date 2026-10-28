@@ -1,13 +1,20 @@
 'use client';
 
-import { useId, useState } from 'react';
-import { previewKnowledgeAction, saveEditAction } from '@/app/admin/(panel)/knowledge/actions';
+import { useId } from 'react';
+import { useState } from 'react';
+import { previewKnowledgeAction } from '@/app/admin/(panel)/knowledge/actions';
+import { saveEditAction } from '@/app/admin/(panel)/knowledge/actions';
 import { GoldenRunner } from '@/components/admin/chat/golden-runner';
 import { Button } from '@/components/ui/button';
-import { Label, Textarea } from '@/components/ui/field';
-import type { EvalView, KnowledgePreview, LineError, SaveResult } from '@/lib/admin/knowledge';
+import { Label } from '@/components/ui/field';
+import { Textarea } from '@/components/ui/field';
+import type { EvalView } from '@/lib/admin/knowledge';
+import type { KnowledgePreview } from '@/lib/admin/knowledge';
+import type { LineError } from '@/lib/admin/knowledge';
+import type { SaveResult } from '@/lib/admin/knowledge';
 import { ChunkPreview } from './chunk-preview';
-import { ErrorList, Status } from './status';
+import { ErrorList } from './status';
+import { Status } from './status';
 
 type Saved = Extract<SaveResult, { ok: true }>;
 
@@ -35,7 +42,7 @@ export function DocumentEditor({
 
   if (initialText === null) {
     return (
-      <p className="text-sm text-mute">
+      <p className="text-base sm:text-sm text-mute">
         The original file for this document was not kept, so it cannot be edited here. Upload a replacement file
         instead.
       </p>
@@ -93,7 +100,7 @@ export function DocumentEditor({
           }}
           rows={22}
           spellCheck={false}
-          className="font-mono text-sm"
+          className="font-mono text-base sm:text-sm"
         />
       </div>
       <div className="flex flex-wrap gap-3">
@@ -112,7 +119,8 @@ export function DocumentEditor({
           <Status tone="good">
             {saved.unchanged
               ? `Nothing changed: the text is identical to version ${saved.version}.`
-              : `Saved as version ${saved.version} with ${saved.chunks} chunks. The bot uses it from its next message.`}
+              : `Saved as version ${saved.version} with ${saved.chunks} chunks. `
+                + 'The bot uses it from its next message.'}
           </Status>
           <div className="rounded-xl border border-line p-4">
             <p className="mb-3 font-semibold">Did relevance go up or down?</p>

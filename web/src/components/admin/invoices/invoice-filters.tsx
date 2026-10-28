@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Field, Input, Select } from '@/components/ui/field';
+import { Field } from '@/components/ui/field';
+import { Input } from '@/components/ui/field';
+import { Select } from '@/components/ui/field';
 
 export type InvoiceFilterValues = {
   q: string;
@@ -54,7 +56,8 @@ export function InvoiceFilters({
       </Field>
       <div className="flex flex-wrap items-center gap-3 md:col-span-12">
         <Button type="submit" size="sm">Filter</Button>
-        <Link href={`/admin/invoices/?tab=${tab}`} className="text-sm text-mute underline-offset-4 hover:underline">
+        <Link href={`/admin/invoices/?tab=${tab}`}
+          className="text-base sm:text-sm text-mute underline-offset-4 hover:underline">
           Clear filters
         </Link>
       </div>

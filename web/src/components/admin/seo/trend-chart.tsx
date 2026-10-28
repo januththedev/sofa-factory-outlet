@@ -1,6 +1,12 @@
 'use client';
 
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { CartesianGrid } from 'recharts';
+import { Line } from 'recharts';
+import { LineChart } from 'recharts';
+import { ResponsiveContainer } from 'recharts';
+import { Tooltip } from 'recharts';
+import { XAxis } from 'recharts';
+import { YAxis } from 'recharts';
 
 export type TrendView = { date: string; label: string; clicks: number; impressions: number };
 
@@ -17,7 +23,7 @@ export function TrendChart({ data }: { data: TrendView[] }) {
 
   return (
     <div>
-      <div className="h-64 w-full" role="img" aria-label={summary}>
+      <div className="h-64 min-w-0 w-full" role="img" aria-label={summary}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 8, right: 0, bottom: 0, left: -16 }}>
             <CartesianGrid stroke="#ddd5c8" strokeDasharray="3 3" vertical={false} />
@@ -73,10 +79,10 @@ export function TrendChart({ data }: { data: TrendView[] }) {
           Impressions (right scale)
         </span>
       </p>
-      <details className="mt-3 text-sm">
-        <summary className="cursor-pointer text-mute">View as table</summary>
+      <details className="mt-3 text-base sm:text-sm">
+        <summary className="min-h-11 cursor-pointer text-mute">View as table</summary>
         <div className="mt-2 max-h-72 overflow-auto">
-          <table className="w-full border-collapse text-left text-sm">
+          <table className="w-full border-collapse text-left text-base sm:text-sm">
             <caption className="sr-only">Daily clicks and impressions for the priority searches</caption>
             <thead className="border-b border-line text-xs uppercase tracking-wider text-mute">
               <tr>

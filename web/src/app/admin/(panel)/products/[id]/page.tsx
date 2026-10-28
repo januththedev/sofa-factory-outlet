@@ -1,4 +1,6 @@
-import { asc, eq } from 'drizzle-orm';
+import { OpsFrame } from '@/components/admin/settings/ops-frame';
+import { asc } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 import { requireRole } from '@/lib/auth/session';
 import { getDb } from '@/lib/db';
@@ -27,7 +29,7 @@ export default async function EditProductPage({ params }: Props) {
     .from(s.categories)
     .orderBy(asc(s.categories.name));
   return (
-    <>
+    <OpsFrame>
       <PageHeader
         title={product.name}
         description="Edit product details, photos, colours and search presentation."
@@ -59,6 +61,6 @@ export default async function EditProductPage({ params }: Props) {
           variants,
         }}
       />
-    </>
+    </OpsFrame>
   );
 }

@@ -21,7 +21,8 @@ export function CopyReportButton({ text }: { text: string }) {
       <Button variant="ghost" onClick={copy}>
         Copy as text
       </Button>
-      <span role="status" aria-live="polite" className={state === 'failed' ? 'text-sm text-bad' : 'text-sm text-good'}>
+      <span role="status" aria-live="polite"
+        className={state === 'failed' ? 'text-base sm:text-sm text-bad' : 'text-base sm:text-sm text-good'}>
         {state === 'done' ? 'Copied.' : state === 'failed' ? 'Could not copy. Select the text below instead.' : ''}
       </span>
     </>

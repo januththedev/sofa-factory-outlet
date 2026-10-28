@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import { StatGrid } from '@/components/admin/seo/ui';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
 import { getReviewRequestStats } from '@/lib/admin/seo';
 
 /** How many review-request WhatsApp links the team has sent, and the rating they have produced so far. */
@@ -28,7 +31,7 @@ export async function RequestsTab() {
         <CardHeader>
           <CardTitle>How review requests work</CardTitle>
         </CardHeader>
-        <CardBody className="space-y-2 text-sm text-ink-2">
+        <CardBody className="space-y-2 text-base sm:text-sm text-ink-2">
           <p>
             A request is counted when staff tap the WhatsApp review request on a booking marked as visited or on a paid
             invoice. The rating here comes only from on-site reviews you have approved.

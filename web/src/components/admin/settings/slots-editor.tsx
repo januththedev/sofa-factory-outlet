@@ -1,12 +1,22 @@
 'use client';
 
-import { Plus, Trash2 } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { Plus } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
+import { useRef } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input, Select } from '@/components/ui/field';
+import { Input } from '@/components/ui/field';
 import type { SlotInput } from '@/lib/admin/settings';
 
-type Row = { key: number; id?: number; weekday: number; start: string; end: string; capacity: string; active: boolean };
+type Row = {
+  key: number;
+  id?: number;
+  weekday: number;
+  start: string;
+  end: string;
+  capacity: string;
+  active: boolean;
+};
 
 // Monday first, the way the showroom thinks of its week; weekday numbers stay 0 = Sunday.
 const WEEKDAY_ORDER = [1, 2, 3, 4, 5, 6, 0];
@@ -62,10 +72,10 @@ export function SlotsEditor({
   }));
 
   return (
-    <div>
+    <div id="f-slots" tabIndex={-1}>
       <input type="hidden" name="slots" value={JSON.stringify(payload)} />
       {rows.length === 0 ? (
-        <p className="rounded-xl bg-bone-2 px-4 py-3 text-sm text-ink-2">
+        <p className="rounded-xl bg-bone-2 px-4 py-3 text-base sm:text-sm text-ink-2">
           No visit slots. Visitors cannot book a visit until you add one.
         </p>
       ) : (
@@ -75,25 +85,25 @@ export function SlotsEditor({
             const label = `slot ${index + 1}`;
             return (
               <li key={row.key} className="rounded-xl border border-line p-3">
-                <div className="grid grid-cols-2 items-end gap-3 sm:grid-cols-[1.3fr_1fr_1fr_5.5rem_auto_auto]">
-                  <label className={cell}>
-                    Day
-                    <Select
-                      aria-label={`Day for ${label}`}
-                      value={row.weekday}
-                      onChange={(event) => patch(row.key, { weekday: Number(event.target.value) })}
-                    >
+                <div className="grid grid-cols-1 items-end gap-3 sm:grid-cols-2">
+                  <fieldset className="col-span-full min-w-0">
+                    <legend className="mb-2 text-sm text-mute">Day for {label}</legend>
+                    <div className="flex flex-wrap gap-2">
                       {WEEKDAY_ORDER.map((weekday) => (
-                        <option key={weekday} value={weekday}>
-                          {dayName(weekday)}
-                        </option>
+                        <Button key={weekday} size="sm" variant={row.weekday === weekday ? 'primary' : 'ghost'}
+                          aria-pressed={row.weekday === weekday}
+                          aria-label={`${dayName(weekday)} for ${label}`}
+                          onClick={() => patch(row.key, { weekday })}>
+                          {dayName(weekday).slice(0, 3)}
+                        </Button>
                       ))}
-                    </Select>
-                  </label>
+                    </div>
+                  </fieldset>
                   <label className={cell}>
                     Starts
                     <Input
                       type="time"
+                      id={`f-slots-${index}`}
                       aria-label={`Start time for ${label}`}
                       value={row.start}
                       onChange={(event) => patch(row.key, { start: event.target.value })}
@@ -122,12 +132,12 @@ export function SlotsEditor({
                       onChange={(event) => patch(row.key, { capacity: event.target.value })}
                     />
                   </label>
-                  <label className="flex items-center gap-2 pb-3 text-sm">
+                  <label className="flex items-center gap-2 pb-3 text-base sm:text-sm">
                     <input
                       type="checkbox"
                       checked={row.active}
                       onChange={(event) => patch(row.key, { active: event.target.checked })}
-                      className="size-4 accent-maroon"
+                      className="size-11 accent-maroon"
                     />
                     Active
                   </label>
@@ -135,14 +145,18 @@ export function SlotsEditor({
                     variant="subtle"
                     size="sm"
                     aria-label={`Remove ${label}`}
-                    onClick={() => setRows((current) => current.filter((item) => item.key !== row.key))}
+                    onClick={() => {
+                      if (window.confirm('Remove this visit slot? Save changes to apply it.')) {
+                        setRows((current) => current.filter((item) => item.key !== row.key));
+                      }
+                    }}
                   >
                     <Trash2 className="size-4" aria-hidden />
                     Remove
                   </Button>
                 </div>
                 {problem ? (
-                  <p role="alert" className="mt-2 text-sm text-bad">
+                  <p role="status" aria-live="polite" className="mt-2 text-base sm:text-sm text-bad">
                     {problem}
                   </p>
                 ) : null}
@@ -152,7 +166,7 @@ export function SlotsEditor({
         </ul>
       )}
       {errors.slots ? (
-        <p role="alert" className="mt-2 text-sm text-bad">
+        <p role="status" aria-live="polite" className="mt-2 text-base sm:text-sm text-bad">
           {errors.slots}
         </p>
       ) : null}

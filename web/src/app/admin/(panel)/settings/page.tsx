@@ -1,14 +1,18 @@
+import { OpsFrame } from '@/components/admin/settings/ops-frame';
 import type { Metadata } from 'next';
 import { PageHeader } from '@/components/admin/page-header';
 import { BusinessForm } from '@/components/admin/settings/business-form';
 import { ChatSeoForm } from '@/components/admin/settings/chat-seo-form';
-import { DeliveryForm, ProofForm } from '@/components/admin/settings/delivery-form';
+import { DeliveryProofForm } from '@/components/admin/settings/delivery-form';
 import { HoursForm } from '@/components/admin/settings/hours-form';
 import { InvoiceForm } from '@/components/admin/settings/invoice-form';
 import { ServicesCard } from '@/components/admin/settings/services-card';
 import { SettingsTabs } from '@/components/admin/settings/settings-tabs';
-import { StaffManager, type StaffRowView } from '@/components/admin/settings/staff-manager';
-import { bpToPercent, readSettings, readSlots } from '@/lib/admin/settings';
+import { StaffManager } from '@/components/admin/settings/staff-manager';
+import type { StaffRowView } from '@/components/admin/settings/staff-manager';
+import { bpToPercent } from '@/lib/admin/settings';
+import { readSettings } from '@/lib/admin/settings';
+import { readSlots } from '@/lib/admin/settings';
 import { getServiceStatus } from '@/lib/admin/stats';
 import { requireRole } from '@/lib/auth/session';
 import { getDb } from '@/lib/db';
@@ -59,8 +63,7 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
   if (tab === 'delivery') {
     content = (
       <div className="space-y-6">
-        <DeliveryForm delivery={delivery} />
-        <ProofForm proof={proof} />
+        <DeliveryProofForm delivery={delivery} proof={proof} />
       </div>
     );
   }
@@ -85,7 +88,7 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
   }
 
   return (
-    <>
+    <OpsFrame>
       <PageHeader
         title="Settings"
         description={
@@ -105,6 +108,6 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
         ]}
       />
       {content}
-    </>
+    </OpsFrame>
   );
 }

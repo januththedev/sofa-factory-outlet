@@ -1,16 +1,27 @@
-import { and, asc, desc, eq, ilike } from 'drizzle-orm';
-import Image from 'next/image';
+import { OpsFrame } from '@/components/admin/settings/ops-frame';
+import { and } from 'drizzle-orm';
+import { asc } from 'drizzle-orm';
+import { desc } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
+import { ilike } from 'drizzle-orm';
+import { Picture } from '@/components/picture';
 import Link from 'next/link';
 import { PageHeader } from '@/components/admin/page-header';
 import { ProductBulkActions } from '@/components/admin/products/product-bulk-actions';
 import { Badge } from '@/components/ui/badge';
-import { Input, Select } from '@/components/ui/field';
-import { Table, TBody, TD, TH, THead, TR } from '@/components/ui/table';
+import { Input } from '@/components/ui/field';
+import { Select } from '@/components/ui/field';
+import { Table } from '@/components/ui/table';
+import { TBody } from '@/components/ui/table';
+import { TD } from '@/components/ui/table';
+import { TH } from '@/components/ui/table';
+import { THead } from '@/components/ui/table';
+import { TR } from '@/components/ui/table';
 import { evaluateSeoChecklist } from '@/lib/admin/seo-checklist';
 import { requireRole } from '@/lib/auth/session';
 import { getDb } from '@/lib/db';
 import * as s from '@/lib/db/schema';
-import { imageUrl } from '@/lib/images/urls';
+import { pictureData } from '@/lib/images/urls';
 import { formatLkr } from '@/lib/money';
 
 export const dynamic = 'force-dynamic';
@@ -51,34 +62,95 @@ export default async function ProductsPage({ searchParams }: Props) {
   const variants = await db.select().from(s.productVariants).orderBy(asc(s.productVariants.sortOrder));
 
   return (
-    <>
+    <OpsFrame>
       <PageHeader
         title="Products"
         description="Keep the catalogue, search and product pages current from one place."
         actions={(
           <>
             <Link className="btn btn-ghost" href="/admin/products/import/">Import CSV</Link>
-            <Link className="btn btn-primary" href="/admin/products/new/">New product</Link>
+            <Link className="btn btn-primary min-h-11 min-w-11" href="/admin/products/new/">New product</Link>
           </>
         )}
       />
-      <form className="mb-6 grid gap-3 sm:grid-cols-3">
-        <Input name="q" defaultValue={filters.q} aria-label="Search products" placeholder="Search products" />
+      <form className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <label className="space-y-2">
+          <span className="block">Search products</span>
+          <Input name="q" type="search" defaultValue={filters.q} placeholder="Search products" />
+        </label>
+        <label className="space-y-2"><span className="block">Status</span>
         <Select name="status" defaultValue={filters.status ?? ''} aria-label="Filter by status">
           <option value="">All statuses</option>
           <option value="published">Published</option>
           <option value="draft">Draft</option>
           <option value="hidden">Hidden</option>
         </Select>
+        </label>
+        <label className="space-y-2"><span className="block">Category</span>
         <Select name="category" defaultValue={filters.category ?? ''} aria-label="Filter by category">
           <option value="">All categories</option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>{category.name}</option>
           ))}
         </Select>
-        <button className="btn btn-ghost sm:hidden" type="submit">Apply filters</button>
+        </label>
+        <button className="btn btn-ghost min-h-11 self-end" type="submit">Apply filters</button>
       </form>
       <ProductBulkActions ids={products.map(({ product }) => product.id)} owner={session.role === 'owner'} />
+      {products.length === 0 ? (
+        <p className="rounded-xl border border-dashed border-line p-5">
+          No products match. Clear the filters or choose New product to add one.
+        </p>
+      ) : null}
+      <ul className="mb-6 grid gap-3 lg:hidden">
+        {products.map(({ product, category }) => {
+          const photos = variants.filter((variant) => variant.productId === product.id)
+            .flatMap((variant) => variant.images);
+          const checklist = evaluateSeoChecklist({
+            name: product.name,
+            seoTitle: product.seoTitle,
+            seoDescription: product.seoDescription,
+            photoCount: photos.length,
+            photosWithAlt: photos.filter((photo) => photo.alt.trim()).length,
+            descriptionMd: product.descriptionMd,
+            priceMinor: product.priceMinor,
+            tags: product.tags,
+          });
+          return (
+            <li key={product.id} className="min-w-0 rounded-xl border border-line bg-paper p-4">
+              <div className="flex items-start gap-3">
+                {photos[0] ? (
+                  <Picture
+                    data={pictureData(photos[0], 480)}
+                    sizes="72px"
+                    className="block size-18 shrink-0"
+                    imgClassName={`size-full rounded-lg ${photos[0].cutout
+                      ? 'object-contain mix-blend-multiply' : 'object-cover'}`}
+                  />
+                ) : <span className="grid size-18 shrink-0 place-items-center bg-bone text-xs">No photo</span>}
+                <div className="min-w-0 flex-1">
+                  <Link href={`/admin/products/${product.id}/`}
+                    className="flex min-h-11 items-center break-words font-semibold text-maroon">
+                    {product.name}
+                  </Link>
+                  <p className="text-base sm:text-sm text-mute">{category.name}</p>
+                  <Badge>{product.status}</Badge>
+                </div>
+              </div>
+              <p className="mt-3 font-semibold">
+                {product.priceMinor === null
+                  ? 'On request'
+                  : `${product.priceFrom ? 'From ' : ''}${formatLkr(product.priceMinor)}`}
+              </p>
+              <p
+                className="mt-2 text-base sm:text-sm">
+                SEO checklist: {checklist.passed}/{checklist.total} ({checklist.score})
+              </p>
+            </li>
+          );
+        })}
+      </ul>
+      <div className="hidden min-w-0 lg:block">
       <Table>
         <THead>
           <TR>
@@ -107,13 +179,12 @@ export default async function ProductsPage({ searchParams }: Props) {
                 <TD>
                   <div className="flex min-w-52 items-start gap-3">
                     {images[0] ? (
-                      <Image
-                        className="size-12 rounded-lg object-cover"
-                        src={imageUrl(images[0], 480)}
-                        alt={images[0].alt}
-                        width={48}
-                        height={48}
-                        unoptimized
+                      <Picture
+                        data={pictureData(images[0], 480)}
+                        sizes="48px"
+                        className="block size-12 shrink-0"
+                        imgClassName={`size-full rounded-lg ${images[0].cutout
+                          ? 'object-contain mix-blend-multiply' : 'object-cover'}`}
                       />
                     ) : (
                       <span className="grid size-12 place-items-center rounded-lg bg-bone text-xs text-mute">
@@ -122,7 +193,7 @@ export default async function ProductsPage({ searchParams }: Props) {
                     )}
                     <div>
                       <Link className="font-semibold text-maroon" href={`/admin/products/${product.id}/`}>
-                        {product.featured ? '★ ' : ''}{product.name}
+                        {product.name}
                       </Link>
                       <div className="mt-1 flex flex-wrap gap-1">
                         {product.reviewNotes.map((note) => (
@@ -157,6 +228,7 @@ export default async function ProductsPage({ searchParams }: Props) {
           })}
         </TBody>
       </Table>
-    </>
+      </div>
+    </OpsFrame>
   );
 }

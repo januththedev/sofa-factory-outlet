@@ -1,10 +1,18 @@
 import Link from 'next/link';
 import { ReviewActions } from '@/components/admin/seo/review-actions';
 import { ReviewLinkForm } from '@/components/admin/seo/review-link-form';
-import { EmptyNote, formatDate, Stars } from '@/components/admin/seo/ui';
+import { EmptyNote } from '@/components/admin/seo/ui';
+import { formatDate } from '@/components/admin/seo/ui';
+import { Stars } from '@/components/admin/seo/ui';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
-import { type AdminReview, listReviewLinkBookings, listReviews, reviewCounts } from '@/lib/admin/reviews';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
+import type { AdminReview } from '@/lib/admin/reviews';
+import { listReviewLinkBookings } from '@/lib/admin/reviews';
+import { listReviews } from '@/lib/admin/reviews';
+import { reviewCounts } from '@/lib/admin/reviews';
 import { cn } from '@/lib/cn';
 import type { ReviewStatus } from '@/lib/seo/report';
 
@@ -44,7 +52,7 @@ export async function ReviewsTab({ filter }: { filter: ReviewTabFilter }) {
         <CardHeader>
           <div>
             <CardTitle>Create a review link for a booking</CardTitle>
-            <p className="mt-1 text-sm text-mute">
+            <p className="mt-1 text-base sm:text-sm text-mute">
               Customers who came in can review the piece they bought. Send them the link on WhatsApp; their review
               waits here until you approve it.
             </p>
@@ -58,7 +66,7 @@ export async function ReviewsTab({ filter }: { filter: ReviewTabFilter }) {
       <Card>
         <CardHeader className="flex-wrap">
           <CardTitle>Moderation queue</CardTitle>
-          <nav aria-label="Filter reviews" className="flex flex-wrap items-center gap-2 text-sm">
+          <nav aria-label="Filter reviews" className="flex flex-wrap items-center gap-2 text-base sm:text-sm">
             {STATUS_FILTERS.map((status) => {
               const current = status === filter.status;
               return (
@@ -114,14 +122,14 @@ function ReviewItem({ review }: { review: AdminReview }) {
         <Stars rating={review.rating} />
         <Badge tone={STATUS_TONE[review.status]}>{STATUS_LABEL[review.status]}</Badge>
         {review.verifiedVisit ? <Badge tone="maroon">Verified visit</Badge> : null}
-        <span className="text-sm text-mute">{formatDate(review.createdAt)}</span>
+        <span className="text-base sm:text-sm text-mute">{formatDate(review.createdAt)}</span>
       </div>
       <div>
         {review.title ? <h3 className="font-semibold">{review.title}</h3> : null}
         <p className="mt-1 max-w-3xl whitespace-pre-line text-ink-2">{review.body}</p>
-        <p className="mt-2 text-sm text-mute">From {review.authorName}</p>
+        <p className="mt-2 text-base sm:text-sm text-mute">From {review.authorName}</p>
       </div>
-      <p className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+      <p className="flex flex-wrap gap-x-4 gap-y-1 text-base sm:text-sm">
         {review.product ? (
           <>
             <Link href={`/admin/products/${review.product.id}/`} className="font-medium text-maroon hover:underline">

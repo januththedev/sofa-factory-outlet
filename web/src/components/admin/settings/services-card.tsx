@@ -12,7 +12,7 @@ export function ServicesCard({ services }: { services: ServiceStatus[] }) {
       <h2 id="services-title" className="font-display text-2xl">
         Connected services
       </h2>
-      <p className="mt-1 max-w-2xl text-sm text-mute">
+      <p className="mt-1 max-w-2xl text-base sm:text-sm text-mute">
         Keys are set as environment variables on the host, not here, so they never pass through this page. Add or
         change them in the hosting dashboard, then redeploy.
       </p>
@@ -21,7 +21,7 @@ export function ServicesCard({ services }: { services: ServiceStatus[] }) {
           <li key={service.id} className="flex flex-wrap items-start justify-between gap-x-6 gap-y-1 py-3">
             <div className="min-w-0">
               <p className="font-medium">{service.label}</p>
-              <p className="text-sm text-mute">{service.effect}</p>
+              <p className="text-base sm:text-sm text-mute">{service.effect}</p>
               {service.configured ? null : (
                 <p className="mt-1 text-xs text-mute">
                   Set: <span className="font-mono">{service.vars.join(', ')}</span>

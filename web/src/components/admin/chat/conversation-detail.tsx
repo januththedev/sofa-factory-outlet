@@ -1,7 +1,11 @@
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
-import { type ConversationDetail as Detail, type MessageRow } from '@/lib/admin/chat';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
+import type { ConversationDetail as Detail } from '@/lib/admin/chat';
+import type { MessageRow } from '@/lib/admin/chat';
 import { formatWhen } from '@/lib/admin/knowledge';
 import { cn } from '@/lib/cn';
 import { MessageActions } from './message-actions';
@@ -32,7 +36,7 @@ function Retrieved({ message, detail }: { message: MessageRow; detail: Detail })
   if (rows.length === 0) return null;
   return (
     <details className="mt-2 text-xs text-mute">
-      <summary className="cursor-pointer">What it looked at ({rows.length})</summary>
+      <summary className="min-h-11 cursor-pointer">What it looked at ({rows.length})</summary>
       <ul className="mt-1 list-disc space-y-0.5 pl-5">
         {rows.map((row) => (
           <li key={row}>{row}</li>
@@ -78,7 +82,7 @@ export function ConversationDetailView({ detail, backHref }: { detail: Detail; b
           <CardTitle>
             Visitor <span className="font-mono">{conversation.visitorId.slice(0, 8)}</span>
           </CardTitle>
-          <p className="mt-1 text-sm text-mute">
+          <p className="mt-1 text-base sm:text-sm text-mute">
             Started {formatWhen(conversation.createdAt)}
             {conversation.context.page ? `, on ${conversation.context.page}` : ''}
           </p>
@@ -88,7 +92,7 @@ export function ConversationDetailView({ detail, backHref }: { detail: Detail; b
             </p>
           ) : null}
         </div>
-        <Link href={backHref} className="text-sm text-maroon underline-offset-4 hover:underline">
+        <Link href={backHref} className="text-base sm:text-sm text-maroon underline-offset-4 hover:underline">
           Back to the list
         </Link>
       </CardHeader>
@@ -107,7 +111,7 @@ export function ConversationDetailView({ detail, backHref }: { detail: Detail; b
                   <p className="text-xs font-semibold uppercase tracking-wider text-mute">
                     {fromVisitor ? 'Visitor' : 'Chatbot'} · {formatWhen(message.createdAt)}
                   </p>
-                  <p className="mt-1 whitespace-pre-wrap text-sm">{message.text}</p>
+                  <p className="mt-1 whitespace-pre-wrap text-base sm:text-sm">{message.text}</p>
                   {fromVisitor ? null : (
                     <>
                       <AssistantMeta message={message} />
@@ -124,7 +128,10 @@ export function ConversationDetailView({ detail, backHref }: { detail: Detail; b
             );
           })}
         </ol>
-        {messages.length === 0 ? <p className="text-sm text-mute">This conversation has no messages.</p> : null}
+        {messages.length === 0 ? <p
+          className="text-base sm:text-sm text-mute">
+          This conversation has no messages.
+        </p> : null}
       </CardBody>
     </Card>
   );

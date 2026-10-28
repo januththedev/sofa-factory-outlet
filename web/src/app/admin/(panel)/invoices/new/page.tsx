@@ -64,7 +64,9 @@ export default async function NewInvoicePage({ searchParams }: { searchParams: S
         )}
       />
       {startError ? (
-        <p role="alert" className="mb-6 rounded-xl border border-bad/30 bg-bad/5 px-4 py-3 text-sm text-bad">
+        <p role="alert"
+          className="mb-6 rounded-xl border border-bad/30 bg-bad/5 px-4 py-3 text-base sm:text-sm
+          text-bad">
           {startError}
         </p>
       ) : null}

@@ -1,4 +1,7 @@
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
 import type { GscStatus } from '@/lib/seo/gsc';
 
 const CODE = 'rounded bg-bone-2 px-1.5 py-0.5 text-xs';
@@ -11,12 +14,13 @@ export function ConnectCard({ status }: { status: GscStatus }) {
         <CardHeader>
           <CardTitle>Search Console is connected</CardTitle>
         </CardHeader>
-        <CardBody className="space-y-2 text-sm text-ink-2">
+        <CardBody className="space-y-2 text-base sm:text-sm text-ink-2">
           <p>
             Reading <strong className="font-semibold text-ink">{status.siteUrl}</strong> as {status.clientEmail}.
           </p>
           <p>
-            No rows have arrived yet. The site pulls the last three days every night, and Google itself reports a day or
+            No rows have arrived yet. The site pulls the last three days every night,
+            and Google itself reports a day or
             two late, so the first numbers appear shortly after the first night.
           </p>
         </CardBody>
@@ -28,7 +32,7 @@ export function ConnectCard({ status }: { status: GscStatus }) {
       <CardHeader>
         <CardTitle>Connect Search Console</CardTitle>
       </CardHeader>
-      <CardBody className="space-y-4 text-sm text-ink-2">
+      <CardBody className="space-y-4 text-base sm:text-sm text-ink-2">
         <p>
           Search Console shows which Google searches bring people to the site and where its pages rank. Until it is
           connected this page has no ranking numbers, but the product and review tabs work as normal.

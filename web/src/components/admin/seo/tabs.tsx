@@ -1,3 +1,4 @@
+import { ScrollTabs } from '@/components/admin/settings/scroll-tabs';
 import Link from 'next/link';
 import { cn } from '@/lib/cn';
 
@@ -21,8 +22,9 @@ export const seoTabHref = (tab: SeoTab): string => (tab === 'overview' ? '/admin
 /** Plain links rather than client state, so each tab has its own address and the back button works. */
 export function SeoTabs({ active }: { active: SeoTab }) {
   return (
-    <nav aria-label="SEO sections" className="-mx-1 overflow-x-auto px-1">
-      <ul className="flex min-w-max gap-1 border-b border-line">
+    <ScrollTabs active={active}>
+    <nav aria-label="SEO sections" className="-mx-1 min-w-max px-1">
+      <ul className="flex min-w-max gap-2 border-b border-line">
         {SEO_TABS.map((tab) => {
           const current = tab.key === active;
           return (
@@ -31,7 +33,7 @@ export function SeoTabs({ active }: { active: SeoTab }) {
                 href={seoTabHref(tab.key)}
                 aria-current={current ? 'page' : undefined}
                 className={cn(
-                  '-mb-px inline-flex border-b-2 px-4 py-3 text-sm font-medium transition-colors',
+                  '-mb-px inline-flex border-b-2 px-4 py-3 text-base sm:text-sm font-medium transition-colors',
                   current ? 'border-maroon text-maroon' : 'border-transparent text-mute hover:text-ink',
                 )}
               >
@@ -42,5 +44,6 @@ export function SeoTabs({ active }: { active: SeoTab }) {
         })}
       </ul>
     </nav>
+    </ScrollTabs>
   );
 }

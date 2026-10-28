@@ -1,13 +1,26 @@
 import Link from 'next/link';
 import { ConnectCard } from '@/components/admin/seo/connect-card';
 import { TrendChart } from '@/components/admin/seo/trend-chart';
-import { EmptyNote, StatGrid } from '@/components/admin/seo/ui';
+import { EmptyNote } from '@/components/admin/seo/ui';
+import { StatGrid } from '@/components/admin/seo/ui';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TBody, TD, TH, THead, TR } from '@/components/ui/table';
-import { getSearchOverview, getSeoProblems, type SearchOverview, type SeoProblems } from '@/lib/admin/seo';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
+import { Table } from '@/components/ui/table';
+import { TBody } from '@/components/ui/table';
+import { TD } from '@/components/ui/table';
+import { TH } from '@/components/ui/table';
+import { THead } from '@/components/ui/table';
+import { TR } from '@/components/ui/table';
+import { getSearchOverview } from '@/lib/admin/seo';
+import { getSeoProblems } from '@/lib/admin/seo';
+import type { SearchOverview } from '@/lib/admin/seo';
+import type { SeoProblems } from '@/lib/admin/seo';
 import { getGscStatus } from '@/lib/seo/gsc';
-import { formatCount, formatPosition } from '@/lib/seo/report';
+import { formatCount } from '@/lib/seo/report';
+import { formatPosition } from '@/lib/seo/report';
 
 const dayFormat = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
 const dayLabel = (date: string): string => dayFormat.format(new Date(`${date}T00:00:00Z`));
@@ -39,7 +52,7 @@ function Rankings({ overview }: { overview: SearchOverview }) {
   const trendView = trend.map((point) => ({ ...point, label: dayLabel(point.date) }));
   return (
     <>
-      <p className="text-sm text-mute">
+      <p className="text-base sm:text-sm text-mute">
         The 20 priority searches, {dayLabel(overview.from)} to {dayLabel(overview.to)} (Asia/Colombo days).
       </p>
       <StatGrid
@@ -61,7 +74,10 @@ function Rankings({ overview }: { overview: SearchOverview }) {
           {trendView.length > 0 ? (
             <TrendChart data={trendView} />
           ) : (
-            <p className="py-6 text-center text-sm text-mute">None of the priority searches has appeared yet.</p>
+            <p
+              className="py-6 text-center text-base sm:text-sm text-mute">
+              None of the priority searches has appeared yet.
+            </p>
           )}
         </CardBody>
       </Card>
@@ -152,11 +168,11 @@ function Problems({ problems }: { problems: SeoProblems }) {
             Products failing the SEO checklist
           </h3>
           {!checklistAvailable ? (
-            <p className="mt-2 text-sm text-mute">— The SEO checklist is not available yet.</p>
+            <p className="mt-2 text-base sm:text-sm text-mute">— The SEO checklist is not available yet.</p>
           ) : weakProducts.length === 0 ? (
-            <p className="mt-2 text-sm text-mute">Every published product is green.</p>
+            <p className="mt-2 text-base sm:text-sm text-mute">Every published product is green.</p>
           ) : (
-            <ul className="mt-3 space-y-3 text-sm">
+            <ul className="mt-3 space-y-3 text-base sm:text-sm">
               {weakProducts.map((product) => (
                 <li key={product.id}>
                   <Link href={`/admin/products/${product.id}/`} className="font-medium text-maroon hover:underline">
@@ -176,9 +192,9 @@ function Problems({ problems }: { problems: SeoProblems }) {
             Published but hidden from Google
           </h3>
           {noindexProducts.length === 0 ? (
-            <p className="mt-2 text-sm text-mute">No published product is set to noindex.</p>
+            <p className="mt-2 text-base sm:text-sm text-mute">No published product is set to noindex.</p>
           ) : (
-            <ul className="mt-3 space-y-2 text-sm">
+            <ul className="mt-3 space-y-2 text-base sm:text-sm">
               {noindexProducts.map((product) => (
                 <li key={product.id}>
                   <Link href={`/admin/products/${product.id}/`} className="font-medium text-maroon hover:underline">
@@ -195,9 +211,12 @@ function Problems({ problems }: { problems: SeoProblems }) {
             Hidden products still being visited
           </h3>
           {hiddenWithRedirects.length === 0 ? (
-            <p className="mt-2 text-sm text-mute">No visitors are arriving on a hidden product&apos;s old address.</p>
+            <p
+              className="mt-2 text-base sm:text-sm text-mute">
+              No visitors are arriving on a hidden product&apos;s old address.
+            </p>
           ) : (
-            <ul className="mt-3 space-y-2 text-sm">
+            <ul className="mt-3 space-y-2 text-base sm:text-sm">
               {hiddenWithRedirects.map((redirect) => (
                 <li key={redirect.id}>
                   <span className="break-all font-medium">{redirect.from}</span>

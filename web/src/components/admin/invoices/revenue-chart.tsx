@@ -1,15 +1,13 @@
 'use client';
 
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Legend,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { Bar } from 'recharts';
+import { BarChart } from 'recharts';
+import { CartesianGrid } from 'recharts';
+import { Legend } from 'recharts';
+import { ResponsiveContainer } from 'recharts';
+import { Tooltip } from 'recharts';
+import { XAxis } from 'recharts';
+import { YAxis } from 'recharts';
 import { formatLkr } from '@/lib/money';
 
 export type RevenueChartPoint = {
@@ -34,18 +32,22 @@ function chartSummary(points: readonly RevenueChartPoint[]): string {
 
 export function RevenueChart({ points }: { points: readonly RevenueChartPoint[] }) {
   if (!points.length) {
-    return <p className="py-12 text-center text-sm text-mute">No revenue has been invoiced in this period.</p>;
+    return <p
+      className="py-12 text-center text-base sm:text-sm text-mute">
+      No revenue has been invoiced in this period.
+    </p>;
   }
   return (
     <figure>
       <figcaption className="sr-only">Bar chart of monthly revenue. {chartSummary(points)}</figcaption>
-      <div aria-hidden="true" className="h-80 w-full">
+      <div aria-hidden="true" className="h-80 min-w-0 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={points} margin={{ top: 8, right: 8, left: 8, bottom: 8 }}>
             <CartesianGrid stroke="var(--color-line)" strokeDasharray="3 3" vertical={false} />
             <XAxis dataKey="label" tick={{ fill: 'var(--color-mute)', fontSize: 12 }} />
-            <YAxis tick={{ fill: 'var(--color-mute)', fontSize: 12 }} width={70} />
-            <Tooltip />
+            <YAxis tick={{ fill: 'var(--color-mute)', fontSize: 12 }} width={104}
+              tickFormatter={(value) => formatLkr(Math.round(Number(value) * 100))} />
+            <Tooltip formatter={(value) => formatLkr(Math.round(Number(value) * 100), { decimals: true })} />
             <Legend />
             <Bar dataKey="invoiced" name="Invoiced" fill="var(--color-maroon)" radius={[3, 3, 0, 0]} />
             <Bar dataKey="paid" name="Paid" fill="var(--color-good)" radius={[3, 3, 0, 0]} />

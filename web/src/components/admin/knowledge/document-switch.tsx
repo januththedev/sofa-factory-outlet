@@ -33,7 +33,7 @@ export function DocumentSwitch({ id, title, enabled }: { id: number; title: stri
       <Switch checked={on} onChange={change} label={`Use ${title} in chat answers`} disabled={busy} />
       <span className="text-xs text-mute">{on ? 'On' : 'Off'}</span>
       {error ? (
-        <span role="alert" className="text-xs text-bad">
+        <span role="status" aria-live="polite" className="text-xs text-bad">
           {error}
         </span>
       ) : null}

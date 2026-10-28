@@ -1,11 +1,17 @@
 'use client';
 
-import { useId, useState } from 'react';
+import { useId } from 'react';
+import { useState } from 'react';
 import { saveChatSettingsAction } from '@/app/admin/(panel)/chat/actions';
 import { Status } from '@/components/admin/knowledge/status';
 import { Button } from '@/components/ui/button';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
-import { Field, Input, Textarea } from '@/components/ui/field';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
+import { Field } from '@/components/ui/field';
+import { Input } from '@/components/ui/field';
+import { Textarea } from '@/components/ui/field';
 import type { ChatSettingsView } from '@/lib/admin/chat';
 
 type Values = {
@@ -65,7 +71,7 @@ export function SettingsForm({ view }: { view: ChatSettingsView }) {
       <CardHeader>
         <div>
           <CardTitle>Chat settings</CardTitle>
-          <p className="mt-1 text-sm text-mute">
+          <p className="mt-1 text-base sm:text-sm text-mute">
             Model answers today: <span className="font-semibold text-ink">{usedToday}</span> of{' '}
             {settings.dailyModelBudget}
             {left !== null ? ` (${left} left at the budget below)` : ''}. The count restarts at midnight in Colombo.
@@ -86,7 +92,7 @@ export function SettingsForm({ view }: { view: ChatSettingsView }) {
               onChange={set('models')}
               rows={4}
               spellCheck={false}
-              className="font-mono text-sm"
+              className="font-mono text-base sm:text-sm"
               aria-invalid={Boolean(fieldErrors.models)}
             />
           </Field>

@@ -1,3 +1,4 @@
+import { ScrollTabs } from '@/components/admin/settings/scroll-tabs';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/cn';
@@ -18,14 +19,15 @@ export function parseKnowledgeTab(value: string | undefined): KnowledgeTab {
 /** Tab links for the Knowledge base page. The Gaps tab shows how many questions are waiting for an answer. */
 export function KnowledgeTabs({ active, openGaps }: { active: KnowledgeTab; openGaps: number }) {
   return (
-    <nav aria-label="Knowledge base sections" className="mb-6 flex gap-1 overflow-x-auto border-b border-line">
+    <ScrollTabs active={active}>
+    <nav aria-label="Knowledge base sections" className="mb-6 flex gap-2 min-w-max border-b border-line">
       {KNOWLEDGE_TABS.map((tab) => (
         <Link
           key={tab.id}
           href={`/admin/knowledge/?tab=${tab.id}`}
           aria-current={tab.id === active ? 'page' : undefined}
           className={cn(
-            'inline-flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-semibold',
+            'inline-flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-base sm:text-sm font-semibold',
             tab.id === active ? 'border-maroon text-maroon' : 'border-transparent text-mute hover:text-ink',
           )}
         >
@@ -34,5 +36,6 @@ export function KnowledgeTabs({ active, openGaps }: { active: KnowledgeTab; open
         </Link>
       ))}
     </nav>
+    </ScrollTabs>
   );
 }

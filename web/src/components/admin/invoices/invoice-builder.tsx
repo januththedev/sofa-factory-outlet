@@ -1,22 +1,29 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo } from 'react';
+import { useRef } from 'react';
+import { useState } from 'react';
+import { stepQuantity } from './builder-state';
+import { useUnsavedWarning } from '@/components/admin/products/use-unsaved-warning';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { issueDraftAction, saveDraftAction } from '@/app/admin/(panel)/invoices/actions';
+import { issueDraftAction } from '@/app/admin/(panel)/invoices/actions';
+import { saveDraftAction } from '@/app/admin/(panel)/invoices/actions';
 import { CustomerPicker } from '@/components/admin/invoices/customer-picker';
-import { ProductPicker, type CatalogueLine } from '@/components/admin/invoices/product-picker';
+import { ProductPicker } from '@/components/admin/invoices/product-picker';
+import type { CatalogueLine } from '@/components/admin/invoices/product-picker';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Field, Input, Select, Textarea } from '@/components/ui/field';
-import {
-  discountInputToValue,
-  minorToRupeesInput,
-  rupeesToMinor,
-  type BuilderCustomer,
-  type BuilderDraftInput,
-  type BuilderLineInput,
-} from '@/lib/admin/invoices';
+import { Field } from '@/components/ui/field';
+import { Input } from '@/components/ui/field';
+import { Select } from '@/components/ui/field';
+import { Textarea } from '@/components/ui/field';
+import { discountInputToValue } from '@/lib/admin/invoices';
+import { minorToRupeesInput } from '@/lib/admin/invoices';
+import { rupeesToMinor } from '@/lib/admin/invoices';
+import type { BuilderCustomer } from '@/lib/admin/invoices';
+import type { BuilderDraftInput } from '@/lib/admin/invoices';
+import type { BuilderLineInput } from '@/lib/admin/invoices';
 import type { InvoiceView } from '@/lib/invoices/api';
 import { computeTotals } from '@/lib/invoices/totals';
 import type { InvoiceSettings } from '@/lib/settings/types';
@@ -111,15 +118,7 @@ export function InvoiceBuilder({
   const booking = invoice?.booking ?? null;
   const kindLabel = type === 'quotation' ? 'quotation' : 'invoice';
 
-  useEffect(() => {
-    if (!dirty) return;
-    const warn = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-      event.returnValue = '';
-    };
-    window.addEventListener('beforeunload', warn);
-    return () => window.removeEventListener('beforeunload', warn);
-  }, [dirty]);
+  useUnsavedWarning(dirty);
 
   const totals = useMemo(() => computeTotals({
     lines: lines.map((line) => ({
@@ -179,6 +178,7 @@ export function InvoiceBuilder({
   }
 
   function removeLine(key: string) {
+    if (!window.confirm('Remove this line from the invoice?')) return;
     setLines((current) => current.filter((line) => line.key !== key));
     markDirty();
   }
@@ -242,7 +242,7 @@ export function InvoiceBuilder({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-w-0 space-y-6 pb-36">
       <div className="flex flex-wrap items-center gap-3">
         <Badge tone={type === 'quotation' ? 'neutral' : 'maroon'}>
           {type === 'quotation' ? 'Quotation' : 'Invoice'}
@@ -250,12 +250,12 @@ export function InvoiceBuilder({
         {booking ? (
           <Link
             href={`/admin/bookings/${booking.id}/`}
-            className="text-sm text-maroon underline-offset-4 hover:underline"
+            className="text-base sm:text-sm text-maroon underline-offset-4 hover:underline"
           >
             From booking {booking.reference}
           </Link>
-        ) : <span className="text-sm text-mute">Walk-in or website sale</span>}
-        <span className="text-sm text-mute">{draftId ? 'Editing a draft' : 'New draft'}</span>
+        ) : <span className="text-base sm:text-sm text-mute">Walk-in or website sale</span>}
+        <span className="text-base sm:text-sm text-mute">{draftId ? 'Editing a draft' : 'New draft'}</span>
       </div>
 
       <section
@@ -263,7 +263,10 @@ export function InvoiceBuilder({
         className="rounded-[var(--radius-card)] border border-line bg-paper p-4 sm:p-6"
       >
         <h2 id="customer-heading" className="font-display text-2xl">1. Customer</h2>
-        <p className="mt-1 text-sm text-mute">Search the existing book, or add the person at the counter.</p>
+        <p
+          className="mt-1 text-base sm:text-sm text-mute">
+          Search the existing book, or add the person at the counter.
+        </p>
         <div className="mt-4">
           <CustomerPicker
             selected={customer}
@@ -297,7 +300,10 @@ export function InvoiceBuilder({
         className="rounded-[var(--radius-card)] border border-line bg-paper p-4 sm:p-6"
       >
         <h2 id="lines-heading" className="font-display text-2xl">2. Line items</h2>
-        <p className="mt-1 text-sm text-mute">Choose a colour variant, then set the quantity and price.</p>
+        <p
+          className="mt-1 text-base sm:text-sm text-mute">
+          Choose a colour variant, then set the quantity and price.
+        </p>
         <div className="mt-4">
           <ProductPicker onAdd={addCatalogueLine} />
         </div>
@@ -318,8 +324,8 @@ export function InvoiceBuilder({
                   Remove
                 </Button>
               </div>
-              <div className="mt-3 grid gap-3 sm:grid-cols-12">
-                <Field label="Description" htmlFor={`line-description-${line.key}`} className="sm:col-span-4">
+              <div className="mt-3 grid gap-3 xl:grid-cols-12">
+                <Field label="Description" htmlFor={`line-description-${line.key}`} className="xl:col-span-6">
                   <Input
                     id={`line-description-${line.key}`}
                     value={line.description}
@@ -327,24 +333,38 @@ export function InvoiceBuilder({
                     placeholder="Delivery to Kandy"
                   />
                 </Field>
-                <Field label="Colour" htmlFor={`line-colour-${line.key}`} className="sm:col-span-2">
+                <Field label="Colour" htmlFor={`line-colour-${line.key}`} className="xl:col-span-3">
                   <Input
                     id={`line-colour-${line.key}`}
                     value={line.colourName ?? ''}
                     onChange={(event) => updateLine(line.key, { colourName: event.target.value })}
                   />
                 </Field>
-                <Field label="Qty" htmlFor={`line-quantity-${line.key}`} className="sm:col-span-1">
-                  <Input
-                    id={`line-quantity-${line.key}`}
-                    type="number"
-                    min={1}
-                    step={1}
-                    value={line.quantity}
-                    onChange={(event) => updateLine(line.key, { quantity: event.target.value })}
-                  />
+                <Field label="Qty" htmlFor={`line-quantity-${line.key}`} className="xl:col-span-3">
+                  <div className="flex items-center gap-2">
+                    <Button variant="ghost" aria-label={`Decrease quantity for line ${index + 1}`}
+                      disabled={quantityOf(line) <= 1 || saving}
+                      onClick={() => updateLine(line.key, { quantity: stepQuantity(line.quantity, -1) })}>
+                      −
+                    </Button>
+                    <Input
+                      id={`line-quantity-${line.key}`}
+                      className="min-w-0 text-center"
+                      type="number"
+                      inputMode="numeric"
+                      min={1}
+                      step={1}
+                      value={line.quantity}
+                      onChange={(event) => updateLine(line.key, { quantity: event.target.value })}
+                    />
+                    <Button variant="ghost" aria-label={`Increase quantity for line ${index + 1}`}
+                      disabled={saving}
+                      onClick={() => updateLine(line.key, { quantity: stepQuantity(line.quantity, 1) })}>
+                      +
+                    </Button>
+                  </div>
                 </Field>
-                <Field label="Unit price (Rs.)" htmlFor={`line-price-${line.key}`} className="sm:col-span-2">
+                <Field label="Unit price (Rs.)" htmlFor={`line-price-${line.key}`} className="xl:col-span-3">
                   <Input
                     id={`line-price-${line.key}`}
                     inputMode="decimal"
@@ -352,7 +372,7 @@ export function InvoiceBuilder({
                     onChange={(event) => updateLine(line.key, { unitPrice: event.target.value })}
                   />
                 </Field>
-                <Field label="Line discount (Rs.)" htmlFor={`line-discount-${line.key}`} className="sm:col-span-2">
+                <Field label="Line discount (Rs.)" htmlFor={`line-discount-${line.key}`} className="xl:col-span-3">
                   <Input
                     id={`line-discount-${line.key}`}
                     inputMode="decimal"
@@ -360,7 +380,7 @@ export function InvoiceBuilder({
                     onChange={(event) => updateLine(line.key, { discount: event.target.value })}
                   />
                 </Field>
-                <div className="sm:col-span-1 sm:self-end sm:text-right">
+                <div className="xl:col-span-1 xl:self-end xl:text-right">
                   <p className="text-xs text-mute">Total</p>
                   <p className="font-semibold tabular-nums">{formatLkr(lineSubtotal(line), { decimals: true })}</p>
                 </div>
@@ -369,7 +389,10 @@ export function InvoiceBuilder({
           ))}
         </ul>
         {lines.length === 0 ? (
-          <p className="mt-4 text-sm text-mute">No lines yet. Search the catalogue or add a custom line.</p>
+          <p
+            className="mt-4 text-base sm:text-sm text-mute">
+            No lines yet. Search the catalogue or add a custom line.
+          </p>
         ) : null}
         <Button variant="subtle" size="sm" className="mt-4" onClick={addCustomLine}>Add custom line</Button>
       </section>
@@ -436,10 +459,10 @@ export function InvoiceBuilder({
             </Field>
           </div>
           {settings.taxEnabled ? (
-            <p className="mt-4 text-sm text-ink-2">
+            <p className="mt-4 text-base sm:text-sm text-ink-2">
               {settings.taxLabel} ({settings.taxRateBp / 100}%) is applied to the taxable total.
             </p>
-          ) : <p className="mt-4 text-sm text-mute">Tax is off in invoice settings.</p>}
+          ) : <p className="mt-4 text-base sm:text-sm text-mute">Tax is off in invoice settings.</p>}
         </section>
 
         <section
@@ -447,7 +470,7 @@ export function InvoiceBuilder({
           className="rounded-[var(--radius-card)] border border-line bg-paper p-4 sm:p-6"
         >
           <h2 id="totals-heading" className="font-display text-2xl">Totals</h2>
-          <dl className="mt-4 space-y-2 text-sm">
+          <dl className="mt-4 space-y-2 text-base sm:text-sm">
             <div className="flex justify-between gap-4">
               <dt>Subtotal</dt>
               <dd className="tabular-nums">{formatLkr(totals.subtotalMinor, { decimals: true })}</dd>
@@ -526,12 +549,17 @@ export function InvoiceBuilder({
       </section>
 
       <div
+        data-sticky-bar
         className={
-          'sticky bottom-4 z-10 flex flex-wrap items-center justify-between gap-3 '
-          + 'rounded-[var(--radius-card)] border border-line bg-paper/95 p-4 shadow-sm backdrop-blur'
+          'sticky bottom-0 z-20 flex flex-wrap items-center justify-between gap-3 '
+          + 'rounded-xl border border-line bg-paper p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-sm'
         }
       >
-        <div aria-live="polite" className="text-sm">
+        <div className="basis-full text-base font-semibold">
+          Total {formatLkr(totals.totalMinor, { decimals: true })}
+          <span className="ml-3 font-normal">Due {formatLkr(totals.balanceMinor, { decimals: true })}</span>
+        </div>
+        <div aria-live="polite" className="text-base sm:text-sm">
           {message ? (
             <span className={message.tone === 'ok' ? 'text-good' : 'text-bad'}>{message.text}</span>
           ) : (

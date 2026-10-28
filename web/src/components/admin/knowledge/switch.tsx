@@ -23,14 +23,14 @@ export function Switch({
       disabled={disabled}
       onClick={() => onChange(!checked)}
       className={cn(
-        'relative h-6 w-11 shrink-0 rounded-full transition-colors before:absolute before:-inset-2 before:content-[""]',
+        'relative min-h-11 min-w-11 shrink-0 rounded-full transition-colors',
         'disabled:opacity-60 motion-reduce:transition-none',
         checked ? 'bg-good' : 'bg-line',
       )}
     >
       <span
         className={cn(
-          'absolute left-0.5 top-0.5 size-5 rounded-full bg-paper shadow transition-transform',
+          'absolute left-0.5 top-3 size-5 rounded-full bg-paper shadow transition-transform',
           'motion-reduce:transition-none',
           checked && 'translate-x-5',
         )}

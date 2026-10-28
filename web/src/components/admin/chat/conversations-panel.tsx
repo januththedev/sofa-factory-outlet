@@ -1,8 +1,18 @@
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardBody, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TBody, TD, TH, THead, TR } from '@/components/ui/table';
-import { type ConversationCounts, type ConversationFilter, listConversations } from '@/lib/admin/chat';
+import { Card } from '@/components/ui/card';
+import { CardBody } from '@/components/ui/card';
+import { CardHeader } from '@/components/ui/card';
+import { CardTitle } from '@/components/ui/card';
+import { Table } from '@/components/ui/table';
+import { TBody } from '@/components/ui/table';
+import { TD } from '@/components/ui/table';
+import { TH } from '@/components/ui/table';
+import { THead } from '@/components/ui/table';
+import { TR } from '@/components/ui/table';
+import type { ConversationCounts } from '@/lib/admin/chat';
+import type { ConversationFilter } from '@/lib/admin/chat';
+import { listConversations } from '@/lib/admin/chat';
 import { formatWhen } from '@/lib/admin/knowledge';
 import { cn } from '@/lib/cn';
 
@@ -50,7 +60,7 @@ export async function ConversationsPanel({
       <CardHeader>
         <div>
           <CardTitle>Conversations</CardTitle>
-          <p className="mt-1 text-sm text-mute">
+          <p className="mt-1 text-base sm:text-sm text-mute">
             Visitors are anonymous: only the first characters of their random id are shown.
           </p>
         </div>
@@ -65,7 +75,7 @@ export async function ConversationsPanel({
                 href={listHref(item.id)}
                 aria-current={item.id === filter ? 'true' : undefined}
                 className={cn(
-                  'inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm',
+                  'inline-flex min-h-11 min-w-11 items-center gap-2 rounded-full border px-3 py-2',
                   item.id === filter
                     ? 'border-maroon bg-maroon/10 text-maroon'
                     : 'border-line text-ink-2 hover:border-ink',
@@ -80,11 +90,36 @@ export async function ConversationsPanel({
       </CardBody>
       {list.rows.length === 0 ? (
         <CardBody>
-          <p className="text-sm text-mute">
-            {filter === 'all' ? 'No one has used the chat yet.' : 'No conversations match this filter.'}
+          <p className="text-base sm:text-sm text-mute">
+            {filter === 'all'
+              ? 'No conversations yet. Try the playground while you wait for the first visitor.'
+              : 'No conversations match this filter. Choose All to see the inbox.'}
           </p>
         </CardBody>
       ) : (
+        <>
+        <ul className="grid gap-3 p-3 lg:hidden">
+          {list.rows.map((row) => (
+            <li key={row.id} className="min-w-0 space-y-3 rounded-xl border border-line p-4">
+              <Link href={detailHref(row.id, filter, list.page)}
+                className="flex min-h-11 items-center font-semibold text-maroon">
+                {row.visitor} conversation {row.id}
+              </Link>
+              <p>{snippet(row.lastText) || 'Open this conversation to read its messages.'}</p>
+              <p
+                className="text-base sm:text-sm text-mute">
+                {formatWhen(row.lastMessageAt)} · {row.messages} messages
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {row.handoff ? <Badge tone="warn">Asked for a person</Badge> : null}
+                {row.thumbsDown > 0 ? <Badge tone="bad">Thumbs down {row.thumbsDown}</Badge> : null}
+                {row.unanswered > 0 ? <Badge>Unsure {row.unanswered}</Badge> : null}
+                {row.flagged > 0 ? <Badge tone="maroon">Flagged {row.flagged}</Badge> : null}
+              </div>
+            </li>
+          ))}
+        </ul>
+        <div className="hidden min-w-0 lg:block">
         <Table>
           <THead>
             <TR>
@@ -139,9 +174,11 @@ export async function ConversationsPanel({
             ))}
           </TBody>
         </Table>
+        </div>
+        </>
       )}
       {list.pages > 1 ? (
-        <CardBody className="flex items-center justify-between gap-3 border-t border-line text-sm">
+        <CardBody className="flex items-center justify-between gap-3 border-t border-line text-base sm:text-sm">
           {list.page > 1 ? (
             <Link href={listHref(filter, list.page - 1)} className="text-maroon underline-offset-4 hover:underline">
               Previous

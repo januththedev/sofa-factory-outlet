@@ -1,11 +1,16 @@
 'use client';
 
+import { Modal } from '@/components/admin/knowledge/modal';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { recordPaymentAction } from '@/app/admin/(panel)/invoices/actions';
 import { Button } from '@/components/ui/button';
-import { Field, Input, Select, Textarea } from '@/components/ui/field';
-import { minorToRupeesInput, rupeesToMinor } from '@/lib/admin/invoices';
+import { Field } from '@/components/ui/field';
+import { Input } from '@/components/ui/field';
+import { Select } from '@/components/ui/field';
+import { Textarea } from '@/components/ui/field';
+import { minorToRupeesInput } from '@/lib/admin/invoices';
+import { rupeesToMinor } from '@/lib/admin/invoices';
 import { formatLkr } from '@/lib/money';
 
 const methods = [
@@ -52,6 +57,7 @@ export function PaymentDialog({
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (pending || message) return;
     const amountMinor = rupeesToMinor(amount);
     if (amountMinor === null || amountMinor <= 0) {
       setError('Enter a payment amount in rupees.');
@@ -85,25 +91,8 @@ export function PaymentDialog({
   return (
     <>
       <Button size="sm" onClick={show} disabled={balanceMinor <= 0}>Record payment</Button>
-      {open ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/45 p-4">
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="payment-dialog-title"
-            className={
-              'max-h-[90vh] w-full max-w-md overflow-y-auto rounded-[var(--radius-card)] '
-              + 'border border-line bg-paper p-5 shadow-xl'
-            }
-            onKeyDown={(event) => {
-              if (event.key === 'Escape') hide();
-            }}
-          >
-            <div className="flex items-start justify-between gap-4">
-              <h2 id="payment-dialog-title" className="font-display text-2xl">Record a payment</h2>
-              <Button variant="ghost" size="sm" onClick={hide} disabled={pending}>Close</Button>
-            </div>
-            <p className="mt-1 text-sm text-mute">
+      <Modal open={open} onClose={hide} title="Record a payment">
+            <p className="mt-1 text-base sm:text-sm text-mute">
               Balance before this payment: {formatLkr(balanceMinor, { decimals: true })}.
             </p>
             <form onSubmit={submit} className="mt-4 space-y-4">
@@ -152,13 +141,19 @@ export function PaymentDialog({
                   onChange={(event) => setNote(event.target.value)}
                 />
               </Field>
-              {error ? <p role="alert" className="text-sm text-bad">{error}</p> : null}
-              {message ? <p role="status" className="text-sm text-good">{message}</p> : null}
-              <Button type="submit" disabled={pending}>{pending ? 'Recording…' : 'Record payment'}</Button>
+              {error ? <p role="status" aria-live="polite" className="text-base sm:text-sm text-bad">{error}</p> : null}
+              {message ? <p role="status" className="text-base sm:text-sm text-good">{message}</p> : null}
+              <div data-sticky-bar className={
+                'sticky bottom-0 z-20 flex flex-wrap gap-3 border-t border-line bg-paper p-3 '
+                + 'pb-[max(0.75rem,env(safe-area-inset-bottom))]'
+              }>
+                <Button type="submit" disabled={pending || Boolean(message)}>
+                  {pending ? 'Recording…' : 'Record payment'}
+                </Button>
+                <Button variant="ghost" onClick={hide} disabled={pending}>Close</Button>
+              </div>
             </form>
-          </div>
-        </div>
-      ) : null}
+      </Modal>
     </>
   );
 }

@@ -1,10 +1,16 @@
 'use client';
 
-import { useId, useState, useTransition } from 'react';
+import { useId } from 'react';
+import { useState } from 'react';
+import { useTransition } from 'react';
 import { generateReviewLinkAction } from '@/app/admin/(panel)/seo/actions';
-import { Button, buttonStyles } from '@/components/ui/button';
-import { Field, Input, Select } from '@/components/ui/field';
-import type { PreparedReviewLink, ReviewLinkBooking } from '@/lib/admin/reviews';
+import { Button } from '@/components/ui/button';
+import { buttonStyles } from '@/components/ui/button';
+import { Field } from '@/components/ui/field';
+import { Input } from '@/components/ui/field';
+import { Select } from '@/components/ui/field';
+import type { PreparedReviewLink } from '@/lib/admin/reviews';
+import type { ReviewLinkBooking } from '@/lib/admin/reviews';
 
 const visitFormat = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
 const visitLabel = (date: string): string => visitFormat.format(new Date(`${date}T00:00:00Z`));
@@ -29,10 +35,14 @@ export function ReviewLinkForm({ bookings }: { bookings: ReviewLinkBooking[] }) 
 
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!bookingId || !productId) return;
+    if (!bookingId || !productId || pending) return;
     setCopied('idle');
     startTransition(async () => {
-      setResult(await generateReviewLinkAction(Number(productId), Number(bookingId)));
+      try {
+        setResult(await generateReviewLinkAction(Number(productId), Number(bookingId)));
+      } catch {
+        setResult({ ok: false, error: 'The review link could not be created. Please try again.' });
+      }
     });
   }
 
@@ -47,7 +57,7 @@ export function ReviewLinkForm({ bookings }: { bookings: ReviewLinkBooking[] }) 
 
   if (bookings.length === 0) {
     return (
-      <p className="text-sm text-mute">
+      <p className="text-base sm:text-sm text-mute">
         Review links are made for bookings marked as visited or purchased, and there are none yet.
       </p>
     );
@@ -95,10 +105,10 @@ export function ReviewLinkForm({ bookings }: { bookings: ReviewLinkBooking[] }) 
         </Button>
       </form>
       <div aria-live="polite">
-        {result && !result.ok ? <p className="text-sm text-bad">{result.error}</p> : null}
+        {result && !result.ok ? <p className="text-base sm:text-sm text-bad">{result.error}</p> : null}
         {result?.ok ? (
           <div className="space-y-3 rounded-xl bg-bone-2 p-4">
-            <p className="text-sm text-ink-2">
+            <p className="text-base sm:text-sm text-ink-2">
               Link for <strong className="font-semibold text-ink">{result.productName}</strong>. It works for 60 days
               and takes one review.
             </p>
@@ -117,11 +127,14 @@ export function ReviewLinkForm({ bookings }: { bookings: ReviewLinkBooking[] }) 
                   Send on WhatsApp
                 </a>
               ) : (
-                <span className="text-sm text-mute">No mobile number on file, so copy the link instead.</span>
+                <span
+                  className="text-base sm:text-sm text-mute">
+                  No mobile number on file, so copy the link instead.
+                </span>
               )}
-              {copied === 'done' ? <span className="text-sm text-good">Copied.</span> : null}
+              {copied === 'done' ? <span className="text-base sm:text-sm text-good">Copied.</span> : null}
               {copied === 'failed' ? (
-                <span className="text-sm text-bad">Could not copy; select the link instead.</span>
+                <span className="text-base sm:text-sm text-bad">Could not copy; select the link instead.</span>
               ) : null}
             </div>
           </div>
