@@ -82,7 +82,12 @@ describe('invoices', () => {
       const token = new URL(link, 'https://example.test').searchParams.get('t')!;
       await expect(verifyShareToken(invoiceId, token)).resolves.toBe(true);
       await expect(verifyShareToken(invoiceId + 1, token)).resolves.toBe(false);
-      await expect(verifyShareToken(invoiceId, `${token.slice(0, -1)}x`)).resolves.toBe(false);
+      // The last base64url character of a 32-byte signature carries only 4 bits, so swapping it can decode to
+      // the same bytes (1 run in 16). The first signature character carries 6, so changing it always breaks it.
+      const start = token.lastIndexOf('.') + 1;
+      const changed = token[start] === 'A' ? 'B' : 'A';
+      await expect(verifyShareToken(invoiceId, `${token.slice(0, start)}${changed}${token.slice(start + 1)}`))
+        .resolves.toBe(false);
     } finally {
       if (previous === undefined) delete process.env.AUTH_SECRET; else process.env.AUTH_SECRET = previous;
     }
