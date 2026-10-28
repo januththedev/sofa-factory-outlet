@@ -7,9 +7,16 @@ import { Hero } from '@/components/landing/hero';
 import { Marquee } from '@/components/landing/marquee';
 import { Proof } from '@/components/landing/proof';
 import { Visit } from '@/components/landing/visit';
-import { getApprovedReviews, getCollectionTiles, getColourSwatches, getFeaturedCards } from '@/lib/catalogue/cached';
-import { siteImage, siteImageUrl } from '@/lib/images/site';
-import { getSettings, mapsDirectionsUrl, mapsEmbedUrl, whatsappLink } from '@/lib/settings/get';
+import { getApprovedReviews } from '@/lib/catalogue/cached';
+import { getCollectionTiles } from '@/lib/catalogue/cached';
+import { getColourSwatches } from '@/lib/catalogue/cached';
+import { getFeaturedCards } from '@/lib/catalogue/cached';
+import { siteImage } from '@/lib/images/site';
+import { siteImageUrl } from '@/lib/images/site';
+import { getSettings } from '@/lib/settings/get';
+import { mapsDirectionsUrl } from '@/lib/settings/get';
+import { mapsEmbedUrl } from '@/lib/settings/get';
+import { whatsappLink } from '@/lib/settings/get';
 import { formatHours } from '@/lib/settings/hours';
 
 export const metadata: Metadata = {
@@ -25,20 +32,20 @@ export default async function HomePage() {
     getApprovedReviews(),
   ]);
   const { business, hours, proof } = settings;
-
-  const hero = siteImage('hero', 'A bright living room with a cream L-shaped sofa, an armchair and a round wooden coffee table');
+  const hero = siteImage('hero',
+    'A bright living room with a cream L-shaped sofa, an armchair and a round wooden coffee table');
   const heroTexture = siteImageUrl('hero', 1920);
   const showroom = siteImage('showroom');
 
   return (
     <>
       {hero && heroTexture ? <Hero picture={hero} textureUrl={heroTexture} /> : null}
-      <Marquee />
-      <FactoryStory />
+      <Featured products={featured} />
       <Collections tiles={tiles} />
       <ColourExplorer swatches={swatches} />
-      <Featured products={featured} />
       <Proof proof={proof} reviews={reviews} />
+      <Marquee />
+      <FactoryStory />
       <Visit
         picture={showroom}
         address={business.address}

@@ -1,12 +1,14 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
+import { useRef } from 'react';
 import { gsap } from '@/lib/motion/gsap';
 import { usePrefersReducedMotion } from '@/lib/motion/hooks';
+import { formatCounterText } from './counter-text';
 
 type CountUpProps = {
   value: number;
-  /** Counts again each time this flips from false to true (pinned story steps). Omit to count once on first view. */
+  /** Desktop pinned steps replay on activation; native rails count once on entering view. */
   active?: boolean;
   prefix?: string;
   suffix?: string;
@@ -14,66 +16,70 @@ type CountUpProps = {
   duration?: number;
 };
 
-const format = (n: number) => Math.round(n).toLocaleString('en-US');
-
-/** A number that counts up from zero. Reduced motion just shows the final value. */
+/** The server and every interrupted animation show the final, factual value. */
 export function CountUp({ value, active, prefix = '', suffix = '', className, duration = 1.6 }: CountUpProps) {
   const el = useRef<HTMLSpanElement>(null);
   const reduced = usePrefersReducedMotion();
   const played = useRef(false);
+  const finalText = formatCounterText(value, prefix, suffix);
 
   useEffect(() => {
     const node = el.current;
     if (!node) return;
-    if (reduced) {
-      node.textContent = `${prefix}${format(value)}${suffix}`;
+    node.textContent = finalText;
+    let tween: ReturnType<typeof gsap.to> | undefined;
+    const finish = () => {
+      tween?.kill();
+      node.textContent = finalText;
+    };
+    // Read the query as well so hydration cannot briefly animate reduced-motion visitors.
+    if (reduced || window.matchMedia('(prefers-reduced-motion: reduce)').matches || active === false) {
+      finish();
       return;
     }
+    if (!('IntersectionObserver' in window)) return;
 
-    const run = () => {
-      const counter = { n: 0 };
-      return gsap.to(counter, {
-        n: value,
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.4);
+      if (!visible || document.hidden) {
+        finish();
+        return;
+      }
+      if (played.current && active === undefined) return;
+      played.current = true;
+      const counter = { value: 0 };
+      tween = gsap.to(counter, {
+        value,
         duration,
         ease: 'power2.out',
         onUpdate: () => {
-          node.textContent = `${prefix}${format(counter.n)}${suffix}`;
+          node.textContent = formatCounterText(counter.value, prefix, suffix);
+        },
+        onComplete: () => {
+          node.textContent = finalText;
+        },
+        onInterrupt: () => {
+          node.textContent = finalText;
         },
       });
+    }, { threshold: 0.4 });
+    const onVisibilityChange = () => {
+      if (document.hidden) finish();
     };
-
-    if (active !== undefined) {
-      if (!active) {
-        node.textContent = `${prefix}0${suffix}`;
-        return;
-      }
-      const tween = run();
-      return () => {
-        tween.kill();
-      };
-    }
-
-    // No `active` prop: count once, when scrolled into view.
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting) && !played.current) {
-          played.current = true;
-          run();
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.4 },
-    );
-    node.textContent = `${prefix}0${suffix}`;
     observer.observe(node);
-    return () => observer.disconnect();
-  }, [active, value, prefix, suffix, duration, reduced]);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      finish();
+    };
+  }, [active, value, prefix, suffix, duration, reduced, finalText]);
 
   return (
-    <span ref={el} className={className} aria-label={`${prefix}${format(value)}${suffix}`}>
-      {prefix}
-      {format(value)}
-      {suffix}
+    <span className={`inline-grid tabular-nums ${className ?? ''}`}>
+      <span className="sr-only">{finalText}</span>
+      <span aria-hidden className="invisible col-start-1 row-start-1">{finalText}</span>
+      <span ref={el} aria-hidden className="col-start-1 row-start-1">{finalText}</span>
     </span>
   );
 }
