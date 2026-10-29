@@ -16,7 +16,7 @@ test('moving between pages never covers the screen with an overlay', async ({ pa
 });
 
 test('an unknown address gets the site 404 page and a real 404 status', async ({ request, page }) => {
-  for (const path of ['/this-page-does-not-exist/', '/product/no-such-sofa/', '/a/b/c/']) {
+  for (const path of ['/this-page-does-not-exist/', '/sofas/not-a-hub/', '/product/no-such-sofa/', '/a/b/c/']) {
     const response = await request.get(path);
     expect(response.status(), path).toBe(404);
   }
@@ -42,25 +42,31 @@ test('a super admin adds an admin, who can sign in, change their password and ca
   const tempPassword = (await temp.textContent())?.trim() ?? '';
   expect(tempPassword.length).toBeGreaterThanOrEqual(10);
 
-  // The new admin signs in on their own browser, is kept out of Admins and Settings, and sets a real password.
+  // The new admin signs in on their own browser: a temporary password must be replaced before anything else.
   const context = await browser.newContext();
   const other = await context.newPage();
   await other.goto('/admin/login/');
   await other.getByLabel('Email').fill(email);
   await other.getByLabel('Password').fill(tempPassword);
   await other.getByRole('button', { name: 'Sign in' }).click();
-  await expect(other).toHaveURL(/\/admin\/$/);
-  await expect(other.getByRole('link', { name: 'Admins' })).toHaveCount(0);
-  await other.goto('/admin/admins/');
-  await expect(other).toHaveURL(/\/admin\/\?notice=owner-only/);
-  await expect(other.getByText('only open to super admins')).toBeVisible();
+  await expect(other).toHaveURL(/\/admin\/account\/$/);
+  await expect(other.getByText('You signed in with a temporary password.')).toBeVisible();
+  await other.goto('/admin/bookings/');
+  await expect(other).toHaveURL(/\/admin\/account\//);
 
-  await other.goto('/admin/account/');
   await other.getByLabel('Current password').fill(tempPassword);
   await other.getByLabel('New password', { exact: true }).fill('my-new-password-77');
   await other.getByLabel('New password again').fill('my-new-password-77');
   await other.getByRole('button', { name: 'Change password' }).click();
   await expect(other.getByText('Password changed.')).toBeVisible();
+
+  // Now the rest of the admin opens, but not the super-admin pages.
+  await other.goto('/admin/');
+  await expect(other).toHaveURL(/\/admin\/$/);
+  await expect(other.getByRole('link', { name: 'Admins' })).toHaveCount(0);
+  await other.goto('/admin/admins/');
+  await expect(other).toHaveURL(/\/admin\/\?notice=owner-only/);
+  await expect(other.getByText('only open to super admins')).toBeVisible();
   await context.close();
 
   // The old temporary password no longer works; the new one does.

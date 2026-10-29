@@ -24,6 +24,8 @@ const env = {
 
 fs.rmSync(dataDir, { recursive: true, force: true });
 fs.rmSync(`${dataDir}.lock`, { force: true });
+// The data cache (unstable_cache) outlives the database. Clear it too, or pages serve rows from the last run.
+fs.rmSync(path.join('.next-e2e', 'cache', 'fetch-cache'), { recursive: true, force: true });
 
 // Run Next's CLI with node directly (no npx/cmd shell) so the process can be
 // stopped cleanly by Playwright on every platform.

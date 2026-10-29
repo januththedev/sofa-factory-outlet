@@ -4,6 +4,13 @@
 
 export const ADMIN_HOME = '/admin/';
 export const LOGIN_PATH = '/admin/login/';
+/** Where an admin with a temporary password is kept until they choose their own. */
+export const ACCOUNT_PATH = '/admin/account/';
+
+/** True for the account page, with or without its trailing slash or a query (the proxy forwards "/admin/account"). */
+export function isAccountPath(path: string): boolean {
+  return /^\/admin\/account(\/|\?|$)/.test(normalisePath(path));
+}
 
 /** Where a staff account is sent when it opens an owner-only page; the shell shows the notice. */
 export const NOTICE_PARAM = 'notice';

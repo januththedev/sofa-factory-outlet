@@ -1,5 +1,6 @@
 'use server';
 
+import { refresh } from 'next/cache';
 import { changeOwnPassword, passwordProblem } from '@/lib/auth/change-password';
 import { createFailureLimiter, FAILURE_WINDOW_MS } from '@/lib/auth/rate-limit';
 import { requireRole } from '@/lib/auth/session';
@@ -34,5 +35,6 @@ export async function changePasswordAction(
     return fail(result.error);
   }
   limiter.reset(key);
+  refresh();
   return { ok: true, message: 'Password changed. Use the new one next time you sign in.', at: Date.now() };
 }

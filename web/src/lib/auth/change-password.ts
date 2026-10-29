@@ -19,6 +19,16 @@ export function passwordProblem(next: string, current: string): string | null {
   return null;
 }
 
+/** True while the account still has a password someone else chose (a new account or a reset). */
+export async function needsPasswordChange(db: Db, userId: number): Promise<boolean> {
+  const [user] = await db
+    .select({ must: s.adminUsers.mustChangePassword })
+    .from(s.adminUsers)
+    .where(eq(s.adminUsers.id, userId))
+    .limit(1);
+  return Boolean(user?.must);
+}
+
 /** An admin changing their own password: the current one must be right. */
 export async function changeOwnPassword(
   db: Db,
@@ -35,6 +45,9 @@ export async function changeOwnPassword(
   if (!(await verifyPassword(current, user.hash))) return { ok: false, error: 'The current password is not right.' };
   const problem = passwordProblem(next, current);
   if (problem) return { ok: false, error: problem };
-  await db.update(s.adminUsers).set({ passwordHash: await hashPassword(next) }).where(eq(s.adminUsers.id, userId));
+  await db
+    .update(s.adminUsers)
+    .set({ passwordHash: await hashPassword(next), mustChangePassword: false })
+    .where(eq(s.adminUsers.id, userId));
   return { ok: true };
 }

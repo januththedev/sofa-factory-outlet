@@ -7,17 +7,18 @@ import { getDb } from '@/lib/db';
 import * as s from '@/lib/db/schema';
 import type { AdminRole } from '@/lib/db/schema/types';
 import { auth } from './auth';
-import { loginUrl, OWNER_ONLY_PATH, PATH_HEADER } from './paths';
+import { ACCOUNT_PATH, isAccountPath, loginUrl, OWNER_ONLY_PATH, PATH_HEADER } from './paths';
 
 // Admin pages, server actions and route handlers call requireRole() themselves:
 // the proxy (gate.ts) can only check that a session cookie exists, never that it
 // is valid, and a layout's redirect does not stop its page from running.
 
 export type AdminSession = { userId: number; email: string; name: string; role: AdminRole };
+type LoadedSession = AdminSession & { mustChangePassword: boolean };
 
 // Memoised for the length of one render, so a layout, a page and the bell route
 // asking in the same request cost a single database read.
-const loadSession = cache(async (): Promise<AdminSession | null> => {
+const loadSession = cache(async (): Promise<LoadedSession | null> => {
   const current = await auth();
   const userId = Number(current?.user?.id);
   if (!Number.isSafeInteger(userId) || userId <= 0) return null;
@@ -26,15 +27,45 @@ const loadSession = cache(async (): Promise<AdminSession | null> => {
   // database every time, so deactivating or demoting someone takes effect at once.
   const db = await getDb();
   const [user] = await db
-    .select({ id: s.adminUsers.id, email: s.adminUsers.email, name: s.adminUsers.name, role: s.adminUsers.role })
+    .select({
+      id: s.adminUsers.id,
+      email: s.adminUsers.email,
+      name: s.adminUsers.name,
+      role: s.adminUsers.role,
+      mustChangePassword: s.adminUsers.mustChangePassword,
+    })
     .from(s.adminUsers)
     .where(and(eq(s.adminUsers.id, userId), eq(s.adminUsers.active, true)))
     .limit(1);
-  return user ? { userId: user.id, email: user.email, name: user.name, role: user.role } : null;
+  return user
+    ? { userId: user.id, email: user.email, name: user.name, role: user.role, mustChangePassword: user.mustChangePassword }
+    : null;
 });
 
+const publicSession = ({ userId, email, name, role }: LoadedSession): AdminSession => ({ userId, email, name, role });
+
 /** The signed-in admin, or null. */
-export const getSession: () => Promise<AdminSession | null> = () => loadSession();
+export const getSession: () => Promise<AdminSession | null> = async () => {
+  const session = await loadSession();
+  return session ? publicSession(session) : null;
+};
+
+/** True while the signed-in admin still has a password someone else chose (a new account or a reset). */
+export const mustChangePassword: () => Promise<boolean> = async () => Boolean((await loadSession())?.mustChangePassword);
+
+async function signedIn(): Promise<LoadedSession> {
+  const session = await loadSession();
+  if (!session) redirect(loginUrl((await headers()).get(PATH_HEADER)));
+  return session;
+}
+
+/**
+ * For the admin shell's layout only: the session, or the login page. It skips the
+ * temporary-password check on purpose. A layout is not fetched again on in-app
+ * navigation, so a redirect thrown there stays in the browser's router cache and
+ * replays on every click (an endless request loop). Pages run on every navigation.
+ */
+export const requireSignedIn: () => Promise<AdminSession> = async () => publicSession(await signedIn());
 
 /**
  * Returns the session or redirects to /admin/login/ (remembering the page asked
@@ -44,8 +75,11 @@ export const getSession: () => Promise<AdminSession | null> = () => loadSession(
  * admin page, action and route handler.
  */
 export const requireRole: (minimum?: AdminRole | 'any') => Promise<AdminSession> = async (minimum = 'any') => {
-  const session = await getSession();
-  if (!session) redirect(loginUrl((await headers()).get(PATH_HEADER)));
+  const session = await signedIn();
+  // A temporary password is replaced before anything else. Only admin pages and their
+  // actions carry the path header; API routes (no header) answer as usual.
+  const path = (await headers()).get(PATH_HEADER);
+  if (session.mustChangePassword && path && !isAccountPath(path)) redirect(ACCOUNT_PATH);
   if (minimum === 'owner' && session.role !== 'owner') redirect(OWNER_ONLY_PATH);
-  return session;
+  return publicSession(session);
 };
