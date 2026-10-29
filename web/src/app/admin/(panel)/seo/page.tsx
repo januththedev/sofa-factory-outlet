@@ -4,7 +4,6 @@ import { PageHeader } from '@/components/admin/page-header';
 import { OverviewTab } from '@/components/admin/seo/overview-tab';
 import { ProductsTab } from '@/components/admin/seo/products-tab';
 import { RedirectsTab } from '@/components/admin/seo/redirects-tab';
-import { ReportTab } from '@/components/admin/seo/report-tab';
 import { RequestsTab } from '@/components/admin/seo/requests-tab';
 import { parseReviewStatus } from '@/components/admin/seo/reviews-tab';
 import { ReviewsTab } from '@/components/admin/seo/reviews-tab';
@@ -30,7 +29,7 @@ export default async function SeoPage({ searchParams }: { searchParams: Promise<
     <OpsFrame>
       <PageHeader
         title="SEO"
-        description="How the site is doing in Google, which products need work, redirects and customer reviews."
+        description="Which pages and products need work, redirects and customer reviews."
       />
       <SeoTabs active={tab} />
       <div className="mt-6">
@@ -43,7 +42,6 @@ export default async function SeoPage({ searchParams }: { searchParams: Promise<
           />
         ) : null}
         {tab === 'requests' ? <RequestsTab /> : null}
-        {tab === 'report' ? <ReportTab month={first(params.month) ?? ''} /> : null}
       </div>
     </OpsFrame>
   );

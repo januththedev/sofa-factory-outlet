@@ -1,157 +1,19 @@
 import Link from 'next/link';
-import { ConnectCard } from '@/components/admin/seo/connect-card';
-import { TrendChart } from '@/components/admin/seo/trend-chart';
-import { EmptyNote } from '@/components/admin/seo/ui';
-import { StatGrid } from '@/components/admin/seo/ui';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { CardBody } from '@/components/ui/card';
 import { CardHeader } from '@/components/ui/card';
 import { CardTitle } from '@/components/ui/card';
-import { Table } from '@/components/ui/table';
-import { TBody } from '@/components/ui/table';
-import { TD } from '@/components/ui/table';
-import { TH } from '@/components/ui/table';
-import { THead } from '@/components/ui/table';
-import { TR } from '@/components/ui/table';
-import { getSearchOverview } from '@/lib/admin/seo';
 import { getSeoProblems } from '@/lib/admin/seo';
-import type { SearchOverview } from '@/lib/admin/seo';
 import type { SeoProblems } from '@/lib/admin/seo';
-import { getGscStatus } from '@/lib/seo/gsc';
-import { formatCount } from '@/lib/seo/report';
-import { formatPosition } from '@/lib/seo/report';
 
-const dayFormat = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
-const dayLabel = (date: string): string => dayFormat.format(new Date(`${date}T00:00:00Z`));
-
-/** The site's own address for a page Google reported, so staff can click through. */
-function pagePath(page: string): string {
-  try {
-    const url = new URL(page);
-    return `${url.pathname}${url.search}`;
-  } catch {
-    return page;
-  }
-}
-
+/** What needs fixing on the site itself. (Google ranking numbers are not connected.) */
 export async function OverviewTab() {
-  const [overview, problems] = await Promise.all([getSearchOverview(), getSeoProblems()]);
-  const status = getGscStatus();
-
+  const problems = await getSeoProblems();
   return (
     <div className="space-y-6">
-      {overview.hasData ? <Rankings overview={overview} /> : <ConnectCard status={status} />}
       <Problems problems={problems} />
     </div>
-  );
-}
-
-function Rankings({ overview }: { overview: SearchOverview }) {
-  const { totals, priority, trend, topPages } = overview;
-  const trendView = trend.map((point) => ({ ...point, label: dayLabel(point.date) }));
-  return (
-    <>
-      <p className="text-base sm:text-sm text-mute">
-        The 20 priority searches, {dayLabel(overview.from)} to {dayLabel(overview.to)} (Asia/Colombo days).
-      </p>
-      <StatGrid
-        stats={[
-          { label: 'Clicks', value: formatCount(totals.clicks), hint: 'From the 20 priority searches' },
-          { label: 'Impressions', value: formatCount(totals.impressions), hint: 'Times they showed in results' },
-          {
-            label: 'Average position',
-            value: formatPosition(totals.position),
-            hint: 'Weighted by impressions; 1 is the top',
-          },
-        ]}
-      />
-      <Card>
-        <CardHeader>
-          <CardTitle>Trend</CardTitle>
-        </CardHeader>
-        <CardBody>
-          {trendView.length > 0 ? (
-            <TrendChart data={trendView} />
-          ) : (
-            <p
-              className="py-6 text-center text-base sm:text-sm text-mute">
-              None of the priority searches has appeared yet.
-            </p>
-          )}
-        </CardBody>
-      </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>Priority searches</CardTitle>
-        </CardHeader>
-        <Table>
-          <caption className="sr-only">Clicks, impressions and position for each priority search</caption>
-          <THead>
-            <TR>
-              <TH scope="col">Search</TH>
-              <TH scope="col">Target page</TH>
-              <TH scope="col" className="text-right">
-                Clicks
-              </TH>
-              <TH scope="col" className="text-right">
-                Impressions
-              </TH>
-              <TH scope="col" className="text-right">
-                Position
-              </TH>
-            </TR>
-          </THead>
-          <TBody>
-            {priority.map((row) => (
-              <TR key={row.query}>
-                <TD className="font-medium">{row.query}</TD>
-                <TD className="text-mute">{row.page}</TD>
-                <TD className="text-right tabular-nums">{formatCount(row.clicks)}</TD>
-                <TD className="text-right tabular-nums">{formatCount(row.impressions)}</TD>
-                <TD className="text-right tabular-nums">{formatPosition(row.position)}</TD>
-              </TR>
-            ))}
-          </TBody>
-        </Table>
-      </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>Top pages</CardTitle>
-        </CardHeader>
-        {topPages.length === 0 ? (
-          <EmptyNote>No pages have earned clicks yet.</EmptyNote>
-        ) : (
-          <Table>
-            <caption className="sr-only">Pages that earned the most clicks from Google</caption>
-            <THead>
-              <TR>
-                <TH scope="col">Page</TH>
-                <TH scope="col" className="text-right">
-                  Clicks
-                </TH>
-                <TH scope="col" className="text-right">
-                  Impressions
-                </TH>
-                <TH scope="col" className="text-right">
-                  Position
-                </TH>
-              </TR>
-            </THead>
-            <TBody>
-              {topPages.map((row) => (
-                <TR key={row.page}>
-                  <TD className="max-w-[28rem] break-all">{pagePath(row.page)}</TD>
-                  <TD className="text-right tabular-nums">{formatCount(row.clicks)}</TD>
-                  <TD className="text-right tabular-nums">{formatCount(row.impressions)}</TD>
-                  <TD className="text-right tabular-nums">{formatPosition(row.position)}</TD>
-                </TR>
-              ))}
-            </TBody>
-          </Table>
-        )}
-      </Card>
-    </>
   );
 }
 
