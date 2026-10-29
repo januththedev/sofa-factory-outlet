@@ -1,10 +1,17 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
+import { Component, type ReactNode, useState } from 'react';
 import { useFinePointer, useIdleAfterLoad, useInViewport, useMediaQuery, usePageVisible, usePrefersReducedMotion, useWebGL } from '@/lib/motion/hooks';
 
 const ImageScene = dynamic(() => import('@/components/webgl/image-scene'), { ssr: false });
+
+/** A failed decorative texture/GPU must never replace the storefront with an error page. */
+class RippleFallback extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() { return { failed: true }; }
+  render() { return this.state.failed ? null : this.props.children; }
+}
 
 /**
  * Cursor-following ripple over the hero photo. Mounts only on wide, fine-pointer
@@ -25,7 +32,7 @@ export function HeroRipple({ src }: { src: string }) {
   if (!(idle && fine && wide && webgl && !reduced)) return null;
   return (
     <div ref={stage} aria-hidden data-hero-canvas className={`pointer-events-none absolute inset-0 transition-opacity duration-1000 ${ready ? 'opacity-100' : 'opacity-0'}`}>
-      <ImageScene src={src} paused={!visible || !onScreen} onReady={() => setReady(true)} />
+      <RippleFallback key={src}><ImageScene src={src} paused={!visible || !onScreen} onReady={() => setReady(true)} /></RippleFallback>
     </div>
   );
 }
