@@ -1,7 +1,13 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { useEffect, useId, useRef, useState, useSyncExternalStore } from 'react';
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import { getLenis } from '@/components/site/smooth-scroll';
 import { TLink } from '@/components/site/transition';
 import { buttonStyles } from '@/components/ui/button';
@@ -42,7 +48,11 @@ function lockScroll(): () => void {
 
 /** Bottom sheet on phones, side drawer on larger screens; both use the same modal focus trap. */
 export function CartDrawer() {
-  const isClient = useSyncExternalStore(noSubscription, isClientSnapshot, isServerSnapshot);
+  const isClient = useSyncExternalStore(
+    noSubscription,
+    isClientSnapshot,
+    isServerSnapshot,
+  );
   const pathname = usePathname();
   const titleId = useId();
   const lines = useCart((state) => state.lines);
@@ -56,9 +66,13 @@ export function CartDrawer() {
   const count = cartCount(lines);
   const { suggestions, pending } = useCartSuggestions(open);
 
-  useEffect(() => useCart.subscribe((state) => {
-    if (state.drawerOpen) setPrimed(true);
-  }), []);
+  useEffect(
+    () =>
+      useCart.subscribe((state) => {
+        if (state.drawerOpen) setPrimed(true);
+      }),
+    [],
+  );
 
   useEffect(() => {
     if (lastPath.current === pathname) return;
@@ -68,7 +82,10 @@ export function CartDrawer() {
 
   useEffect(() => {
     if (!open) return;
-    const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previous =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
     const unlock = lockScroll();
     panel.current?.focus({ preventScroll: true });
     const onKeyDown = (event: KeyboardEvent) => {
@@ -80,8 +97,9 @@ export function CartDrawer() {
         return;
       }
       if (event.key !== 'Tab') return;
-      const items = [...dialog.querySelectorAll<HTMLElement>(FOCUSABLE)]
-        .filter((item) => item.getClientRects().length > 0);
+      const items = [...dialog.querySelectorAll<HTMLElement>(FOCUSABLE)].filter(
+        (item) => item.getClientRects().length > 0,
+      );
       const first = items[0];
       const last = items[items.length - 1];
       if (!first || !last) {
@@ -91,7 +109,10 @@ export function CartDrawer() {
       }
       const active = document.activeElement;
       const inside = dialog.contains(active);
-      if (event.shiftKey && (!inside || active === first || active === dialog)) {
+      if (
+        event.shiftKey &&
+        (!inside || active === first || active === dialog)
+      ) {
         event.preventDefault();
         last.focus();
       } else if (!event.shiftKey && (!inside || active === last)) {
@@ -138,17 +159,26 @@ export function CartDrawer() {
           'absolute inset-x-0 bottom-0 flex max-h-[92dvh] w-full flex-col rounded-t-3xl border border-line',
           'bg-bone shadow-xl outline-none sm:inset-x-auto sm:right-0 sm:top-0 sm:h-dvh sm:max-h-dvh',
           'sm:max-w-[28.75rem] sm:rounded-none transition-transform duration-200 motion-reduce:transition-none',
-          open ? 'translate-y-0 sm:translate-x-0' : 'translate-y-full sm:translate-y-0 sm:translate-x-full',
+          open
+            ? 'translate-y-0 sm:translate-x-0'
+            : 'translate-y-full sm:translate-y-0 sm:translate-x-full',
         )}
       >
-        <div aria-hidden className="flex h-6 shrink-0 items-center justify-center sm:hidden">
+        <div
+          aria-hidden
+          className="flex h-6 shrink-0 items-center justify-center sm:hidden"
+        >
           <span className="h-1 w-12 rounded-full bg-ink/20" />
         </div>
         <div className="flex shrink-0 items-start justify-between gap-4 border-b border-line px-4 py-3 sm:px-6">
           <div>
-            <h2 id={titleId} className="font-display text-2xl">Your cart</h2>
+            <h2 id={titleId} className="font-display text-2xl">
+              Your cart
+            </h2>
             <p role="status" className="text-base text-mute">
-              {count === 0 ? 'Nothing in your cart yet' : `${count} ${count === 1 ? 'item' : 'items'}`}
+              {count === 0
+                ? 'Nothing in your cart yet'
+                : `${count} ${count === 1 ? 'item' : 'items'}`}
             </p>
           </div>
           <button
@@ -160,7 +190,10 @@ export function CartDrawer() {
             <CloseIcon />
           </button>
         </div>
-        <div data-lenis-prevent className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 sm:px-6">
+        <div
+          data-lenis-prevent
+          className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 sm:px-6"
+        >
           <CartUndoNotice removed={removed} undo={undo} />
           {showContent ? (
             lines.length ? (
@@ -185,7 +218,9 @@ export function CartDrawer() {
                   />
                 </div>
               </>
-            ) : <CartEmpty onNavigate={closeDrawer} />
+            ) : (
+              <CartEmpty onNavigate={closeDrawer} />
+            )
           ) : null}
         </div>
         {showContent ? (
@@ -198,9 +233,22 @@ export function CartDrawer() {
           >
             <CartTotals lines={lines} />
             <TLink
+              href="/request-quote/"
+              onClick={closeDrawer}
+              className={cn(
+                buttonStyles({ variant: 'ghost', size: 'lg' }),
+                'w-full',
+              )}
+            >
+              Request a quote
+            </TLink>
+            <TLink
               href="/book-visit/"
               onClick={closeDrawer}
-              className={cn(buttonStyles({ variant: 'primary', size: 'lg' }), 'w-full')}
+              className={cn(
+                buttonStyles({ variant: 'primary', size: 'lg' }),
+                'w-full',
+              )}
             >
               Book a visit
             </TLink>
@@ -208,7 +256,10 @@ export function CartDrawer() {
               <TLink
                 href="/cart/"
                 onClick={closeDrawer}
-                className={cn(buttonStyles({ variant: 'ghost', size: 'md' }), 'w-full')}
+                className={cn(
+                  buttonStyles({ variant: 'ghost', size: 'md' }),
+                  'w-full',
+                )}
               >
                 View cart
               </TLink>

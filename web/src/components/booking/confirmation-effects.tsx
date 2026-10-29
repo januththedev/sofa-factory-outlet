@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { clearSubmissionToken } from '@/lib/security/submission-token';
 import { trackEvent } from '@/lib/analytics/client';
 import { useCart } from '@/lib/cart/store';
 import { clearBookingDraft } from './draft';
@@ -11,10 +12,17 @@ import { clearBookingDraft } from './draft';
  * later (reload, back button, a saved link) does neither, so it can never wipe
  * a cart the visitor has started since.
  */
-export function ConfirmationEffects({ reference, pieces }: { reference: string; pieces: number }) {
+export function ConfirmationEffects({
+  reference,
+  pieces,
+}: {
+  reference: string;
+  pieces: number;
+}) {
   const clear = useCart((state) => state.clear);
 
   useEffect(() => {
+    clearSubmissionToken('booking');
     const key = `sfo-booking-done:${reference}`;
     try {
       if (window.localStorage.getItem(key)) return;

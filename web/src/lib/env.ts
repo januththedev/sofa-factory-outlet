@@ -34,7 +34,11 @@ const schema = z.object({
   EMAIL_FROM: withDefault('Sofa Factory Outlet <bookings@sofafactoryoutlet.lk>'),
 
   CRON_SECRET: optional,
-  NEXT_PUBLIC_SITE_URL: withDefault('http://localhost:3000'),
+  NEXT_PUBLIC_SITE_URL: withDefault(
+    process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : 'http://localhost:3000',
+  ),
 
   INDEXNOW_KEY: optional,
   GSC_SERVICE_ACCOUNT_JSON: optional,

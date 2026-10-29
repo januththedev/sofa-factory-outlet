@@ -32,7 +32,14 @@ import { formatLkPhone } from '@/lib/phone';
 // ---------------------------------------------------------------------------------------------
 // Status model
 
-export const BOOKING_STATUSES = ['new', 'contacted', 'visited', 'purchased', 'lost', 'cancelled'] as const;
+export const BOOKING_STATUSES = [
+  'new',
+  'contacted',
+  'visited',
+  'purchased',
+  'lost',
+  'cancelled',
+] as const;
 
 export const STATUS_LABELS: Record<BookingStatus, string> = {
   new: 'New',
@@ -43,7 +50,13 @@ export const STATUS_LABELS: Record<BookingStatus, string> = {
   cancelled: 'Cancelled',
 };
 
-export type StatusTone = 'neutral' | 'maroon' | 'good' | 'warn' | 'bad' | 'dark';
+export type StatusTone =
+  | 'neutral'
+  | 'maroon'
+  | 'good'
+  | 'warn'
+  | 'bad'
+  | 'dark';
 
 export const STATUS_TONES: Record<BookingStatus, StatusTone> = {
   new: 'maroon',
@@ -71,12 +84,17 @@ export function canTransition(from: BookingStatus, to: BookingStatus): boolean {
   return TRANSITIONS[from].includes(to);
 }
 
-export function allowedTransitions(from: BookingStatus): readonly BookingStatus[] {
+export function allowedTransitions(
+  from: BookingStatus,
+): readonly BookingStatus[] {
   return TRANSITIONS[from];
 }
 
 export function isBookingStatus(value: unknown): value is BookingStatus {
-  return typeof value === 'string' && (BOOKING_STATUSES as readonly string[]).includes(value);
+  return (
+    typeof value === 'string' &&
+    (BOOKING_STATUSES as readonly string[]).includes(value)
+  );
 }
 
 /** Bookings that can still be moved to another date or slot. */
@@ -103,7 +121,10 @@ const MAX_ID = 2_147_483_647;
 export function isRealDate(value: string): boolean {
   if (!DATE_PATTERN.test(value)) return false;
   const parsed = new Date(`${value}T00:00:00Z`);
-  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
+  return (
+    !Number.isNaN(parsed.getTime()) &&
+    parsed.toISOString().slice(0, 10) === value
+  );
 }
 
 /** A route parameter such as the [id] of /admin/bookings/[id]/, or null when it is not a usable id. */
@@ -147,7 +168,11 @@ const longDayFormat = new Intl.DateTimeFormat('en-GB', {
   year: 'numeric',
 });
 
-const shortDayFormat = new Intl.DateTimeFormat('en-GB', { timeZone: 'UTC', day: 'numeric', month: 'short' });
+const shortDayFormat = new Intl.DateTimeFormat('en-GB', {
+  timeZone: 'UTC',
+  day: 'numeric',
+  month: 'short',
+});
 
 const colomboDateTimeFormat = new Intl.DateTimeFormat('en-GB', {
   timeZone: 'Asia/Colombo',
@@ -188,7 +213,8 @@ function colomboStamp(value: Date): string {
     minute: '2-digit',
     hour12: false,
   }).formatToParts(value);
-  const pick = (type: Intl.DateTimeFormatPartTypes) => parts.find((part) => part.type === type)?.value ?? '';
+  const pick = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)?.value ?? '';
   const hour = pick('hour') === '24' ? '00' : pick('hour');
   return `${pick('year')}-${pick('month')}-${pick('day')} ${hour}:${pick('minute')}`;
 }
@@ -206,7 +232,9 @@ export function phoneSearchPatterns(text: string): string[] {
   const compact = text.replace(/[\s\-().]/g, '');
   if (!/^\+?\d{3,}$/.test(compact)) return [];
   const local = compact.replace(/^\+/, '').replace(/^(0094|94|0)/, '');
-  return Array.from(new Set([compact, local])).filter((pattern) => pattern.length >= 3);
+  return Array.from(new Set([compact, local])).filter(
+    (pattern) => pattern.length >= 3,
+  );
 }
 
 const firstWord = (name: string) => name.trim().split(/\s+/)[0] ?? '';
@@ -221,7 +249,8 @@ export function buildReviewMessage(input: {
   const greeting = first ? `Hi ${first},` : 'Hello,';
   const thanks = `${greeting} thank you for visiting ${input.businessName}.`;
   const url = input.reviewUrl?.trim();
-  if (url) return `${thanks} If you have a minute, would you share your experience on Google? ${url}`;
+  if (url)
+    return `${thanks} If you have a minute, would you share your experience on Google? ${url}`;
   return `${thanks} If you have any questions about the pieces you saw, just reply to this message.`;
 }
 
@@ -254,7 +283,8 @@ const KNOWN_HOSTS: Array<[RegExp, string]> = [
   [/(^|\.)tiktok\.com$/, 'TikTok'],
 ];
 
-const capitalise = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
+const capitalise = (value: string) =>
+  value.charAt(0).toUpperCase() + value.slice(1);
 
 function referrerName(value: string | null | undefined): string | null {
   const text = value?.trim();
@@ -290,7 +320,8 @@ export function summariseSource(input: {
   const medium = (utm.utm_medium ?? utm.medium ?? '').trim();
   const campaign = (utm.utm_campaign ?? utm.campaign ?? '').trim();
   let origin = referrerName(input.referrer) ?? 'Direct';
-  if (source) origin = medium ? `${capitalise(source)} (${medium})` : capitalise(source);
+  if (source)
+    origin = medium ? `${capitalise(source)} (${medium})` : capitalise(source);
   const details: string[] = [];
   if (campaign) details.push(`Campaign: ${campaign}`);
   const page = pagePath(input.sourcePage);
@@ -331,13 +362,21 @@ function toItemView(row: typeof s.bookingItems.$inferSelect): ItemView {
 }
 
 /** Pieces in total, and a money total only when every item has a price. */
-export function itemsTotal(items: Array<Pick<ItemView, 'quantity' | 'priceMinor'>>): {
+export function itemsTotal(
+  items: Array<Pick<ItemView, 'quantity' | 'priceMinor'>>,
+): {
   pieces: number;
   totalMinor: number | null;
 } {
   const pieces = items.reduce((sum, item) => sum + item.quantity, 0);
-  const allPriced = items.length > 0 && items.every((item) => item.priceMinor !== null);
-  const totalMinor = allPriced ? items.reduce((sum, item) => sum + (item.priceMinor ?? 0) * item.quantity, 0) : null;
+  const allPriced =
+    items.length > 0 && items.every((item) => item.priceMinor !== null);
+  const totalMinor = allPriced
+    ? items.reduce(
+        (sum, item) => sum + (item.priceMinor ?? 0) * item.quantity,
+        0,
+      )
+    : null;
   return { pieces, totalMinor };
 }
 
@@ -443,7 +482,9 @@ function filterWhere(filter: BookingFilter): SQL | undefined {
     const matches = [
       ilike(s.customers.name, likePattern(filter.q)),
       ilike(s.bookings.reference, likePattern(filter.q)),
-      ...phoneSearchPatterns(filter.q).map((pattern) => ilike(s.customers.phone, likePattern(pattern))),
+      ...phoneSearchPatterns(filter.q).map((pattern) =>
+        ilike(s.customers.phone, likePattern(pattern)),
+      ),
     ];
     const search = or(...matches);
     if (search) conditions.push(search);
@@ -471,7 +512,11 @@ export type BookingListRow = {
   pieces: number;
 };
 
-async function selectRows(filter: BookingFilter, limit: number, offset: number): Promise<BookingListRow[]> {
+async function selectRows(
+  filter: BookingFilter,
+  limit: number,
+  offset: number,
+): Promise<BookingListRow[]> {
   const db = await getDb();
   const direction = filter.sort === 'asc' ? asc : desc;
   const records = await db
@@ -479,10 +524,16 @@ async function selectRows(filter: BookingFilter, limit: number, offset: number):
     .from(s.bookings)
     .innerJoin(s.customers, eq(s.customers.id, s.bookings.customerId))
     .where(filterWhere(filter))
-    .orderBy(direction(s.bookings.visitDate), direction(s.bookings.slotLabel), direction(s.bookings.id))
+    .orderBy(
+      direction(s.bookings.visitDate),
+      direction(s.bookings.slotLabel),
+      direction(s.bookings.id),
+    )
     .limit(limit)
     .offset(offset);
-  const items = await itemsByBooking(records.map((record) => record.booking.id));
+  const items = await itemsByBooking(
+    records.map((record) => record.booking.id),
+  );
   return records.map(({ booking, customer }) => {
     const bookingItems = items.get(booking.id) ?? [];
     return {
@@ -492,9 +543,9 @@ async function selectRows(filter: BookingFilter, limit: number, offset: number):
       visitDate: booking.visitDate,
       slotLabel: booking.slotLabel,
       customerId: customer.id,
-      customerName: customer.name,
+      customerName: booking.contactSnapshot?.name ?? customer.name,
       phone: customer.phone,
-      email: customer.email,
+      email: booking.contactSnapshot?.email ?? customer.email,
       city: booking.city ?? customer.city,
       preferredContact: booking.preferredContact,
       customerNotes: booking.customerNotes,
@@ -526,23 +577,34 @@ export type BookingPage = {
 };
 
 /** One page of bookings for the filter, newest or oldest visit date first. */
-export async function listBookings(filter: BookingFilter, pageSize: number = PAGE_SIZE): Promise<BookingPage> {
+export async function listBookings(
+  filter: BookingFilter,
+  pageSize: number = PAGE_SIZE,
+): Promise<BookingPage> {
   const total = await countRows(filter);
   const pageCount = Math.max(1, Math.ceil(total / pageSize));
   const page = Math.min(Math.max(1, filter.page), pageCount);
-  const rows = total === 0 ? [] : await selectRows(filter, pageSize, (page - 1) * pageSize);
+  const rows =
+    total === 0
+      ? []
+      : await selectRows(filter, pageSize, (page - 1) * pageSize);
   return { rows, total, page, pageCount, pageSize };
 }
 
 /** Bookings still waiting for a first contact; the "New" count at the top of the list. */
 export async function countNewBookings(): Promise<number> {
   const db = await getDb();
-  const [row] = await db.select({ value: count() }).from(s.bookings).where(eq(s.bookings.status, 'new'));
+  const [row] = await db
+    .select({ value: count() })
+    .from(s.bookings)
+    .where(eq(s.bookings.status, 'new'));
   return row.value;
 }
 
 /** Products that appear in at least one booking, for the product filter. */
-export async function listBookedProducts(): Promise<Array<{ id: number; name: string }>> {
+export async function listBookedProducts(): Promise<
+  Array<{ id: number; name: string }>
+> {
   const db = await getDb();
   return db
     .select({ id: s.products.id, name: s.products.name })
@@ -568,16 +630,22 @@ export function csvCell(value: string | number | null | undefined): string {
   let text = String(value);
   // Spreadsheets run cells that start with = + - @ as formulas. Numbers and phone numbers
   // (+94 77 123 4567) are left alone; anything else gets a leading apostrophe.
-  const formula = /^[=@\t\r]/.test(text) || (/^[+-]/.test(text) && !/^[+-]?[\d\s().-]+$/.test(text));
+  const formula =
+    /^[=@\t\r]/.test(text) ||
+    (/^[+-]/.test(text) && !/^[+-]?[\d\s().-]+$/.test(text));
   if (formula) text = `'${text}`;
   return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
 }
 
-export function csvLine(cells: Array<string | number | null | undefined>): string {
+export function csvLine(
+  cells: Array<string | number | null | undefined>,
+): string {
   return `${cells.map(csvCell).join(',')}\r\n`;
 }
 
-export function toCsv(rows: Array<Array<string | number | null | undefined>>): string {
+export function toCsv(
+  rows: Array<Array<string | number | null | undefined>>,
+): string {
   return rows.map(csvLine).join('');
 }
 
@@ -604,8 +672,12 @@ function itemSummary(item: ItemView): string {
   return `${item.name}${colour} x${item.quantity}`;
 }
 
-export function bookingCsvRow(row: BookingListRow): Array<string | number | null> {
-  const source = [row.source.origin, row.source.detail].filter(Boolean).join(' · ');
+export function bookingCsvRow(
+  row: BookingListRow,
+): Array<string | number | null> {
+  const source = [row.source.origin, row.source.detail]
+    .filter(Boolean)
+    .join(' · ');
   return [
     row.reference,
     STATUS_LABELS[row.status],
@@ -636,13 +708,17 @@ export async function* streamBookingsCsv(
   let offset = 0;
   for (;;) {
     const rows = await selectRows(filter, batchSize, offset);
-    if (rows.length > 0) yield rows.map((row) => csvLine(bookingCsvRow(row))).join('');
+    if (rows.length > 0)
+      yield rows.map((row) => csvLine(bookingCsvRow(row))).join('');
     if (rows.length < batchSize) return;
     offset += rows.length;
   }
 }
 
-export async function bookingsCsv(filter: BookingFilter, batchSize: number = EXPORT_BATCH): Promise<string> {
+export async function bookingsCsv(
+  filter: BookingFilter,
+  batchSize: number = EXPORT_BATCH,
+): Promise<string> {
   let text = '';
   for await (const chunk of streamBookingsCsv(filter, batchSize)) text += chunk;
   return text;
@@ -670,7 +746,9 @@ export const INVOICE_STATUS_LABELS: Record<InvoiceStatus, string> = {
 };
 
 /** "SFO-2026-0001", or "Draft invoice" / "Draft quotation" until a number is issued. */
-export function invoiceTitle(invoice: Pick<InvoiceLink, 'number' | 'type'>): string {
+export function invoiceTitle(
+  invoice: Pick<InvoiceLink, 'number' | 'type'>,
+): string {
   if (invoice.number) return invoice.number;
   return invoice.type === 'quotation' ? 'Draft quotation' : 'Draft invoice';
 }
@@ -699,7 +777,11 @@ async function loadCore(bookingId: number): Promise<Core | null> {
     .limit(1);
   if (!row) return null;
   const items = await itemsByBooking([bookingId]);
-  return { booking: row.booking, customer: row.customer, items: items.get(bookingId) ?? [] };
+  return {
+    booking: row.booking,
+    customer: row.customer,
+    items: items.get(bookingId) ?? [],
+  };
 }
 
 export type BookingSheet = {
@@ -744,11 +826,11 @@ function toSheet(core: Core): BookingSheet {
       preferredContact: booking.preferredContact,
     },
     customer: {
-      name: customer.name,
+      name: booking.contactSnapshot?.name ?? customer.name,
       phone: customer.phone,
       phoneLabel: formatLkPhone(customer.phone),
       whatsapp: customer.whatsapp,
-      email: customer.email,
+      email: booking.contactSnapshot?.email ?? customer.email,
       city: booking.city ?? customer.city,
     },
     items,
@@ -760,12 +842,19 @@ function toSheet(core: Core): BookingSheet {
 }
 
 /** Everything the one-page print sheet shows. */
-export async function getBookingSheet(bookingId: number): Promise<BookingSheet | null> {
+export async function getBookingSheet(
+  bookingId: number,
+): Promise<BookingSheet | null> {
   const core = await loadCore(bookingId);
   return core ? toSheet(core) : null;
 }
 
-export type ChatLine = { id: number; role: 'user' | 'assistant'; text: string; createdAt: Date };
+export type ChatLine = {
+  id: number;
+  role: 'user' | 'assistant';
+  text: string;
+  createdAt: Date;
+};
 
 export type BookingDetail = {
   sheet: BookingSheet;
@@ -799,7 +888,10 @@ const invoiceColumns = {
 };
 
 /** Recent invoices for a customer, newest first. */
-export async function listInvoiceLinks(customerId: number, limit = 30): Promise<InvoiceLink[]> {
+export async function listInvoiceLinks(
+  customerId: number,
+  limit = 30,
+): Promise<InvoiceLink[]> {
   const db = await getDb();
   return db
     .select(invoiceColumns)
@@ -809,7 +901,9 @@ export async function listInvoiceLinks(customerId: number, limit = 30): Promise<
     .limit(limit);
 }
 
-export async function getBookingDetail(bookingId: number): Promise<BookingDetail | null> {
+export async function getBookingDetail(
+  bookingId: number,
+): Promise<BookingDetail | null> {
   const core = await loadCore(bookingId);
   if (!core) return null;
   const { booking, customer } = core;
@@ -836,14 +930,21 @@ export async function getBookingDetail(bookingId: number): Promise<BookingDetail
       status: s.bookings.status,
     })
     .from(s.bookings)
-    .where(and(eq(s.bookings.customerId, customer.id), ne(s.bookings.id, bookingId)))
+    .where(
+      and(eq(s.bookings.customerId, customer.id), ne(s.bookings.id, bookingId)),
+    )
     .orderBy(desc(s.bookings.visitDate), desc(s.bookings.id))
     .limit(30);
   const invoices = await listInvoiceLinks(customer.id);
   const [bookingInvoice] = await db
     .select(invoiceColumns)
     .from(s.invoices)
-    .where(and(eq(s.invoices.bookingId, bookingId), ne(s.invoices.status, 'cancelled')))
+    .where(
+      and(
+        eq(s.invoices.bookingId, bookingId),
+        ne(s.invoices.status, 'cancelled'),
+      ),
+    )
     .orderBy(asc(s.invoices.id))
     .limit(1);
   return {
@@ -866,9 +967,14 @@ export async function getBookingDetail(bookingId: number): Promise<BookingDetail
   };
 }
 
-export async function getBookingStatus(bookingId: number): Promise<BookingStatus | null> {
+export async function getBookingStatus(
+  bookingId: number,
+): Promise<BookingStatus | null> {
   const db = await getDb();
-  const [row] = await db.select({ status: s.bookings.status }).from(s.bookings).where(eq(s.bookings.id, bookingId));
+  const [row] = await db
+    .select({ status: s.bookings.status })
+    .from(s.bookings)
+    .where(eq(s.bookings.id, bookingId));
   return row ? row.status : null;
 }
 
@@ -877,18 +983,33 @@ export async function getBookingStatus(bookingId: number): Promise<BookingStatus
 
 export type StatusChange =
   | { ok: true; from: BookingStatus; to: BookingStatus }
-  | { ok: false; code: 'invalid' | 'not_found' | 'unchanged' | 'not_allowed'; message: string };
+  | {
+      ok: false;
+      code: 'invalid' | 'not_found' | 'unchanged' | 'not_allowed';
+      message: string;
+    };
 
 function nextStepsMessage(from: BookingStatus): string {
-  const next = allowedTransitions(from).map((status) => STATUS_LABELS[status].toLowerCase());
+  const next = allowedTransitions(from).map((status) =>
+    STATUS_LABELS[status].toLowerCase(),
+  );
   const label = STATUS_LABELS[from].toLowerCase();
-  if (next.length === 0) return `A ${label} booking has no further status changes.`;
+  if (next.length === 0)
+    return `A ${label} booking has no further status changes.`;
   return `A ${label} booking can only change to: ${next.join(', ')}.`;
 }
 
 /** Moves a booking to a new status if the rules allow it. The row is locked while it is checked. */
-export async function changeBookingStatus(bookingId: number, target: string): Promise<StatusChange> {
-  if (!isBookingStatus(target)) return { ok: false, code: 'invalid', message: 'Choose a status from the list.' };
+export async function changeBookingStatus(
+  bookingId: number,
+  target: string,
+): Promise<StatusChange> {
+  if (!isBookingStatus(target))
+    return {
+      ok: false,
+      code: 'invalid',
+      message: 'Choose a status from the list.',
+    };
   const db = await getDb();
   return db.transaction(async (tx): Promise<StatusChange> => {
     const [booking] = await tx
@@ -896,34 +1017,66 @@ export async function changeBookingStatus(bookingId: number, target: string): Pr
       .from(s.bookings)
       .where(eq(s.bookings.id, bookingId))
       .for('update');
-    if (!booking) return { ok: false, code: 'not_found', message: 'This booking could not be found.' };
+    if (!booking)
+      return {
+        ok: false,
+        code: 'not_found',
+        message: 'This booking could not be found.',
+      };
     if (booking.status === target) {
       const message = `The booking is already ${STATUS_LABELS[target].toLowerCase()}.`;
       return { ok: false, code: 'unchanged', message };
     }
     if (!canTransition(booking.status, target)) {
-      return { ok: false, code: 'not_allowed', message: nextStepsMessage(booking.status) };
+      return {
+        ok: false,
+        code: 'not_allowed',
+        message: nextStepsMessage(booking.status),
+      };
     }
-    await tx.update(s.bookings).set({ status: target, updatedAt: new Date() }).where(eq(s.bookings.id, bookingId));
+    await tx
+      .update(s.bookings)
+      .set({ status: target, updatedAt: new Date() })
+      .where(eq(s.bookings.id, bookingId));
     return { ok: true, from: booking.status, to: target };
   });
 }
 
-const notesSchema = z.string().max(4000, 'Notes can be up to 4,000 characters.');
+const notesSchema = z
+  .string()
+  .max(4000, 'Notes can be up to 4,000 characters.');
 
-export type NotesResult = { ok: true } | { ok: false; code: 'invalid' | 'not_found'; message: string };
+export type NotesResult =
+  | { ok: true }
+  | { ok: false; code: 'invalid' | 'not_found'; message: string };
 
 /** Saves the staff notes on a booking. An empty note clears them. */
-export async function saveStaffNotes(bookingId: number, notes: string): Promise<NotesResult> {
+export async function saveStaffNotes(
+  bookingId: number,
+  notes: string,
+): Promise<NotesResult> {
   const parsed = notesSchema.safeParse(notes.trim());
-  if (!parsed.success) return { ok: false, code: 'invalid', message: parsed.error.issues[0].message };
+  if (!parsed.success)
+    return {
+      ok: false,
+      code: 'invalid',
+      message: parsed.error.issues[0].message,
+    };
   const db = await getDb();
   const updated = await db
     .update(s.bookings)
-    .set({ staffNotes: parsed.data === '' ? null : parsed.data, updatedAt: new Date() })
+    .set({
+      staffNotes: parsed.data === '' ? null : parsed.data,
+      updatedAt: new Date(),
+    })
     .where(eq(s.bookings.id, bookingId))
     .returning({ id: s.bookings.id });
-  if (updated.length === 0) return { ok: false, code: 'not_found', message: 'This booking could not be found.' };
+  if (updated.length === 0)
+    return {
+      ok: false,
+      code: 'not_found',
+      message: 'This booking could not be found.',
+    };
   return { ok: true };
 }
 
@@ -945,8 +1098,16 @@ export async function getRescheduleOptions(current?: {
       date: day.date,
       label: formatVisitDate(day.date),
       slots: day.slots
-        .filter((slot) => slot.remaining > 0 && !(current?.date === day.date && current.slotId === slot.slotId))
-        .map((slot) => ({ slotId: slot.slotId, label: slot.label, remaining: slot.remaining })),
+        .filter(
+          (slot) =>
+            slot.remaining > 0 &&
+            !(current?.date === day.date && current.slotId === slot.slotId),
+        )
+        .map((slot) => ({
+          slotId: slot.slotId,
+          label: slot.label,
+          remaining: slot.remaining,
+        })),
     }))
     .filter((day) => day.slots.length > 0);
 }
@@ -961,7 +1122,13 @@ export type RescheduleResult =
   | { ok: true; visitDate: string; slotLabel: string }
   | {
       ok: false;
-      code: 'invalid' | 'not_found' | 'not_open' | 'slot_closed' | 'slot_full' | 'unchanged';
+      code:
+        | 'invalid'
+        | 'not_found'
+        | 'not_open'
+        | 'slot_closed'
+        | 'slot_full'
+        | 'unchanged';
       message: string;
     };
 
@@ -976,7 +1143,12 @@ export async function rescheduleBooking(input: {
   slotId: number;
 }): Promise<RescheduleResult> {
   const parsed = rescheduleSchema.safeParse(input);
-  if (!parsed.success) return { ok: false, code: 'invalid', message: 'Choose a date and a time slot.' };
+  if (!parsed.success)
+    return {
+      ok: false,
+      code: 'invalid',
+      message: 'Choose a date and a time slot.',
+    };
   const { bookingId, date, slotId } = parsed.data;
   const closed: RescheduleResult = {
     ok: false,
@@ -984,21 +1156,46 @@ export async function rescheduleBooking(input: {
     message: 'That day or time slot is not open for visits.',
   };
   const [day] = await getAvailability({ from: date, days: 1 });
-  if (!day || !day.open || !day.slots.some((slot) => slot.slotId === slotId)) return closed;
+  if (!day || !day.open || !day.slots.some((slot) => slot.slotId === slotId))
+    return closed;
 
   const db = await getDb();
   return db.transaction(async (tx): Promise<RescheduleResult> => {
-    await tx.execute(sql`select id from booking_slots where id = ${slotId} for update`);
-    const [slot] = await tx.select().from(s.bookingSlots).where(eq(s.bookingSlots.id, slotId)).limit(1);
-    const [booking] = await tx.select().from(s.bookings).where(eq(s.bookings.id, bookingId)).for('update');
-    if (!booking) return { ok: false, code: 'not_found', message: 'This booking could not be found.' };
+    await tx.execute(
+      sql`select id from booking_slots where id = ${slotId} for update`,
+    );
+    const [slot] = await tx
+      .select()
+      .from(s.bookingSlots)
+      .where(eq(s.bookingSlots.id, slotId))
+      .limit(1);
+    const [booking] = await tx
+      .select()
+      .from(s.bookings)
+      .where(eq(s.bookings.id, bookingId))
+      .for('update');
+    if (!booking)
+      return {
+        ok: false,
+        code: 'not_found',
+        message: 'This booking could not be found.',
+      };
     if (!isOpenBooking(booking.status)) {
       const label = STATUS_LABELS[booking.status].toLowerCase();
-      return { ok: false, code: 'not_open', message: `A ${label} booking cannot be rescheduled.` };
+      return {
+        ok: false,
+        code: 'not_open',
+        message: `A ${label} booking cannot be rescheduled.`,
+      };
     }
-    if (!slot || !slot.active || slot.weekday !== weekdayForDate(date)) return closed;
+    if (!slot || !slot.active || slot.weekday !== weekdayForDate(date))
+      return closed;
     if (booking.visitDate === date && booking.slotId === slot.id) {
-      return { ok: false, code: 'unchanged', message: 'The booking is already in that slot.' };
+      return {
+        ok: false,
+        code: 'unchanged',
+        message: 'The booking is already in that slot.',
+      };
     }
     const [taken] = await tx
       .select({ value: count() })
@@ -1012,29 +1209,51 @@ export async function rescheduleBooking(input: {
         ),
       );
     if (taken.value >= slot.capacity) {
-      return { ok: false, code: 'slot_full', message: 'That time slot is full. Choose another.' };
+      return {
+        ok: false,
+        code: 'slot_full',
+        message: 'That time slot is full. Choose another.',
+      };
     }
     const slotLabel = `${slot.start}–${slot.end}`;
     await tx
       .update(s.bookings)
-      .set({ visitDate: date, slotId: slot.id, slotLabel, updatedAt: new Date() })
+      .set({
+        visitDate: date,
+        slotId: slot.id,
+        slotLabel,
+        updatedAt: new Date(),
+      })
       .where(eq(s.bookings.id, bookingId));
     return { ok: true, visitDate: date, slotLabel };
   });
 }
 
-export type ReviewRequestResult = { ok: true; at: Date } | { ok: false; message: string };
+export type ReviewRequestResult =
+  | { ok: true; at: Date }
+  | { ok: false; message: string };
 
 /** Notes that staff opened the WhatsApp review request. Only offered once a visit has happened. */
-export async function markReviewRequested(bookingId: number): Promise<ReviewRequestResult> {
+export async function markReviewRequested(
+  bookingId: number,
+): Promise<ReviewRequestResult> {
   const db = await getDb();
   const now = new Date();
   const updated = await db
     .update(s.bookings)
     .set({ reviewRequestedAt: now, updatedAt: now })
-    .where(and(eq(s.bookings.id, bookingId), inArray(s.bookings.status, ['visited', 'purchased'])))
+    .where(
+      and(
+        eq(s.bookings.id, bookingId),
+        inArray(s.bookings.status, ['visited', 'purchased']),
+      ),
+    )
     .returning({ id: s.bookings.id });
-  if (updated.length === 0) return { ok: false, message: 'A review can only be requested after the visit.' };
+  if (updated.length === 0)
+    return {
+      ok: false,
+      message: 'A review can only be requested after the visit.',
+    };
   return { ok: true, at: now };
 }
 
@@ -1061,7 +1280,12 @@ export type CalendarSlot = {
   bookings: CalendarEntry[];
 };
 
-export type CalendarDay = { date: string; label: string; isToday: boolean; slots: CalendarSlot[] };
+export type CalendarDay = {
+  date: string;
+  label: string;
+  isToday: boolean;
+  slots: CalendarSlot[];
+};
 
 export type Calendar = {
   view: CalendarView;
@@ -1094,7 +1318,10 @@ function calendarTitle(view: CalendarView, from: string, to: string): string {
 }
 
 /** Slots and bookings for one day or one Monday-to-Sunday week, by Colombo date. */
-export async function getCalendar(options: { view: CalendarView; date: string }): Promise<Calendar> {
+export async function getCalendar(options: {
+  view: CalendarView;
+  date: string;
+}): Promise<Calendar> {
   const today = colomboToday();
   const date = isRealDate(options.date) ? options.date : today;
   const from = options.view === 'week' ? weekStart(date) : date;
@@ -1110,7 +1337,12 @@ export async function getCalendar(options: { view: CalendarView; date: string })
     .from(s.bookings)
     .innerJoin(s.customers, eq(s.customers.id, s.bookings.customerId))
     .where(and(gte(s.bookings.visitDate, from), lte(s.bookings.visitDate, to)))
-    .orderBy(asc(s.bookings.visitDate), asc(s.bookings.slotLabel), asc(s.bookings.createdAt), asc(s.bookings.id));
+    .orderBy(
+      asc(s.bookings.visitDate),
+      asc(s.bookings.slotLabel),
+      asc(s.bookings.createdAt),
+      asc(s.bookings.id),
+    );
   const ids = records.map((record) => record.booking.id);
   const pieceRows =
     ids.length > 0
@@ -1123,11 +1355,13 @@ export async function getCalendar(options: { view: CalendarView; date: string })
           .where(inArray(s.bookingItems.bookingId, ids))
           .groupBy(s.bookingItems.bookingId)
       : [];
-  const pieces = new Map(pieceRows.map((row) => [row.bookingId, Number(row.pieces)]));
+  const pieces = new Map(
+    pieceRows.map((row) => [row.bookingId, Number(row.pieces)]),
+  );
   const entryFor = (record: (typeof records)[number]): CalendarEntry => ({
     id: record.booking.id,
     reference: record.booking.reference,
-    customerName: record.customerName,
+    customerName: record.booking.contactSnapshot?.name ?? record.customerName,
     pieces: pieces.get(record.booking.id) ?? 0,
     status: record.booking.status,
   });
@@ -1136,11 +1370,15 @@ export async function getCalendar(options: { view: CalendarView; date: string })
   const days: CalendarDay[] = [];
   for (let day = from; day <= to; day = addDays(day, 1)) {
     const weekday = weekdayForDate(day);
-    const dayRecords = records.filter((record) => record.booking.visitDate === day);
+    const dayRecords = records.filter(
+      (record) => record.booking.visitDate === day,
+    );
     const offered = slots.filter((slot) => slot.weekday === weekday);
     const offeredIds = new Set(offered.map((slot) => slot.id));
     const daySlots: CalendarSlot[] = offered.map((slot) => {
-      const entries = dayRecords.filter((record) => record.booking.slotId === slot.id).map(entryFor);
+      const entries = dayRecords
+        .filter((record) => record.booking.slotId === slot.id)
+        .map(entryFor);
       return {
         key: `slot-${slot.id}`,
         label: `${slot.start}–${slot.end}`,
@@ -1151,7 +1389,11 @@ export async function getCalendar(options: { view: CalendarView; date: string })
     });
     const orphans = new Map<string, CalendarEntry[]>();
     for (const record of dayRecords) {
-      if (record.booking.slotId !== null && offeredIds.has(record.booking.slotId)) continue;
+      if (
+        record.booking.slotId !== null &&
+        offeredIds.has(record.booking.slotId)
+      )
+        continue;
       const list = orphans.get(record.booking.slotLabel) ?? [];
       list.push(entryFor(record));
       orphans.set(record.booking.slotLabel, list);
@@ -1165,7 +1407,12 @@ export async function getCalendar(options: { view: CalendarView; date: string })
         bookings: entries,
       });
     }
-    days.push({ date: day, label: formatDayLabel(day), isToday: day === today, slots: daySlots });
+    days.push({
+      date: day,
+      label: formatDayLabel(day),
+      isToday: day === today,
+      slots: daySlots,
+    });
   }
 
   const step = options.view === 'week' ? 7 : 1;

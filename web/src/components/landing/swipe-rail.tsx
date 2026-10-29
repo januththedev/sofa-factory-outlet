@@ -65,7 +65,9 @@ export function SwipeRail({
         aria-label={label}
         aria-describedby={pinned ? undefined : id}
         tabIndex={pinned ? undefined : 0}
-        data-lenis-prevent={pinned ? undefined : true}
+        // Keep vertical wheel gestures with the page's smooth-scroll controller.
+        // A blanket prevent lets native scroll race an active Lenis animation.
+        data-lenis-prevent-horizontal={pinned ? undefined : true}
         className={pinned
           ? 'overflow-visible'
           : `relative snap-x snap-mandatory overflow-x-auto overscroll-x-contain p-1.5 pb-3 ${desktopGrid}`}
