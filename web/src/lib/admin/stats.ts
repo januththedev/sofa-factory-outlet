@@ -279,7 +279,7 @@ export async function getDashboardStats(now: Date = new Date(), handle?: Db): Pr
 // Setup checklist input
 
 export type ServiceStatus = {
-  id: 'search-console' | 'openrouter' | 'resend' | 'indexnow';
+  id: 'openrouter' | 'resend';
   label: string;
   configured: boolean;
   /** Names of the environment variables to set on the host. Never their values. */
@@ -290,13 +290,6 @@ export type ServiceStatus = {
 /** Which optional services have their keys set. Presence only: the values are never read out. */
 export function getServiceStatus(): ServiceStatus[] {
   return [
-    {
-      id: 'search-console',
-      label: 'Google Search Console',
-      configured: Boolean(env.GSC_SERVICE_ACCOUNT_JSON && env.GSC_SITE_URL),
-      vars: ['GSC_SERVICE_ACCOUNT_JSON', 'GSC_SITE_URL'],
-      effect: 'Clicks, impressions and search positions on the SEO page.',
-    },
     {
       id: 'openrouter',
       label: 'OpenRouter',
@@ -310,13 +303,6 @@ export function getServiceStatus(): ServiceStatus[] {
       configured: Boolean(env.RESEND_API_KEY),
       vars: ['RESEND_API_KEY', 'ADMIN_ALERT_EMAIL'],
       effect: 'Alert and digest emails. The bell works without it.',
-    },
-    {
-      id: 'indexnow',
-      label: 'IndexNow',
-      configured: Boolean(env.INDEXNOW_KEY),
-      vars: ['INDEXNOW_KEY'],
-      effect: 'Tells search engines at once when a page changes (switch it on above).',
     },
   ];
 }
