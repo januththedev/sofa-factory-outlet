@@ -15,7 +15,7 @@ import { JsonLd } from '@/lib/seo/jsonld';
 import { pageMetadata } from '@/lib/seo/metadata';
 
 const reserved = new Set(
-  'shop product admin api blob guides cart book-visit about-us factory visit trade privacy review'.split(' '),
+  'shop product admin api blob guides cart book-visit about-us factory visit trade privacy review faq sofa-shop-colombo custom-sofas-sri-lanka request-quote'.split(' '),
 );
 type Props = {
   params: Promise<{ category: string }>;

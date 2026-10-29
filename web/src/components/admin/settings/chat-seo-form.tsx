@@ -4,7 +4,6 @@ import { saveChatSeoAction } from '@/app/admin/(panel)/settings/actions';
 import type { ChatSettings, SeoSettings } from '@/lib/settings/types';
 import {
   AreaField,
-  CheckField,
   FormCard,
   SaveBar,
   SectionTitle,

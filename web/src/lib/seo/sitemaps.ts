@@ -42,7 +42,7 @@ const guideEntries = unstable_cache(async (): Promise<SitemapUrl[]> => {
 }, ['seo-sitemap-guides-v1'], { tags: ['guides'], revalidate: 3600 });
 
 export async function sitemapByName(name: string): Promise<SitemapUrl[] | null> {
-  if (name === 'pages') return ['/', '/shop/', '/about-us/', '/factory/', '/visit/', '/trade/', '/book-visit/'].map((loc) => ({ loc: absolutePage(loc) }));
+  if (name === 'pages') return ['/', '/shop/', '/about-us/', '/factory/', '/visit/', '/trade/', '/book-visit/', '/faq/', '/sofa-shop-colombo/', '/custom-sofas-sri-lanka/', '/guides/'].map((loc) => ({ loc: absolutePage(loc) }));
   if (name === 'guides') return guideEntries();
   const { products, categories } = await catalogueEntries();
   if (name === 'products') return [...new Map(products.map((p) => [p.id, { loc: absolutePage(`/product/${p.slug}/`), lastmod: date(p.updatedAt) }])).values()];

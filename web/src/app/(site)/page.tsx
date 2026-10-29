@@ -18,18 +18,21 @@ import { mapsDirectionsUrl } from '@/lib/settings/get';
 import { mapsEmbedUrl } from '@/lib/settings/get';
 import { whatsappLink } from '@/lib/settings/get';
 import { formatHours } from '@/lib/settings/hours';
+import { furnitureStoreJsonLd, JsonLd, organizationJsonLd } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
   alternates: { canonical: '/' },
 };
 
 export default async function HomePage() {
-  const [settings, tiles, swatches, featured, reviews] = await Promise.all([
+  const [settings, tiles, swatches, featured, reviews, organisation, store] = await Promise.all([
     getSettings(),
     getCollectionTiles(),
     getColourSwatches(),
     getFeaturedCards(6),
     getApprovedReviews(),
+    organizationJsonLd(),
+    furnitureStoreJsonLd(),
   ]);
   const { business, hours, proof } = settings;
   const hero = siteImage('hero',
@@ -54,6 +57,7 @@ export default async function HomePage() {
         directionsUrl={mapsDirectionsUrl(business.address)}
         whatsappUrl={whatsappLink(business.whatsapp.number, 'Hi, I would like to visit the showroom.')}
       />
+      <JsonLd data={[...organisation, store]} />
     </>
   );
 }

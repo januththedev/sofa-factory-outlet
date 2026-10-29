@@ -17,6 +17,9 @@ const COMPANY = [
   { href: '/visit/', label: 'Visit the showroom' },
   { href: '/book-visit/', label: 'Book a visit' },
   { href: '/trade/', label: 'Trade' },
+  { href: '/faq/', label: 'Questions' },
+  { href: '/sofa-shop-colombo/', label: 'Sofa shop in Colombo' },
+  { href: '/custom-sofas-sri-lanka/', label: 'Custom-made sofas' },
   { href: '/privacy/', label: 'Privacy' },
 ];
 
