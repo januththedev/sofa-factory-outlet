@@ -8,6 +8,7 @@ import { type MenuUser, UserMenu } from './user-menu';
 const SECTION_TITLES: Array<[string, string]> = [
   ['/admin/bookings/calendar', 'Calendar'],
   ['/admin/bookings', 'Bookings'],
+  ['/admin/leads', 'Leads'],
   ['/admin/customers', 'Customers'],
   ['/admin/products', 'Products'],
   ['/admin/categories', 'Categories'],
@@ -20,7 +21,10 @@ const SECTION_TITLES: Array<[string, string]> = [
 ];
 
 function pageTitle(pathname: string): string {
-  return SECTION_TITLES.find(([prefix]) => pathname.startsWith(prefix))?.[1] ?? 'Dashboard';
+  return (
+    SECTION_TITLES.find(([prefix]) => pathname.startsWith(prefix))?.[1] ??
+    'Dashboard'
+  );
 }
 
 /** Compact admin chrome, with the current section visible beside the phone menu button. */

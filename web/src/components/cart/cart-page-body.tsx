@@ -25,22 +25,39 @@ export function CartPageBody() {
   if (!hydrated) {
     return (
       <div aria-busy="true" className="mt-10 space-y-4">
-        <p role="status" className="sr-only">Loading your cart...</p>
-        <div aria-hidden className="h-36 rounded-xl bg-bone-2 motion-safe:animate-pulse" />
-        <div aria-hidden className="h-36 rounded-xl bg-bone-2 motion-safe:animate-pulse" />
+        <p role="status" className="sr-only">
+          Loading your cart...
+        </p>
+        <div
+          aria-hidden
+          className="h-36 rounded-xl bg-bone-2 motion-safe:animate-pulse"
+        />
+        <div
+          aria-hidden
+          className="h-36 rounded-xl bg-bone-2 motion-safe:animate-pulse"
+        />
       </div>
     );
   }
   return (
-    <div ref={linesRegion} tabIndex={-1} className="mt-10 min-w-0 pb-28 lg:mt-14 lg:pb-0">
-      <CartUndoNotice removed={removed} undo={() => {
-        undo();
-        parkFocus();
-      }} />
+    <div
+      ref={linesRegion}
+      tabIndex={-1}
+      className="mt-10 min-w-0 pb-28 lg:mt-14 lg:pb-0"
+    >
+      <CartUndoNotice
+        removed={removed}
+        undo={() => {
+          undo();
+          parkFocus();
+        }}
+      />
       {lines.length ? (
         <div className="grid min-w-0 gap-10 lg:grid-cols-[minmax(0,1fr)_21rem]">
           <section aria-labelledby={linesHeading} className="min-w-0">
-            <h2 id={linesHeading} className="sr-only">Items in your cart</h2>
+            <h2 id={linesHeading} className="sr-only">
+              Items in your cart
+            </h2>
             <CartLineList
               lines={lines}
               layout="page"
@@ -50,24 +67,45 @@ export function CartPageBody() {
               }}
             />
           </section>
-          <aside aria-labelledby={summaryHeading} className="min-w-0 lg:sticky lg:top-28 lg:self-start">
+          <aside
+            aria-labelledby={summaryHeading}
+            className="min-w-0 lg:sticky lg:top-28 lg:self-start"
+          >
             <div className="rounded-[var(--radius-card)] border border-line bg-paper p-5">
-              <h2 id={summaryHeading} className="font-display text-2xl">Summary</h2>
+              <h2 id={summaryHeading} className="font-display text-2xl">
+                Summary
+              </h2>
               <p role="status" className="mt-1 text-base text-mute">
                 {cartCount(lines)} {cartCount(lines) === 1 ? 'item' : 'items'}
               </p>
-              <div className="mt-5 border-t border-line pt-5"><CartTotals lines={lines} /></div>
+              <div className="mt-5 border-t border-line pt-5">
+                <CartTotals lines={lines} />
+              </div>
               <TLink
                 href="/book-visit/"
-                className={cn(buttonStyles({ variant: 'primary', size: 'lg' }), 'mt-6 hidden w-full lg:inline-flex')}
+                className={cn(
+                  buttonStyles({ variant: 'primary', size: 'lg' }),
+                  'mt-6 hidden w-full lg:inline-flex',
+                )}
               >
                 Book a visit
+              </TLink>
+              <TLink
+                href="/request-quote/"
+                className={cn(
+                  buttonStyles({ variant: 'ghost', size: 'lg' }),
+                  'mt-3 w-full',
+                )}
+              >
+                Request a quote
               </TLink>
               <Button
                 variant="ghost"
                 size="lg"
                 className="mt-3 w-full"
-                onClick={() => openChat({ cart: toCartRef(lines), nudge: true })}
+                onClick={() =>
+                  openChat({ cart: toCartRef(lines), nudge: true })
+                }
               >
                 Ask our assistant
               </Button>
@@ -83,17 +121,28 @@ export function CartPageBody() {
             />
           </div>
         </div>
-      ) : <CartEmpty large />}
+      ) : (
+        <CartEmpty large />
+      )}
       <div
         data-sticky-bar
         className={[
           'fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bone px-4 pt-3 lg:hidden',
-          'pb-[max(0.75rem,env(safe-area-inset-bottom))]',
+          'pb-[max(0.75rem,env(safe-area-inset-bottom))] grid grid-cols-2 gap-2',
         ].join(' ')}
       >
         <TLink
+          href="/request-quote/"
+          className={buttonStyles({ variant: 'ghost', size: 'md' })}
+        >
+          Request a quote
+        </TLink>
+        <TLink
           href="/book-visit/"
-          className={cn(buttonStyles({ variant: 'primary', size: 'lg' }), 'w-full')}
+          className={cn(
+            buttonStyles({ variant: 'primary', size: 'lg' }),
+            'w-full',
+          )}
         >
           Book a visit
         </TLink>

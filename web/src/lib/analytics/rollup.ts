@@ -50,9 +50,15 @@ type EventRow = {
 
 type Cell = { date: string; metric: string; dimension: string; value: number };
 
-type UniqueCell = { date: string; metric: string; dimension: string; seen: Set<string> };
+type UniqueCell = {
+  date: string;
+  metric: string;
+  dimension: string;
+  seen: Set<string>;
+};
 
-const cellKey = (date: string, metric: string, dimension: string) => `${date}\u0000${metric}\u0000${dimension}`;
+const cellKey = (date: string, metric: string, dimension: string) =>
+  `${date}\u0000${metric}\u0000${dimension}`;
 
 export type RebuildOptions = { days?: number; now?: Date; db?: DbOrTx };
 export type RebuildResult = { dates: string[]; events: number; rows: number };
@@ -65,7 +71,9 @@ export type RebuildResult = { dates: string[]; events: number; rows: number };
  * whatsapp_clicks, source, device, city and top_page. Dimensioned metrics count
  * distinct visitors (product_views/top_page count events).
  */
-export async function rebuildDailyStats(options: RebuildOptions = {}): Promise<RebuildResult> {
+export async function rebuildDailyStats(
+  options: RebuildOptions = {},
+): Promise<RebuildResult> {
   const db = options.db ?? (await getDb());
   const now = options.now ?? new Date();
   const dates = colomboDays(options.days ?? 3, now);
@@ -97,19 +105,27 @@ export async function rebuildDailyStats(options: RebuildOptions = {}): Promise<R
     if (cell) cell.value += amount;
     else counted.set(key, { date, metric, dimension, value: amount });
   };
-  const addUnique = (date: string, metric: string, dimension: string, visitorId: string) => {
+  const addUnique = (
+    date: string,
+    metric: string,
+    dimension: string,
+    visitorId: string,
+  ) => {
     const key = cellKey(date, metric, dimension);
     const cell = unique.get(key);
     if (cell) cell.seen.add(visitorId);
-    else unique.set(key, { date, metric, dimension, seen: new Set([visitorId]) });
+    else
+      unique.set(key, { date, metric, dimension, seen: new Set([visitorId]) });
   };
 
   for (const event of events) {
     const date = colomboDate(event.createdAt);
     addUnique(date, 'visitors', '', event.visitorId);
     addUnique(date, 'sessions', '', event.sessionId);
-    if (event.path && event.type === 'page_view') add(date, 'top_page', event.path);
-    if (event.productId !== null && event.type === 'product_view') add(date, 'product_views', String(event.productId));
+    if (event.path && event.type === 'page_view')
+      add(date, 'top_page', event.path);
+    if (event.productId !== null && event.type === 'product_view')
+      add(date, 'product_views', String(event.productId));
     if (event.type === 'page_view') add(date, 'page_views');
     if (event.type === 'add_to_cart') add(date, 'add_to_cart');
     if (event.type === 'chat_open') add(date, 'chat_opened');
@@ -121,7 +137,8 @@ export async function rebuildDailyStats(options: RebuildOptions = {}): Promise<R
     addUnique(date, 'source', event.source || 'other', event.visitorId);
     addUnique(date, 'device', event.device || 'unknown', event.visitorId);
     // The Visitors page lists Sri Lankan cities only; local requests have no country.
-    if (event.city && (!event.country || event.country === 'LK')) addUnique(date, 'city', event.city, event.visitorId);
+    if (event.city && (!event.country || event.country === 'LK'))
+      addUnique(date, 'city', event.city, event.visitorId);
   }
 
   for (const cell of unique.values()) {
@@ -147,7 +164,11 @@ export async function rebuildDailyStats(options: RebuildOptions = {}): Promise<R
       .insert(s.dailyStats)
       .values(values)
       .onConflictDoUpdate({
-        target: [s.dailyStats.date, s.dailyStats.metric, s.dailyStats.dimension],
+        target: [
+          s.dailyStats.date,
+          s.dailyStats.metric,
+          s.dailyStats.dimension,
+        ],
         set: { value: sql`excluded.value` },
       });
   }
@@ -158,21 +179,33 @@ export async function rebuildDailyStats(options: RebuildOptions = {}): Promise<R
 export type PurgeOptions = { now?: Date; days?: number; db?: DbOrTx };
 
 /** Delete raw events older than the retention window. Returns how many went. */
-export async function purgeOldEvents(options: PurgeOptions = {}): Promise<number> {
+export async function purgeOldEvents(
+  options: PurgeOptions = {},
+): Promise<number> {
   const db = options.db ?? (await getDb());
   const now = options.now ?? new Date();
-  const cutoff = new Date(now.getTime() - (options.days ?? RAW_EVENT_RETENTION_DAYS) * DAY_MS);
-  const removed = await db.delete(s.events).where(lt(s.events.createdAt, cutoff)).returning({ id: s.events.id });
+  const cutoff = new Date(
+    now.getTime() - (options.days ?? RAW_EVENT_RETENTION_DAYS) * DAY_MS,
+  );
+  const removed = await db
+    .delete(s.events)
+    .where(lt(s.events.createdAt, cutoff))
+    .returning({ id: s.events.id });
   return removed.length;
 }
 
 export type RollupResult = RebuildResult & { purged: number };
 
 /** The nightly job: rebuild the last three days, then drop events past retention. */
-export async function runRollup(options: RebuildOptions = {}): Promise<RollupResult> {
+export async function runRollup(
+  options: RebuildOptions = {},
+): Promise<RollupResult> {
   const db = options.db ?? (await getDb());
   const now = options.now ?? new Date();
   const rebuilt = await rebuildDailyStats({ ...options, now, db });
   const purged = await purgeOldEvents({ now, db });
+  await db
+    .delete(s.rateBuckets)
+    .where(lt(s.rateBuckets.expiresAt, new Date(now.getTime() - DAY_MS)));
   return { ...rebuilt, purged };
 }

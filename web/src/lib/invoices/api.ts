@@ -54,14 +54,21 @@ export type InvoiceDraftInput = {
   terms?: string;
 };
 
-
 /**
  * Issues a draft inside one transaction: takes the next number from invoice_counters
  * (row-locked, so numbers never repeat) as SFO-2026-0001, or SFO-Q-2026-0001 for quotations,
  * and sets status 'issued'.
  */
 
-export type PaymentInput = { invoiceId: number; amountMinor: number; method: 'cash' | 'bank_transfer' | 'card'; paidOn: string; reference?: string; note?: string };
+export type PaymentInput = {
+  requestKey?: string;
+  invoiceId: number;
+  amountMinor: number;
+  method: 'cash' | 'bank_transfer' | 'card';
+  paidOn: string;
+  reference?: string;
+  note?: string;
+};
 
 /** Records a payment and updates paid/balance and status (issued → partially_paid → paid). Rejects overpayment. */
 
@@ -97,9 +104,16 @@ export type InvoiceRow = {
   createdAt: string;
 };
 
-
 export type InvoiceView = InvoiceRow & {
-  customer: { id: number; name: string; phone: string; whatsapp: string | null; email: string | null; city: string | null; address: string | null };
+  customer: {
+    id: number;
+    name: string;
+    phone: string;
+    whatsapp: string | null;
+    email: string | null;
+    city: string | null;
+    address: string | null;
+  };
   booking: { id: number; reference: string } | null;
   lines: Array<LineInput & { id: number; lineMinor: number }>;
   discount: { type: 'amount' | 'percent'; value: number };
@@ -111,16 +125,33 @@ export type InvoiceView = InvoiceRow & {
   deliveryDate: string | null;
   notes: string | null;
   terms: string | null;
-  payments: Array<{ id: number; amountMinor: number; method: string; paidOn: string; reference: string | null; note: string | null }>;
+  payments: Array<{
+    id: number;
+    amountMinor: number;
+    method: string;
+    paidOn: string;
+    reference: string | null;
+    note: string | null;
+  }>;
   convertedFromId: number | null;
 };
 
-
 export type RevenueReport = {
-  months: Array<{ month: string; invoicedMinor: number; paidMinor: number; websiteMinor: number; walkInMinor: number }>;
-  outstanding: Array<{ invoiceId: number; number: string; customerName: string; balanceMinor: number; issuedAt: string }>;
+  months: Array<{
+    month: string;
+    invoicedMinor: number;
+    paidMinor: number;
+    websiteMinor: number;
+    walkInMinor: number;
+  }>;
+  outstanding: Array<{
+    invoiceId: number;
+    number: string;
+    customerName: string;
+    balanceMinor: number;
+    issuedAt: string;
+  }>;
 };
-
 
 /** A4 PDF via @react-pdf/renderer: logo, business and bank details, customer, items, totals, delivery date, warranty and terms, signature lines. */
 

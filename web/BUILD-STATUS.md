@@ -2,7 +2,21 @@
 
 Spec: `../Plan.md`. Implementation plan: nine phases, one local commit each. Updated after every phase, and the way to resume after a context reset.
 
-**Last updated:** 29 Oct 2026: the mobile and UX wave below is finished, verified and committed locally (35 commits ahead of `origin/main`, **not pushed**). The sections after it are historical.
+**Last updated:** 29 Oct 2026: quote-request and sales-follow-up release implemented locally on `feat/quote-requests-and-sales-followups`; no remote push or deployment. Older sections below retain their historical context.
+
+## Quote requests and sales follow-up release (29 Oct 2026)
+
+This section describes the current local implementation; the push/deployment statements and pending phase tables below are historical.
+
+- Public `/request-quote/` accepts product/colour selections, contact preference, city, budget and room notes without a visit date. Product pages and both cart views link to it.
+- `/admin/leads/` provides search, assigned/unassigned and follow-up queues; the lead view records staff assignment, Colombo-time follow-up, stage, lost reason, priority and an append-only activity trail. Prepare quotation opens the existing editor with snapshotted pieces.
+- Booking confirmation and ICS now require a private HttpOnly cookie with a hashed, expiring server-side token. Old reference-only pages reveal no visit details and provide recovery instructions.
+- Public bookings/enquiries no longer overwrite customer master data. Contact snapshots remain visible in booking administration.
+- Booking requests, quotation conversion and payment recording support safe retries. Draft/issue/cancel/payment operations share invoice locks; invoices with payments cannot be cancelled; unpriced zero-value lines cannot be issued.
+- Login/booking/enquiry gates use shared atomic database counters. Existing process-local and browser-count checks remain additional brakes. Expired counters are cleaned by the rollup job.
+- Apply the additive migration `drizzle/0002_living_vision.sql` through the existing migration command before serving this code against a hosted database. Local PGlite migrates automatically.
+- Verified: TypeScript, lint and production build pass; full unit/database suite 1,114 passed, focused campaign/proxy suite 10 passed, and production-browser journeys 4 passed. Phone quote form and desktop lead detail were visually reviewed.
+- Full roadmap and remaining work: `docs/FUNCTIONALITY-IMPROVEMENT-PLAN.md`. This release does not implement fulfillment, customer quote acceptance, complete translations or a payment gateway.
 
 ## Desktop and admin pass (29 Oct 2026)
 

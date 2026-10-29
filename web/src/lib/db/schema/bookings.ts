@@ -16,7 +16,10 @@ import { customers } from './people';
 import type { BookingStatus, ImageRef } from './types';
 
 /** Feeds booking references: SFO-B-0001, SFO-B-0002, … (formatted in code). */
-export const bookingRefSeq = pgSequence('booking_ref_seq', { startWith: 1, increment: 1 });
+export const bookingRefSeq = pgSequence('booking_ref_seq', {
+  startWith: 1,
+  increment: 1,
+});
 
 export const bookingSlots = pgTable('booking_slots', {
   id: serial('id').primaryKey(),
@@ -33,16 +36,30 @@ export const bookings = pgTable(
   {
     id: serial('id').primaryKey(),
     reference: text('reference').notNull().unique(),
+    accessHash: text('access_hash').unique(),
+    accessExpiresAt: timestamp('access_expires_at', { withTimezone: true }),
+    requestFingerprint: text('request_fingerprint'),
+    contactSnapshot: jsonb('contact_snapshot').$type<{
+      name: string;
+      phone: string;
+      email?: string;
+      city?: string;
+    }>(),
     customerId: integer('customer_id')
       .notNull()
       .references(() => customers.id),
     visitDate: date('visit_date').notNull(),
-    slotId: integer('slot_id').references(() => bookingSlots.id, { onDelete: 'set null' }),
+    slotId: integer('slot_id').references(() => bookingSlots.id, {
+      onDelete: 'set null',
+    }),
     slotLabel: text('slot_label').notNull(),
     status: text('status').$type<BookingStatus>().notNull().default('new'),
     customerNotes: text('customer_notes'),
     staffNotes: text('staff_notes'),
-    preferredContact: text('preferred_contact').$type<'whatsapp' | 'call' | 'email'>().notNull().default('whatsapp'),
+    preferredContact: text('preferred_contact')
+      .$type<'whatsapp' | 'call' | 'email'>()
+      .notNull()
+      .default('whatsapp'),
     city: text('city'),
     sourcePage: text('source_page'),
     referrer: text('referrer'),
@@ -51,8 +68,12 @@ export const bookings = pgTable(
     conversationId: integer('conversation_id'),
     consentAt: timestamp('consent_at', { withTimezone: true }),
     reviewRequestedAt: timestamp('review_requested_at', { withTimezone: true }),
-    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
   },
   (t) => [
     index('bookings_date_slot_idx').on(t.visitDate, t.slotId),
@@ -68,8 +89,12 @@ export const bookingItems = pgTable(
     bookingId: integer('booking_id')
       .notNull()
       .references(() => bookings.id, { onDelete: 'cascade' }),
-    productId: integer('product_id').references(() => products.id, { onDelete: 'set null' }),
-    variantId: integer('variant_id').references(() => productVariants.id, { onDelete: 'set null' }),
+    productId: integer('product_id').references(() => products.id, {
+      onDelete: 'set null',
+    }),
+    variantId: integer('variant_id').references(() => productVariants.id, {
+      onDelete: 'set null',
+    }),
     productName: text('product_name').notNull(),
     productSlug: text('product_slug'),
     colourName: text('colour_name'),

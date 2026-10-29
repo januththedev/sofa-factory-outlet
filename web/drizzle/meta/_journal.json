@@ -15,6 +15,13 @@
       "when": 1793118638154,
       "tag": "0001_init",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793243968111,
+      "tag": "0002_living_vision",
+      "breakpoints": true
     }
   ]
 }

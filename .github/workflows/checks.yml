@@ -1,0 +1,32 @@
+name: Application checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      PGLITE_DIR: .data/ci-build
+      AUTH_SECRET: ci-only-secret-0123456789-abcdef-0123456789
+      CRON_SECRET: ci-only-cron-secret-0123456789
+      OWNER_EMAIL: owner@ci.test
+      OWNER_PASSWORD: ci-only-owner-password-1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test -- --maxWorkers=1
+      - run: npm run build

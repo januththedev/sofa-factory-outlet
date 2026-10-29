@@ -1,6 +1,8 @@
 import { CalendarPlus, MapPin, MessageCircle } from 'lucide-react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { cookies } from 'next/headers';
+import { bookingCookie, canReadBooking } from '@/lib/security/access';
 import { BookingReference } from '@/components/booking/booking-reference';
 import { formatVisitDate } from '@/components/booking/calendar';
 import { ConfirmationEffects } from '@/components/booking/confirmation-effects';
@@ -16,7 +18,11 @@ import { getSettings, mapsDirectionsUrl } from '@/lib/settings/get';
 export const dynamic = 'force-dynamic';
 const REFERENCE = /^SFO-B-\d{1,9}$/i;
 
-export async function generateMetadata({ params }: { params: Promise<{ ref: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ ref: string }>;
+}): Promise<Metadata> {
   const { ref } = await params;
   return pageMetadata({
     title: 'Your visit is booked',
@@ -26,9 +32,33 @@ export async function generateMetadata({ params }: { params: Promise<{ ref: stri
   });
 }
 
-export default async function BookingDonePage({ params }: { params: Promise<{ ref: string }> }) {
+export default async function BookingDonePage({
+  params,
+}: {
+  params: Promise<{ ref: string }>;
+}) {
   const { ref } = await params;
   if (!REFERENCE.test(ref)) notFound();
+  if (
+    !(await canReadBooking(
+      ref,
+      (await cookies()).get(bookingCookie(ref))?.value,
+    ))
+  )
+    return (
+      <div className="site-container pb-24 pt-32 lg:pt-44">
+        <h1 className="font-display text-4xl">
+          Your visit details are private.
+        </h1>
+        <p className="mt-6 max-w-lg">
+          Open this page in the browser you used to book. If you need help
+          recovering your booking, contact our team and quote your reference.
+        </p>
+        <TLink href="/visit/" className="btn-primary mt-6 min-h-11 px-6">
+          Contact the showroom
+        </TLink>
+      </div>
+    );
   const booking = await getBookingByReference(ref);
   if (!booking) notFound();
   const { business } = await getSettings();
@@ -37,33 +67,55 @@ export default async function BookingDonePage({ params }: { params: Promise<{ re
     ? bookingWhatsappLink(booking, business.whatsapp.number)
     : null;
   const address = business.address.confirmed
-    ? [business.address.street, business.address.locality, business.address.city].filter(Boolean).join(', ')
+    ? [
+        business.address.street,
+        business.address.locality,
+        business.address.city,
+      ]
+        .filter(Boolean)
+        .join(', ')
     : null;
   const directionsHref = business.map.confirmed
-    ? business.map.placeUrl ?? (
-      business.map.lat !== null && business.map.lng !== null
+    ? (business.map.placeUrl ??
+      (business.map.lat !== null && business.map.lng !== null
         ? `https://www.google.com/maps/dir/?api=1&destination=${business.map.lat},${business.map.lng}`
-        : address ? mapsDirectionsUrl(business.address) : null
-    )
-    : address ? mapsDirectionsUrl(business.address) : null;
+        : address
+          ? mapsDirectionsUrl(business.address)
+          : null))
+    : address
+      ? mapsDirectionsUrl(business.address)
+      : null;
   const calendarHref = `/api/bookings/${encodeURIComponent(booking.reference)}/ics/`;
 
   return (
     <div className="site-container pb-24 pt-24 lg:pb-32 lg:pt-44">
-      {active ? <ConfirmationEffects reference={booking.reference} pieces={booking.items.length} /> : null}
+      {active ? (
+        <ConfirmationEffects
+          reference={booking.reference}
+          pieces={booking.items.length}
+        />
+      ) : null}
       <div className="mx-auto max-w-4xl">
-        <p className="eyebrow text-xs">{active ? 'Visit booked' : 'Booking closed'}</p>
+        <p className="eyebrow text-xs">
+          {active ? 'Visit booked' : 'Booking closed'}
+        </p>
         <h1 className="mt-4 text-[clamp(2.4rem,5vw,4.4rem)] font-light leading-[1]">
-          {active ? 'Your visit is booked.' : 'This booking is no longer active.'}
+          {active
+            ? 'Your visit is booked.'
+            : 'This booking is no longer active.'}
         </h1>
         <Card className="mt-10 min-w-0 p-4 sm:p-10">
           <p className="eyebrow text-xs">Booking reference</p>
           <BookingReference reference={booking.reference} />
-          <p className="mt-2 text-base text-mute">Keep this reference and quote it when you contact us.</p>
+          <p className="mt-2 text-base text-mute">
+            Keep this reference and quote it when you contact us.
+          </p>
           <dl className="mt-8 grid gap-6 border-t border-line pt-8 sm:grid-cols-3">
             <div>
               <dt className="eyebrow text-xs">Date</dt>
-              <dd className="mt-2 text-lg">{formatVisitDate(booking.visitDate)}</dd>
+              <dd className="mt-2 text-lg">
+                {formatVisitDate(booking.visitDate)}
+              </dd>
             </div>
             <div>
               <dt className="eyebrow text-xs">Time</dt>
@@ -71,15 +123,24 @@ export default async function BookingDonePage({ params }: { params: Promise<{ re
             </div>
             <div>
               <dt className="eyebrow text-xs">Showroom</dt>
-              <dd className="mt-2 text-lg">{address ?? 'Details confirmed when we contact you.'}</dd>
+              <dd className="mt-2 text-lg">
+                {address ?? 'Details confirmed when we contact you.'}
+              </dd>
             </div>
           </dl>
           {active ? (
-            <section aria-labelledby="done-next" className="mt-8 border-t border-line pt-6">
-              <h2 id="done-next" className="font-display text-2xl">What happens next</h2>
+            <section
+              aria-labelledby="done-next"
+              className="mt-8 border-t border-line pt-6"
+            >
+              <h2 id="done-next" className="font-display text-2xl">
+                What happens next
+              </h2>
               <ol className="mt-4 list-decimal space-y-3 pl-5 text-base text-ink-2">
                 <li>We confirm your visit by WhatsApp or phone.</li>
-                <li>Your showroom visit is by appointment, at the agreed time.</li>
+                <li>
+                  Your showroom visit is by appointment, at the agreed time.
+                </li>
                 <li>Prices are confirmed at the showroom.</li>
               </ol>
             </section>
@@ -119,15 +180,22 @@ export default async function BookingDonePage({ params }: { params: Promise<{ re
                 Message us on WhatsApp
               </a>
             ) : null}
-            <TLink href="/shop/" className="btn-ghost min-h-11 px-5 py-3">Back to the shop</TLink>
+            <TLink href="/shop/" className="btn-ghost min-h-11 px-5 py-3">
+              Back to the shop
+            </TLink>
           </div>
         </Card>
         <section aria-labelledby="done-pieces" className="mt-10">
-          <h2 id="done-pieces" className="text-2xl font-light">Your pieces</h2>
+          <h2 id="done-pieces" className="text-2xl font-light">
+            Your pieces
+          </h2>
           {booking.items.length ? (
             <ul className="mt-6 divide-y divide-line">
               {booking.items.map((item, index) => (
-                <li key={`${item.slug ?? item.name}-${index}`} className="flex min-w-0 items-center gap-4 py-4">
+                <li
+                  key={`${item.slug ?? item.name}-${index}`}
+                  className="flex min-w-0 items-center gap-4 py-4"
+                >
                   <div className="size-[72px] shrink-0 overflow-hidden rounded-lg bg-bone-2">
                     {item.image ? (
                       <Picture
@@ -136,7 +204,9 @@ export default async function BookingDonePage({ params }: { params: Promise<{ re
                         sizes="72px"
                         imgClassName={cn(
                           'h-full w-full',
-                          item.image.cutout ? 'object-contain mix-blend-multiply' : 'object-cover',
+                          item.image.cutout
+                            ? 'object-contain mix-blend-multiply'
+                            : 'object-cover',
                         )}
                       />
                     ) : null}
@@ -149,15 +219,25 @@ export default async function BookingDonePage({ params }: { params: Promise<{ re
                       >
                         {item.name}
                       </TLink>
-                    ) : <p className="break-words font-display text-lg">{item.name}</p>}
+                    ) : (
+                      <p className="break-words font-display text-lg">
+                        {item.name}
+                      </p>
+                    )}
                     <p className="text-base text-mute">
-                      {[item.colourName, `Quantity ${item.quantity}`].filter(Boolean).join(' · ')}
+                      {[item.colourName, `Quantity ${item.quantity}`]
+                        .filter(Boolean)
+                        .join(' · ')}
                     </p>
                   </div>
                 </li>
               ))}
             </ul>
-          ) : <p className="mt-6 text-base text-ink-2">No pieces chosen yet. You can choose at the showroom.</p>}
+          ) : (
+            <p className="mt-6 text-base text-ink-2">
+              No pieces chosen yet. You can choose at the showroom.
+            </p>
+          )}
         </section>
       </div>
     </div>

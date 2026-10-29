@@ -2,11 +2,24 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircle } from 'lucide-react';
-import { startTransition, useActionState, useEffect, useRef, useState } from 'react';
-import { Controller, type FieldErrors, useForm, useWatch } from 'react-hook-form';
+import {
+  startTransition,
+  useActionState,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import {
+  Controller,
+  type FieldErrors,
+  useForm,
+  useWatch,
+} from 'react-hook-form';
+import { submissionToken } from '@/lib/security/submission-token';
 import { submitBooking } from '@/app/(site)/book-visit/actions';
 import { TLink } from '@/components/site/transition';
 import { Card } from '@/components/ui/card';
+import { collectAttribution } from '@/lib/analytics/attribution';
 import { getVisitorIds, trackEvent } from '@/lib/analytics/client';
 import type { DayAvailability } from '@/lib/bookings/api';
 import { useCart } from '@/lib/cart/store';
@@ -62,27 +75,31 @@ type BookingFormProps = {
   whatsappHref: string | null;
 };
 
-function fieldTarget(form: HTMLFormElement | null, name: DetailField): HTMLElement | null {
+function fieldTarget(
+  form: HTMLFormElement | null,
+  name: DetailField,
+): HTMLElement | null {
   const root = form?.querySelector<HTMLElement>(`#${fieldId(name)}`);
   if (!root) return null;
   if (root.matches('input, textarea, select, button')) return root;
-  const choices = root.querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled)');
+  const choices = root.querySelectorAll<HTMLElement>(
+    'button:not(:disabled), input:not(:disabled)',
+  );
   return [...choices].find((item) => item.getClientRects().length > 0) ?? root;
 }
 
-function revealField(form: HTMLFormElement | null, name: DetailField, focus = true) {
+function revealField(
+  form: HTMLFormElement | null,
+  name: DetailField,
+  focus = true,
+) {
   const target = fieldTarget(form, name);
   target?.scrollIntoView({ block: 'center', behavior: 'instant' });
   if (focus) target?.focus({ preventScroll: true });
 }
 
 function collectMeta(): BookingMeta {
-  const params = new URLSearchParams(window.location.search);
-  const utm: Record<string, string> = {};
-  for (const key of ['source', 'medium', 'campaign']) {
-    const value = params.get(`utm_${key}`);
-    if (value) utm[key] = value.slice(0, 200);
-  }
+  const utm = collectAttribution();
   let sourcePage = window.location.pathname;
   let referrer: string | undefined;
   if (document.referrer) {
@@ -97,11 +114,22 @@ function collectMeta(): BookingMeta {
   return { visitorId: getVisitorIds().visitorId, sourcePage, referrer, utm };
 }
 
-function Step({ number, title, children }: { number: number; title: string; children: React.ReactNode }) {
+function Step({
+  number,
+  title,
+  children,
+}: {
+  number: number;
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
     <Card className="min-w-0 p-4 sm:p-8">
       <section aria-labelledby={`bv-step-${number}`}>
-        <h2 id={`bv-step-${number}`} className="flex items-center gap-3 text-2xl font-light">
+        <h2
+          id={`bv-step-${number}`}
+          className="flex items-center gap-3 text-2xl font-light"
+        >
           <span
             aria-hidden
             className="grid size-8 shrink-0 place-items-center rounded-full bg-ink text-base text-bone"
@@ -116,16 +144,33 @@ function Step({ number, title, children }: { number: number; title: string; chil
   );
 }
 
-export function BookingForm({ availability: initialAvailability, businessName, whatsappHref }: BookingFormProps) {
+export function BookingForm({
+  availability: initialAvailability,
+  businessName,
+  whatsappHref,
+}: BookingFormProps) {
   const submissionLock = useRef(false);
-  const [state, formAction, pending] = useActionState<BookingFormState, FormData>(async (previous, data) => {
+  const requestToken = useRef<string | null>(null);
+  const [state, formAction, pending] = useActionState<
+    BookingFormState,
+    FormData
+  >(async (previous, data) => {
     try {
       return await submitBooking(previous, data);
     } catch (error) {
       // Next handles successful action redirects; transport failures remain retryable in this form.
-      if (error && typeof error === 'object' && 'digest' in error &&
-        typeof error.digest === 'string' && error.digest.startsWith('NEXT_REDIRECT')) throw error;
-      return { code: 'unknown', error: 'We could not connect. Please try again.' };
+      if (
+        error &&
+        typeof error === 'object' &&
+        'digest' in error &&
+        typeof error.digest === 'string' &&
+        error.digest.startsWith('NEXT_REDIRECT')
+      )
+        throw error;
+      return {
+        code: 'unknown',
+        error: 'We could not connect. Please try again.',
+      };
     } finally {
       submissionLock.current = false;
     }
@@ -171,7 +216,11 @@ export function BookingForm({ availability: initialAvailability, businessName, w
   useEffect(() => {
     trackEvent('booking_start');
     const saved = restoreBookingDraft();
-    if (saved) reset({ ...DEFAULTS, ...saved, consent: false }, { keepDefaultValues: true });
+    if (saved)
+      reset(
+        { ...DEFAULTS, ...saved, consent: false },
+        { keepDefaultValues: true },
+      );
     let timer: ReturnType<typeof setTimeout> | undefined;
     let dirty = false;
     const flush = () => {
@@ -204,12 +253,15 @@ export function BookingForm({ availability: initialAvailability, businessName, w
     if (!state) return;
     const fieldErrors = state.fieldErrors ?? {};
     const failed = DETAIL_FIELDS.filter((name) => fieldErrors[name]);
-    for (const name of failed) setError(name, { type: 'server', message: fieldErrors[name] });
+    for (const name of failed)
+      setError(name, { type: 'server', message: fieldErrors[name] });
     if (state.code === 'slot_full' || state.code === 'slot_closed') {
       const refreshed = state.availability ?? initialAvailability;
       const currentDate = getValues('date');
       // Prefer the next free time on the same day, then later days, then any remaining day.
-      const next = earliestAvailable(refreshed, currentDate) ?? earliestAvailable(refreshed);
+      const next =
+        earliestAvailable(refreshed, currentDate) ??
+        earliestAvailable(refreshed);
       resetField('slotId');
       if (next) {
         setValue('date', next.date);
@@ -217,7 +269,10 @@ export function BookingForm({ availability: initialAvailability, businessName, w
         clearErrors(['date', 'slotId']);
       } else {
         setValue('date', '');
-        setError('date', { type: 'server', message: 'No free times remain. Please try again later.' });
+        setError('date', {
+          type: 'server',
+          message: 'No free times remain. Please try again later.',
+        });
       }
       revealField(formRef.current, 'date', false);
       summaryRef.current?.focus({ preventScroll: true });
@@ -225,7 +280,15 @@ export function BookingForm({ availability: initialAvailability, businessName, w
       if (failed[0]) revealField(formRef.current, failed[0], false);
       summaryRef.current?.focus({ preventScroll: failed.length > 0 });
     }
-  }, [state, setError, resetField, getValues, setValue, clearErrors, initialAvailability]);
+  }, [
+    state,
+    setError,
+    resetField,
+    getValues,
+    setValue,
+    clearErrors,
+    initialAvailability,
+  ]);
 
   const onInvalid = (invalid: FieldErrors<BookingDetails>) => {
     submissionLock.current = false;
@@ -241,14 +304,23 @@ export function BookingForm({ availability: initialAvailability, businessName, w
   const onValid = (details: BookingDetails) => {
     setDismissed(state);
     setClientNotice(null);
-    const data = toBookingFormData(details, { items: toCartRef(lines), meta: collectMeta() });
+    const data = toBookingFormData(details, {
+      items: toCartRef(lines),
+      meta: collectMeta(),
+    });
+    requestToken.current ??= submissionToken('booking');
+    data.set('requestToken', requestToken.current);
     startTransition(() => formAction(data));
   };
 
   const message = (name: DetailField) => errors[name]?.message;
   const chooseDate = (next: string) => {
     if (next === getValues('date')) return;
-    setValue('date', next, { shouldValidate: true, shouldDirty: true, shouldTouch: true });
+    setValue('date', next, {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
     resetField('slotId');
   };
 
@@ -273,9 +345,15 @@ export function BookingForm({ availability: initialAvailability, businessName, w
           aria-label="Booking needs attention"
           className="scroll-mb-32 rounded-xl border border-bad/30 bg-paper p-4 focus:ring-2 focus:ring-maroon"
         >
-          <p className="font-medium text-bad">{notice ?? 'Please check the following details.'}</p>
-          {serverState?.code === 'slot_full' || serverState?.code === 'slot_closed' ? (
-            <p className="mt-2">The next free option is selected below, if one is available. Please check the time.</p>
+          <p className="font-medium text-bad">
+            {notice ?? 'Please check the following details.'}
+          </p>
+          {serverState?.code === 'slot_full' ||
+          serverState?.code === 'slot_closed' ? (
+            <p className="mt-2">
+              The next free option is selected below, if one is available.
+              Please check the time.
+            </p>
           ) : null}
           <ul className="mt-2 space-y-2">
             {errorFields.map((name) => (
@@ -295,11 +373,18 @@ export function BookingForm({ availability: initialAvailability, businessName, w
           </ul>
           {serverState ? (
             <div className="mt-3 flex flex-wrap gap-2">
-              <button type="submit" disabled={pending} className="min-h-11 rounded-full border px-5">
+              <button
+                type="submit"
+                disabled={pending}
+                className="min-h-11 rounded-full border px-5"
+              >
                 Try again
               </button>
               {whatsappHref ? (
-                <a href={whatsappHref} className="inline-flex min-h-11 items-center px-3 underline">
+                <a
+                  href={whatsappHref}
+                  className="inline-flex min-h-11 items-center px-3 underline"
+                >
                   Message us on WhatsApp
                 </a>
               ) : null}
@@ -314,10 +399,21 @@ export function BookingForm({ availability: initialAvailability, businessName, w
         <div className="grid gap-6 sm:grid-cols-2">
           <Field name="name" label="Full name" error={message('name')}>
             {(a11y) => (
-              <TextInput {...a11y} type="text" autoComplete="name" enterKeyHint="next" {...register('name')} />
+              <TextInput
+                {...a11y}
+                type="text"
+                autoComplete="name"
+                enterKeyHint="next"
+                {...register('name')}
+              />
             )}
           </Field>
-          <Field name="phone" label="Phone number" hint="For example 077 123 4567" error={message('phone')}>
+          <Field
+            name="phone"
+            label="Phone number"
+            hint="For example 077 123 4567"
+            error={message('phone')}
+          >
             {(a11y) => (
               <TextInput
                 {...a11y}
@@ -341,7 +437,11 @@ export function BookingForm({ availability: initialAvailability, businessName, w
               checked={field.value && !landline}
               disabled={landline}
               onChange={field.onChange}
-              hint={landline ? 'WhatsApp needs a mobile number, so we will call this number.' : undefined}
+              hint={
+                landline
+                  ? 'WhatsApp needs a mobile number, so we will call this number.'
+                  : undefined
+              }
             />
           )}
         />
@@ -358,7 +458,12 @@ export function BookingForm({ availability: initialAvailability, businessName, w
               />
             )}
           </Field>
-          <Field name="city" label="City or district" optional error={message('city')}>
+          <Field
+            name="city"
+            label="City or district"
+            optional
+            error={message('city')}
+          >
             {(a11y) => (
               <TextInput
                 {...a11y}
@@ -375,10 +480,12 @@ export function BookingForm({ availability: initialAvailability, businessName, w
           legend="Preferred date"
           error={message('date')}
           onBlur={(event) => {
-            if (!event.currentTarget.contains(event.relatedTarget)) void trigger('date');
+            if (!event.currentTarget.contains(event.relatedTarget))
+              void trigger('date');
           }}
         >
-          {serverState?.code === 'slot_full' || serverState?.code === 'slot_closed' ? (
+          {serverState?.code === 'slot_full' ||
+          serverState?.code === 'slot_closed' ? (
             <p role="status" className="mb-3 text-base text-bad">
               {serverState.error} Check the available days and times below.
             </p>
@@ -388,12 +495,22 @@ export function BookingForm({ availability: initialAvailability, businessName, w
             value={date}
             onChange={chooseDate}
             onEarliest={(next) => {
-              setValue('date', next.date, { shouldValidate: true, shouldDirty: true });
-              setValue('slotId', next.slotId, { shouldValidate: true, shouldDirty: true });
+              setValue('date', next.date, {
+                shouldValidate: true,
+                shouldDirty: true,
+              });
+              setValue('slotId', next.slotId, {
+                shouldValidate: true,
+                shouldDirty: true,
+              });
             }}
           />
           <div className="hidden lg:block">
-            <DatePicker availability={availability} value={date} onChange={chooseDate} />
+            <DatePicker
+              availability={availability}
+              value={date}
+              onChange={chooseDate}
+            />
           </div>
         </Group>
         <Group name="slotId" legend="Time slot" error={message('slotId')}>
@@ -412,7 +529,11 @@ export function BookingForm({ availability: initialAvailability, businessName, w
               />
             )}
           />
-          <p aria-live="polite" aria-atomic="true" className="mt-3 min-h-12 text-base font-medium text-ink-2">
+          <p
+            aria-live="polite"
+            aria-atomic="true"
+            className="mt-3 min-h-12 text-base font-medium text-ink-2"
+          >
             {chosenDay && chosenSlot
               ? `${formatVisitDate(chosenDay.date)}, ${chosenSlot.start} to ${chosenSlot.end}`
               : 'Choose a day and time, or tap Earliest available.'}
@@ -425,12 +546,21 @@ export function BookingForm({ availability: initialAvailability, businessName, w
           hint="For example room size, colours you like or pieces you want to see."
           error={message('notes')}
         >
-          {(a11y) => <TextArea {...a11y} enterKeyHint="done" {...register('notes')} />}
+          {(a11y) => (
+            <TextArea {...a11y} enterKeyHint="done" {...register('notes')} />
+          )}
         </Field>
-        <Group name="preferredContact" legend="How should we contact you?" error={message('preferredContact')}>
+        <Group
+          name="preferredContact"
+          legend="How should we contact you?"
+          error={message('preferredContact')}
+        >
           <div className="flex flex-wrap gap-2">
             {CONTACT_METHODS.map((method) => (
-              <label key={method} className="relative inline-flex min-h-11 cursor-pointer">
+              <label
+                key={method}
+                className="relative inline-flex min-h-11 cursor-pointer"
+              >
                 <input
                   type="radio"
                   value={method}
@@ -458,23 +588,39 @@ export function BookingForm({ availability: initialAvailability, businessName, w
             <input
               id={fieldId('consent')}
               type="checkbox"
-              aria-describedby={message('consent') ? `${fieldId('consent')}-error` : undefined}
+              aria-describedby={
+                message('consent') ? `${fieldId('consent')}-error` : undefined
+              }
               aria-invalid={message('consent') ? true : undefined}
               className="size-11 shrink-0 accent-maroon md:mt-1 md:size-6"
               {...register('consent')}
             />
             <span>
-              I agree that {businessName} may use these details to arrange my visit, as set out in the{' '}
-              <TLink href="/privacy/" target="_blank" rel="noopener noreferrer" className="text-maroon underline">
+              I agree that {businessName} may use these details to arrange my
+              visit, as set out in the{' '}
+              <TLink
+                href="/privacy/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-maroon underline"
+              >
                 privacy policy (opens in a new tab)
-              </TLink>.
+              </TLink>
+              .
             </span>
           </label>
           {message('consent') ? (
-            <p id={`${fieldId('consent')}-error`} className="mt-2 text-base text-bad">{message('consent')}</p>
+            <p
+              id={`${fieldId('consent')}-error`}
+              className="mt-2 text-base text-bad"
+            >
+              {message('consent')}
+            </p>
           ) : null}
         </div>
-        <p className="text-base text-mute">Nothing is paid online. Prices are confirmed at your visit.</p>
+        <p className="text-base text-mute">
+          Nothing is paid online. Prices are confirmed at your visit.
+        </p>
       </Step>
       <div
         data-sticky-bar
@@ -489,7 +635,12 @@ export function BookingForm({ availability: initialAvailability, businessName, w
           disabled={pending}
           className="btn-primary mx-auto flex min-h-12 w-full max-w-xl items-center justify-center gap-2 px-6 lg:mx-0 lg:w-auto lg:max-w-none"
         >
-          {pending ? <LoaderCircle aria-hidden className="size-5 motion-safe:animate-spin" /> : null}
+          {pending ? (
+            <LoaderCircle
+              aria-hidden
+              className="size-5 motion-safe:animate-spin"
+            />
+          ) : null}
           {pending ? 'Booking...' : 'Book my visit'}
         </button>
       </div>

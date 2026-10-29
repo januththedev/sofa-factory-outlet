@@ -8,10 +8,18 @@ import { trackEvent } from '@/lib/analytics/client';
 import { useCart } from '@/lib/cart/store';
 import { openChat } from '@/lib/events';
 
-type ProductSnapshot = { id: number; slug: string; name: string; priceMinor: number | null };
+type ProductSnapshot = {
+  id: number;
+  slug: string;
+  name: string;
+  priceMinor: number | null;
+};
 type CartFeedback = { added: boolean; addLine: () => void };
 
-export function useProductCart(product: ProductSnapshot, variant: ProductVariantView | undefined): CartFeedback {
+export function useProductCart(
+  product: ProductSnapshot,
+  variant: ProductVariantView | undefined,
+): CartFeedback {
   const add = useCart((state) => state.add);
   const [addedVariant, setAddedVariant] = useState<number | null>(null);
   useEffect(() => {
@@ -38,7 +46,12 @@ export function useProductCart(product: ProductSnapshot, variant: ProductVariant
   return { added, addLine };
 }
 
-export function AddToCart({ product, variant, feedback, compact = false }: {
+export function AddToCart({
+  product,
+  variant,
+  feedback,
+  compact = false,
+}: {
   product: ProductSnapshot;
   variant: ProductVariantView;
   feedback?: CartFeedback;
@@ -48,28 +61,52 @@ export function AddToCart({ product, variant, feedback, compact = false }: {
   const { added, addLine } = feedback ?? local;
   return (
     <div className={compact ? 'grid grid-cols-2 gap-2' : 'flex flex-col gap-3'}>
-      <button type="button" disabled={added} className="btn btn-primary min-h-11 px-3" onClick={addLine}>
+      <button
+        type="button"
+        disabled={added}
+        className="btn btn-primary min-h-11 px-3"
+        onClick={addLine}
+      >
         {added ? 'Added to cart' : 'Add to cart'}
       </button>
       <button
         type="button"
         className="btn btn-ghost min-h-11 px-3"
-        onClick={() => openChat({ productId: product.id, variantId: variant.id })}
+        onClick={() =>
+          openChat({ productId: product.id, variantId: variant.id })
+        }
       >
         Ask about this sofa
       </button>
+      <TLink
+        href="/request-quote/"
+        className="btn btn-ghost min-h-11 px-3"
+        onClick={addLine}
+      >
+        Request a quote
+      </TLink>
       {!compact ? (
-        <TLink href="/book-visit/" className="btn btn-ghost min-h-11" onClick={addLine}>
+        <TLink
+          href="/book-visit/"
+          className="btn btn-ghost min-h-11"
+          onClick={addLine}
+        >
           Book a visit with this piece
         </TLink>
       ) : null}
       {added ? (
-        <TLink href="/cart/" className={`min-h-11 px-3 py-3 text-center underline ${compact ? 'col-span-2' : ''}`}>
+        <TLink
+          href="/cart/"
+          className={`min-h-11 px-3 py-3 text-center underline ${compact ? 'col-span-2' : ''}`}
+        >
           View cart
         </TLink>
       ) : null}
-      {!feedback ? <p role="status" className="sr-only">{added ? 'Added to cart. View cart is available.' : ''}</p>
-        : null}
+      {!feedback ? (
+        <p role="status" className="sr-only">
+          {added ? 'Added to cart. View cart is available.' : ''}
+        </p>
+      ) : null}
     </div>
   );
 }
