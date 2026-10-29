@@ -76,3 +76,29 @@ test('a super admin adds an admin, who can sign in, change their password and ca
   await expect(check).toHaveURL(/\/admin\/$/);
   await fresh.close();
 });
+
+test('search pages, FAQ markup and llms.txt are published for search engines and AI assistants', async ({ page, request }) => {
+  for (const [path, heading] of [
+    ['/faq/', 'Sofa questions, answered'],
+    ['/sofa-shop-colombo/', 'A Colombo sofa shop that makes its own sofas'],
+    ['/custom-sofas-sri-lanka/', 'Custom-made sofas, built for your room'],
+  ] as const) {
+    const response = await page.goto(path);
+    expect(response?.status(), path).toBe(200);
+    await expect(page.getByRole('heading', { level: 1, name: heading })).toBeVisible();
+    const types = await page.locator('script[type="application/ld+json"]').allTextContents();
+    expect(types.join(' '), path).toContain('"FAQPage"');
+  }
+  await page.goto('/');
+  const home = (await page.locator('script[type="application/ld+json"]').allTextContents()).join(' ');
+  expect(home).toContain('"FurnitureStore"');
+  expect(home).toContain('"WebSite"');
+
+  const llms = await (await request.get('/llms.txt')).text();
+  expect(llms).toContain('## How to buy');
+  expect(llms).toContain('/custom-sofas-sri-lanka/');
+  expect(llms).toContain('## Common questions');
+  const sitemap = await (await request.get('/sitemaps/pages.xml')).text();
+  expect(sitemap).toContain('/faq/');
+  expect(sitemap).toContain('/sofa-shop-colombo/');
+});

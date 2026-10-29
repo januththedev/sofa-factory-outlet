@@ -4,7 +4,6 @@ import { saveChatSeoAction } from '@/app/admin/(panel)/settings/actions';
 import type { ChatSettings, SeoSettings } from '@/lib/settings/types';
 import {
   AreaField,
-  CheckField,
   FormCard,
   SaveBar,
   SectionTitle,
@@ -69,12 +68,6 @@ export function ChatSeoForm({ chat, seo }: { chat: ChatSettings; seo: SeoSetting
           <option value="allow">Allow</option>
           <option value="block">Block</option>
         </SelectField>
-        <CheckField
-          name="seo.indexNow"
-          label="Tell search engines at once when a page changes (IndexNow)"
-          hint="Needs the IndexNow key to be configured; see Connected services below."
-          defaultChecked={seo.indexNow}
-        />
       </section>
 
       <SaveBar state={state} pending={pending} />
