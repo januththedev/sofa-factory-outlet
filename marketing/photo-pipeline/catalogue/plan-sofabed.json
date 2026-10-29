@@ -1,0 +1,33 @@
+{
+ "folder": "sofa-sets-sofa-come-bad",
+ "excluded": {
+  "3": "another brand's watermark",
+  "4": "another brand's watermark",
+  "5": "possibly stock",
+  "6": "possibly stock",
+  "7": "possibly stock"
+ },
+ "products": [
+  {
+   "key": "sofa-bed",
+   "name": "Sofa Bed",
+   "shape": "sofa-bed",
+   "variants": [
+    {
+     "colour": "Brown Stripe",
+     "photos": [
+      1,
+      2,
+      0
+     ]
+    },
+    {
+     "colour": "Teal",
+     "photos": [
+      8
+     ]
+    }
+   ]
+  }
+ ]
+}

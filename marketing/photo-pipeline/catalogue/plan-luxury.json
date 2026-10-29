@@ -1,0 +1,42 @@
+{
+  "folder": "sofa-sets-luxuary",
+  "excluded": { "10": "stock", "12": "stock", "13": "stock", "14": "stock", "29": "stock", "32": "stock", "33": "stock", "34": "stock", "35": "stock", "43": "stock", "44": "stock", "45": "stock", "61": "stock", "62": "stock", "84": "stock", "85": "stock", "87": "stock", "74": "foam frames in production", "75": "foam frames", "76": "foam frames", "11": "close-up", "1": "top view", "2": "top view", "3": "top view", "28": "partial" },
+  "products": [
+    {
+      "key": "luxury-modular",
+      "name": "Luxury Modular Corner Sofa",
+      "shape": "u-shape",
+      "variants": [
+        { "colour": "Rust Orange", "photos": [37, 36, 40, 9] },
+        { "colour": "Ivory", "photos": [78, 77, 80] },
+        { "colour": "Taupe", "photos": [51, 50, 52] },
+        { "colour": "Black and Cream", "photos": [47, 46, 48] },
+        { "colour": "Royal Blue and Cream", "photos": [82, 81, 83] },
+        { "colour": "Champagne", "photos": [73, 71, 72] },
+        { "colour": "Chocolate Brown", "photos": [63, 64, 65] },
+        { "colour": "Charcoal and Grey", "photos": [67, 68, 70] },
+        { "colour": "Grey", "photos": [7, 8] },
+        { "colour": "Navy", "photos": [22, 23] },
+        { "colour": "Dusty Mauve", "photos": [20, 21] },
+        { "colour": "Black and Grey", "photos": [54, 55, 0] },
+        { "colour": "Cream Stripe", "photos": [24, 25, 27] },
+        { "colour": "Black and Stripe", "photos": [56, 57] },
+        { "colour": "Olive and Black", "photos": [58, 59, 60] },
+        { "colour": "Black Damask", "photos": [5, 4, 6] },
+        { "colour": "Marble Beige", "photos": [86] }
+      ]
+    },
+    {
+      "key": "wave-lounge-chair",
+      "name": "Wave Lounge Chair",
+      "shape": "chair",
+      "variants": [ { "colour": "Light Grey", "photos": [16, 15, 17, 18] } ]
+    },
+    {
+      "key": "chaise-longue",
+      "name": "Velvet Chaise Longue",
+      "shape": "chaise",
+      "variants": [ { "colour": "Black", "photos": [30, 31] } ]
+    }
+  ]
+}

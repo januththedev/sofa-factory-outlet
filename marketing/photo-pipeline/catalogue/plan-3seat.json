@@ -1,0 +1,292 @@
+{
+ "folder": "sofa-sets-3-seaters",
+ "excluded": {
+  "0": "stock, supplier or partial",
+  "7": "stock, supplier or partial",
+  "39": "stock, supplier or partial",
+  "42": "stock, supplier or partial",
+  "52": "stock, supplier or partial",
+  "58": "stock, supplier or partial",
+  "59": "stock, supplier or partial",
+  "60": "stock, supplier or partial",
+  "61": "stock, supplier or partial",
+  "62": "stock, supplier or partial",
+  "63": "stock, supplier or partial",
+  "64": "stock, supplier or partial",
+  "65": "stock, supplier or partial",
+  "66": "stock, supplier or partial",
+  "72": "stock, supplier or partial",
+  "73": "stock, supplier or partial",
+  "74": "stock, supplier or partial",
+  "75": "stock, supplier or partial",
+  "26": "stock, supplier or partial",
+  "31": "stock, supplier or partial",
+  "33": "stock, supplier or partial",
+  "34": "stock, supplier or partial",
+  "23": "stock, supplier or partial",
+  "24": "stock, supplier or partial",
+  "25": "stock, supplier or partial",
+  "3": "stock, supplier or partial",
+  "4": "stock, supplier or partial",
+  "35": "stock, supplier or partial",
+  "48": "stock, supplier or partial",
+  "53": "stock, supplier or partial",
+  "54": "stock, supplier or partial",
+  "20": "stock, supplier or partial",
+  "27": "stock, supplier or partial",
+  "80": "supplier factory or stock",
+  "81": "supplier factory or stock",
+  "82": "supplier factory or stock",
+  "83": "supplier factory or stock",
+  "84": "supplier factory or stock",
+  "85": "supplier factory or stock",
+  "86": "supplier factory or stock",
+  "87": "supplier factory or stock",
+  "88": "supplier factory or stock",
+  "89": "supplier factory or stock",
+  "90": "supplier factory or stock",
+  "91": "supplier factory or stock",
+  "92": "supplier factory or stock",
+  "93": "supplier factory or stock",
+  "94": "supplier factory or stock",
+  "95": "supplier factory or stock",
+  "96": "supplier factory or stock",
+  "97": "supplier factory or stock",
+  "98": "supplier factory or stock",
+  "99": "supplier factory or stock",
+  "100": "supplier factory or stock",
+  "101": "supplier factory or stock",
+  "102": "supplier factory or stock",
+  "103": "supplier factory or stock",
+  "104": "supplier factory or stock",
+  "105": "supplier factory or stock",
+  "106": "supplier factory or stock",
+  "107": "supplier factory or stock",
+  "108": "supplier factory or stock",
+  "109": "supplier factory or stock",
+  "110": "supplier factory or stock",
+  "111": "supplier factory or stock",
+  "112": "supplier factory or stock",
+  "113": "supplier factory or stock",
+  "114": "supplier factory or stock",
+  "115": "supplier factory or stock",
+  "116": "supplier factory or stock",
+  "117": "supplier factory or stock",
+  "118": "supplier factory or stock",
+  "119": "supplier factory or stock",
+  "120": "supplier factory or stock",
+  "121": "supplier factory or stock",
+  "122": "supplier factory or stock",
+  "123": "supplier factory or stock",
+  "124": "supplier factory or stock",
+  "125": "supplier factory or stock",
+  "126": "supplier factory or stock",
+  "127": "supplier factory or stock",
+  "128": "supplier factory or stock",
+  "129": "supplier factory or stock"
+ },
+ "products": [
+  {
+   "key": "three-seater-chesterfield",
+   "name": "Chesterfield 3-Seater Sofa",
+   "shape": "three-seater",
+   "variants": [
+    {
+     "colour": "Beige",
+     "photos": [
+      21,
+      29
+     ]
+    },
+    {
+     "colour": "Grey",
+     "photos": [
+      49,
+      40,
+      55
+     ]
+    },
+    {
+     "colour": "Olive Green",
+     "photos": [
+      45
+     ]
+    },
+    {
+     "colour": "Blush Pink",
+     "photos": [
+      51
+     ]
+    },
+    {
+     "colour": "Latte",
+     "photos": [
+      43,
+      44
+     ]
+    },
+    {
+     "colour": "Mustard",
+     "photos": [
+      69,
+      68
+     ]
+    },
+    {
+     "colour": "Charcoal",
+     "photos": [
+      136,
+      138,
+      135
+     ]
+    }
+   ]
+  },
+  {
+   "key": "three-seater-modern",
+   "name": "Modern 3-Seater Sofa",
+   "shape": "three-seater",
+   "variants": [
+    {
+     "colour": "Pale Blue",
+     "photos": [
+      12,
+      11,
+      9
+     ]
+    },
+    {
+     "colour": "Denim Blue",
+     "photos": [
+      16,
+      15
+     ]
+    },
+    {
+     "colour": "Grey",
+     "photos": [
+      22,
+      70,
+      71
+     ]
+    },
+    {
+     "colour": "Emerald",
+     "photos": [
+      6,
+      5,
+      37,
+      79
+     ]
+    },
+    {
+     "colour": "Grey and Charcoal",
+     "photos": [
+      8,
+      57
+     ]
+    },
+    {
+     "colour": "Olive Green",
+     "photos": [
+      56
+     ]
+    },
+    {
+     "colour": "Cream",
+     "photos": [
+      18
+     ]
+    },
+    {
+     "colour": "Tan Leather",
+     "photos": [
+      28
+     ]
+    },
+    {
+     "colour": "Raspberry",
+     "photos": [
+      78,
+      77
+     ]
+    },
+    {
+     "colour": "Lime",
+     "photos": [
+      32
+     ]
+    },
+    {
+     "colour": "White",
+     "photos": [
+      1,
+      169,
+      170,
+      166
+     ]
+    },
+    {
+     "colour": "Cream Stripe",
+     "photos": [
+      132,
+      131,
+      142,
+      144
+     ]
+    },
+    {
+     "colour": "Black and Grey",
+     "photos": [
+      146,
+      145
+     ]
+    },
+    {
+     "colour": "Black and Silver",
+     "photos": [
+      148,
+      149
+     ]
+    },
+    {
+     "colour": "Kelly Green",
+     "photos": [
+      152,
+      151
+     ]
+    },
+    {
+     "colour": "Navy",
+     "photos": [
+      155,
+      154
+     ]
+    },
+    {
+     "colour": "Taupe",
+     "photos": [
+      157,
+      158
+     ]
+    },
+    {
+     "colour": "Charcoal",
+     "photos": [
+      159,
+      160
+     ]
+    },
+    {
+     "colour": "Chocolate Brown",
+     "photos": [
+      162,
+      163,
+      165
+     ]
+    }
+   ]
+  }
+ ],
+ "reviewed_up_to": 170
+}

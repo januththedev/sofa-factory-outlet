@@ -1,0 +1,270 @@
+{
+ "folder": "sofa-sets-sofa-3-1-1",
+ "excluded": {
+  "17": "flyer",
+  "57": "stock",
+  "64": "stock",
+  "65": "stock",
+  "66": "stock",
+  "67": "flyer",
+  "70": "stock",
+  "71": "stock",
+  "36": "close-up",
+  "38": "close-up",
+  "39": "antique, not theirs",
+  "73": "partial",
+  "68": "partial"
+ },
+ "products": [
+  {
+   "key": "set-311-box",
+   "name": "3+1+1 Sofa Set",
+   "shape": "set",
+   "variants": [
+    {
+     "colour": "Black and Grey",
+     "photos": [
+      1,
+      0,
+      2,
+      95,
+      96
+     ]
+    },
+    {
+     "colour": "Black and Turquoise",
+     "photos": [
+      4,
+      54
+     ]
+    },
+    {
+     "colour": "Black and Cream",
+     "photos": [
+      5,
+      114,
+      53,
+      128
+     ]
+    },
+    {
+     "colour": "Black and Orange",
+     "photos": [
+      157,
+      156,
+      10
+     ]
+    },
+    {
+     "colour": "Black and Peach",
+     "photos": [
+      11,
+      12
+     ]
+    },
+    {
+     "colour": "Tan and Brown",
+     "photos": [
+      14,
+      13,
+      15
+     ]
+    },
+    {
+     "colour": "Navy",
+     "photos": [
+      61,
+      60,
+      62,
+      16
+     ]
+    },
+    {
+     "colour": "Grey and Teal",
+     "photos": [
+      18,
+      49
+     ]
+    },
+    {
+     "colour": "Sky Blue",
+     "photos": [
+      20,
+      23,
+      21
+     ]
+    },
+    {
+     "colour": "White",
+     "photos": [
+      24,
+      25
+     ]
+    },
+    {
+     "colour": "Light Grey and Charcoal",
+     "photos": [
+      28,
+      27
+     ]
+    },
+    {
+     "colour": "Beige",
+     "photos": [
+      34
+     ]
+    },
+    {
+     "colour": "Olive Green",
+     "photos": [
+      44,
+      48
+     ]
+    },
+    {
+     "colour": "Brown Patterned",
+     "photos": [
+      76,
+      75,
+      78,
+      7
+     ]
+    },
+    {
+     "colour": "Brown Damask",
+     "photos": [
+      139,
+      141,
+      143
+     ]
+    },
+    {
+     "colour": "Charcoal and Silver",
+     "photos": [
+      80,
+      81
+     ]
+    },
+    {
+     "colour": "Royal Blue",
+     "photos": [
+      86,
+      85,
+      88
+     ]
+    },
+    {
+     "colour": "Black Damask",
+     "photos": [
+      101,
+      98
+     ]
+    },
+    {
+     "colour": "Purple and Grey",
+     "photos": [
+      104,
+      106
+     ]
+    },
+    {
+     "colour": "Tan and Grey",
+     "photos": [
+      108,
+      107
+     ]
+    },
+    {
+     "colour": "Brown and Cream",
+     "photos": [
+      119,
+      121,
+      124,
+      135,
+      165,
+      164
+     ]
+    },
+    {
+     "colour": "Grey Damask",
+     "photos": [
+      131,
+      132
+     ]
+    },
+    {
+     "colour": "Lime Green",
+     "photos": [
+      145,
+      144
+     ]
+    },
+    {
+     "colour": "Coral Red",
+     "photos": [
+      150,
+      148
+     ]
+    },
+    {
+     "colour": "Black and Red",
+     "photos": [
+      154,
+      153
+     ]
+    },
+    {
+     "colour": "Navy and Cream",
+     "photos": [
+      161,
+      160
+     ]
+    },
+    {
+     "colour": "Taupe",
+     "photos": [
+      170,
+      168
+     ]
+    },
+    {
+     "colour": "Lime and Black",
+     "photos": [
+      173,
+      172,
+      175
+     ]
+    },
+    {
+     "colour": "Black and Sky Blue",
+     "photos": [
+      177,
+      179,
+      180
+     ]
+    }
+   ]
+  },
+  {
+   "key": "set-wing-chairs",
+   "name": "Sofa Set with Wing Chairs",
+   "shape": "set",
+   "variants": [
+    {
+     "colour": "Grey",
+     "photos": [
+      45,
+      46
+     ]
+    },
+    {
+     "colour": "Navy",
+     "photos": [
+      59
+     ]
+    }
+   ]
+  }
+ ],
+ "reviewed_up_to": 181
+}

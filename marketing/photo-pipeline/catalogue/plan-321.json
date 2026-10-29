@@ -1,0 +1,61 @@
+{
+  "folder": "sofa-sets-sofa-3-2-1",
+  "excluded": { "7": "stock photo", "22": "flyer with text", "26": "flyer with text", "51": "catalogue page", "52": "marketing render", "53": "brand graphic", "66": "marketing render", "75": "far away", "76": "possibly stock", "3": "busy, partial", "73": "wrapped", "57": "partial" },
+  "products": [
+    {
+      "key": "set-321-classic",
+      "name": "Classic 3+2+1 Sofa Set",
+      "shape": "set",
+      "variants": [
+        { "colour": "Plum Brown", "photos": [15, 14, 16] },
+        { "colour": "Grey", "photos": [63, 10, 9] },
+        { "colour": "Olive Green", "photos": [46, 47] },
+        { "colour": "Navy", "photos": [68, 19, 69] },
+        { "colour": "Beige", "photos": [24, 25, 48] },
+        { "colour": "Brown and Beige", "photos": [78, 77, 80] },
+        { "colour": "Caramel", "photos": [54, 43] },
+        { "colour": "Mocha", "photos": [55, 56] },
+        { "colour": "Powder Blue", "photos": [50, 67] },
+        { "colour": "Stone Grey", "photos": [2, 1] },
+        { "colour": "Cream", "photos": [82, 21, 20] },
+        { "colour": "Mustard", "photos": [71, 70] }
+      ]
+    },
+    {
+      "key": "set-321-chesterfield",
+      "name": "Chesterfield 3+2+1 Sofa Set",
+      "shape": "set",
+      "variants": [
+        { "colour": "Cream", "photos": [59, 60, 61, 58] },
+        { "colour": "Navy", "photos": [65] },
+        { "colour": "Tan Leather", "photos": [74] },
+        { "colour": "Black", "photos": [44] },
+        { "colour": "Purple", "photos": [39] }
+      ]
+    },
+    {
+      "key": "set-321-wood-arm",
+      "name": "Leatherette Sofa Set with Wooden Arms",
+      "shape": "set",
+      "variants": [ { "colour": "Black", "photos": [30, 31, 4] } ]
+    },
+    {
+      "key": "set-321-two-tone-leatherette",
+      "name": "Two-Tone Leatherette Sofa Set",
+      "shape": "set",
+      "variants": [ { "colour": "Grey and Black", "photos": [28, 29, 27] } ]
+    },
+    {
+      "key": "set-321-navy-leather",
+      "name": "Leather Sofa Set",
+      "shape": "set",
+      "variants": [ { "colour": "Navy", "photos": [34, 35, 33] } ]
+    },
+    {
+      "key": "set-ottoman-striped",
+      "name": "Sofa Set with Ottoman",
+      "shape": "set",
+      "variants": [ { "colour": "Mocha with Striped Cushions", "photos": [85, 86, 87, 84] } ]
+    }
+  ]
+}

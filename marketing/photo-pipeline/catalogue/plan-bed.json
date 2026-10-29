@@ -1,0 +1,102 @@
+{
+ "folder": "sofa-sets-bed",
+ "excluded": {
+  "0": "supplier, stock, hotel room or mattress only",
+  "1": "supplier, stock, hotel room or mattress only",
+  "3": "supplier, stock, hotel room or mattress only",
+  "9": "supplier, stock, hotel room or mattress only",
+  "12": "supplier, stock, hotel room or mattress only",
+  "13": "supplier, stock, hotel room or mattress only",
+  "14": "supplier, stock, hotel room or mattress only",
+  "16": "supplier, stock, hotel room or mattress only",
+  "17": "supplier, stock, hotel room or mattress only",
+  "18": "supplier, stock, hotel room or mattress only",
+  "19": "supplier, stock, hotel room or mattress only",
+  "20": "supplier, stock, hotel room or mattress only",
+  "21": "supplier, stock, hotel room or mattress only",
+  "22": "supplier, stock, hotel room or mattress only",
+  "23": "supplier, stock, hotel room or mattress only",
+  "24": "supplier, stock, hotel room or mattress only",
+  "25": "supplier, stock, hotel room or mattress only",
+  "26": "supplier, stock, hotel room or mattress only",
+  "27": "supplier, stock, hotel room or mattress only",
+  "28": "supplier, stock, hotel room or mattress only",
+  "29": "supplier, stock, hotel room or mattress only",
+  "30": "supplier, stock, hotel room or mattress only",
+  "31": "supplier, stock, hotel room or mattress only",
+  "32": "supplier, stock, hotel room or mattress only",
+  "33": "supplier, stock, hotel room or mattress only",
+  "34": "supplier, stock, hotel room or mattress only",
+  "35": "supplier, stock, hotel room or mattress only",
+  "36": "supplier, stock, hotel room or mattress only",
+  "37": "supplier, stock, hotel room or mattress only",
+  "38": "supplier, stock, hotel room or mattress only",
+  "39": "supplier, stock, hotel room or mattress only",
+  "40": "supplier, stock, hotel room or mattress only",
+  "41": "supplier, stock, hotel room or mattress only",
+  "42": "supplier, stock, hotel room or mattress only",
+  "43": "supplier, stock, hotel room or mattress only",
+  "44": "supplier, stock, hotel room or mattress only",
+  "45": "supplier, stock, hotel room or mattress only",
+  "46": "supplier, stock, hotel room or mattress only",
+  "47": "supplier, stock, hotel room or mattress only",
+  "48": "supplier, stock, hotel room or mattress only",
+  "49": "supplier, stock, hotel room or mattress only",
+  "50": "supplier, stock, hotel room or mattress only",
+  "51": "supplier, stock, hotel room or mattress only",
+  "52": "supplier, stock, hotel room or mattress only",
+  "53": "supplier, stock, hotel room or mattress only"
+ },
+ "products": [
+  {
+   "key": "bed-tufted",
+   "name": "Upholstered Bed with Tufted Headboard",
+   "shape": "bed",
+   "category": "beds",
+   "variants": [
+    {
+     "colour": "Grey",
+     "photos": [
+      4,
+      7,
+      2
+     ]
+    },
+    {
+     "colour": "Beige",
+     "photos": [
+      5,
+      6
+     ]
+    }
+   ]
+  },
+  {
+   "key": "bed-channel",
+   "name": "Upholstered Bed with Channel Headboard",
+   "shape": "bed",
+   "category": "beds",
+   "variants": [
+    {
+     "colour": "Grey",
+     "photos": [
+      10,
+      15
+     ]
+    },
+    {
+     "colour": "Olive Green",
+     "photos": [
+      11
+     ]
+    },
+    {
+     "colour": "Blush Pink",
+     "photos": [
+      8
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,45 @@
+{
+ "folder": "sofa-sets-dinning-table",
+ "excluded": {
+  "0": "possibly stock or supplier",
+  "1": "possibly stock or supplier",
+  "2": "possibly stock or supplier",
+  "3": "possibly stock or supplier",
+  "4": "possibly stock or supplier",
+  "5": "possibly stock or supplier",
+  "6": "possibly stock or supplier",
+  "7": "possibly stock or supplier",
+  "8": "possibly stock or supplier",
+  "9": "possibly stock or supplier",
+  "10": "possibly stock or supplier",
+  "11": "possibly stock or supplier",
+  "12": "possibly stock or supplier",
+  "13": "possibly stock or supplier",
+  "14": "possibly stock or supplier",
+  "15": "possibly stock or supplier",
+  "16": "possibly stock or supplier",
+  "17": "possibly stock or supplier",
+  "18": "possibly stock or supplier",
+  "19": "possibly stock or supplier",
+  "20": "possibly stock or supplier",
+  "25": "possibly stock or supplier"
+ },
+ "products": [
+  {
+   "key": "table-live-edge",
+   "name": "Live-Edge Dining Table",
+   "shape": "table",
+   "category": "tables",
+   "variants": [
+    {
+     "colour": "Walnut",
+     "photos": [
+      22,
+      21,
+      24
+     ]
+    }
+   ]
+  }
+ ]
+}

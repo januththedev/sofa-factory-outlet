@@ -1,0 +1,772 @@
+{
+ "folder": "sofa-sets-sofa-l-shape",
+ "excluded": {
+  "5": "far away",
+  "51": "flyer",
+  "62": "top view",
+  "82": "flyer",
+  "83": "flyer",
+  "84": "flyer",
+  "85": "flyer",
+  "86": "flyer",
+  "87": "flyer",
+  "90": "flyer",
+  "121": "flyer",
+  "139": "close-up",
+  "155": "price tag on photo",
+  "213": "stock, flyer or supplier factory photo",
+  "221": "stock, flyer or supplier factory photo",
+  "232": "stock, flyer or supplier factory photo",
+  "233": "stock, flyer or supplier factory photo",
+  "234": "stock, flyer or supplier factory photo",
+  "235": "stock, flyer or supplier factory photo",
+  "236": "stock, flyer or supplier factory photo",
+  "237": "stock, flyer or supplier factory photo",
+  "238": "stock, flyer or supplier factory photo",
+  "239": "stock, flyer or supplier factory photo",
+  "240": "stock, flyer or supplier factory photo",
+  "242": "stock, flyer or supplier factory photo",
+  "254": "stock, flyer or supplier factory photo",
+  "268": "stock, flyer or supplier factory photo",
+  "244": "stock, flyer or supplier factory photo",
+  "245": "stock, flyer or supplier factory photo",
+  "274": "stock, flyer or supplier factory photo",
+  "275": "stock, flyer or supplier factory photo",
+  "276": "stock, flyer or supplier factory photo",
+  "277": "stock, flyer or supplier factory photo",
+  "278": "stock, flyer or supplier factory photo",
+  "279": "stock, flyer or supplier factory photo",
+  "280": "stock, flyer or supplier factory photo",
+  "281": "stock, flyer or supplier factory photo",
+  "282": "stock, flyer or supplier factory photo",
+  "283": "stock, flyer or supplier factory photo",
+  "284": "stock, flyer or supplier factory photo",
+  "285": "stock, flyer or supplier factory photo",
+  "286": "stock, flyer or supplier factory photo",
+  "287": "stock, flyer or supplier factory photo",
+  "288": "stock, flyer or supplier factory photo",
+  "289": "stock, flyer or supplier factory photo",
+  "290": "stock, flyer or supplier factory photo",
+  "291": "stock, flyer or supplier factory photo",
+  "292": "stock, flyer or supplier factory photo",
+  "293": "stock, flyer or supplier factory photo",
+  "294": "stock, flyer or supplier factory photo",
+  "295": "stock, flyer or supplier factory photo",
+  "296": "stock, flyer or supplier factory photo",
+  "297": "stock, flyer or supplier factory photo",
+  "298": "stock, flyer or supplier factory photo",
+  "299": "stock, flyer or supplier factory photo",
+  "300": "stock, flyer or supplier factory photo",
+  "301": "stock, flyer or supplier factory photo",
+  "302": "stock, flyer or supplier factory photo",
+  "303": "stock, flyer or supplier factory photo",
+  "304": "stock, flyer or supplier factory photo",
+  "305": "stock, flyer or supplier factory photo",
+  "306": "stock, flyer or supplier factory photo",
+  "307": "stock, flyer or supplier factory photo",
+  "308": "stock, flyer or supplier factory photo",
+  "309": "stock, flyer or supplier factory photo",
+  "310": "stock, flyer or supplier factory photo",
+  "311": "stock, flyer or supplier factory photo",
+  "312": "stock, flyer or supplier factory photo",
+  "313": "stock, flyer or supplier factory photo",
+  "314": "stock, flyer or supplier factory photo",
+  "315": "stock, flyer or supplier factory photo",
+  "316": "stock, flyer or supplier factory photo",
+  "317": "stock, flyer or supplier factory photo",
+  "318": "stock, flyer or supplier factory photo",
+  "319": "stock, flyer or supplier factory photo",
+  "500": "stock",
+  "501": "stock",
+  "502": "stock",
+  "503": "stock",
+  "504": "stock",
+  "505": "stock"
+ },
+ "products": [
+  {
+   "key": "l-shape-chaise",
+   "name": "L-Shape Sofa with Chaise",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Grey",
+     "photos": [
+      45,
+      48,
+      111,
+      112,
+      11,
+      260,
+      270,
+      420,
+      518,
+      520
+     ]
+    },
+    {
+     "colour": "Light Grey",
+     "photos": [
+      93,
+      96,
+      249,
+      250
+     ]
+    },
+    {
+     "colour": "Cream",
+     "photos": [
+      12,
+      7,
+      18,
+      209,
+      210,
+      357,
+      356,
+      472,
+      471,
+      555,
+      556
+     ]
+    },
+    {
+     "colour": "White",
+     "photos": [
+      89,
+      88,
+      537,
+      536
+     ]
+    },
+    {
+     "colour": "Lilac",
+     "photos": [
+      44,
+      43
+     ]
+    },
+    {
+     "colour": "Chocolate Brown",
+     "photos": [
+      24,
+      65,
+      64,
+      142
+     ]
+    },
+    {
+     "colour": "Caramel",
+     "photos": [
+      66,
+      67,
+      212,
+      262,
+      541,
+      543
+     ]
+    },
+    {
+     "colour": "Plum",
+     "photos": [
+      58,
+      59
+     ]
+    },
+    {
+     "colour": "Blush Pink",
+     "photos": [
+      101,
+      102,
+      195,
+      196
+     ]
+    },
+    {
+     "colour": "Taupe",
+     "photos": [
+      110,
+      108,
+      109
+     ]
+    },
+    {
+     "colour": "Mushroom",
+     "photos": [
+      94,
+      95,
+      248
+     ]
+    },
+    {
+     "colour": "Denim Blue",
+     "photos": [
+      98,
+      97,
+      99
+     ]
+    },
+    {
+     "colour": "Patterned Grey",
+     "photos": [
+      151,
+      150,
+      153
+     ]
+    },
+    {
+     "colour": "Emerald",
+     "photos": [
+      117
+     ]
+    },
+    {
+     "colour": "Sand",
+     "photos": [
+      147,
+      148,
+      257,
+      261
+     ]
+    },
+    {
+     "colour": "Navy",
+     "photos": [
+      165,
+      160
+     ]
+    },
+    {
+     "colour": "Charcoal Brown",
+     "photos": [
+      180,
+      182,
+      181
+     ]
+    },
+    {
+     "colour": "Dove Grey",
+     "photos": [
+      190,
+      175,
+      201
+     ]
+    },
+    {
+     "colour": "Teal",
+     "photos": [
+      192,
+      194,
+      222,
+      253
+     ]
+    },
+    {
+     "colour": "Bottle Green",
+     "photos": [
+      197
+     ]
+    },
+    {
+     "colour": "Turquoise",
+     "photos": [
+      199,
+      198,
+      227,
+      533,
+      532
+     ]
+    },
+    {
+     "colour": "Peach",
+     "photos": [
+      200
+     ]
+    },
+    {
+     "colour": "Mocha",
+     "photos": [
+      223,
+      224,
+      433,
+      434
+     ]
+    },
+    {
+     "colour": "Royal Blue",
+     "photos": [
+      225,
+      226
+     ]
+    },
+    {
+     "colour": "Copper",
+     "photos": [
+      256
+     ]
+    },
+    {
+     "colour": "Mustard",
+     "photos": [
+      273
+     ]
+    },
+    {
+     "colour": "Terracotta",
+     "photos": [
+      546,
+      545,
+      547
+     ]
+    },
+    {
+     "colour": "Sage Green",
+     "photos": [
+      573,
+      575
+     ]
+    },
+    {
+     "colour": "Slate Blue",
+     "photos": [
+      577,
+      579
+     ]
+    },
+    {
+     "colour": "Black",
+     "photos": [
+      600,
+      599,
+      592
+     ]
+    }
+   ]
+  },
+  {
+   "key": "l-shape-chesterfield",
+   "name": "Chesterfield L-Shape Sofa",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Grey",
+     "photos": [
+      103,
+      104,
+      146
+     ]
+    },
+    {
+     "colour": "Blush Pink",
+     "photos": [
+      114
+     ]
+    },
+    {
+     "colour": "Mauve",
+     "photos": [
+      115
+     ]
+    },
+    {
+     "colour": "Beige",
+     "photos": [
+      141
+     ]
+    },
+    {
+     "colour": "Ivory",
+     "photos": [
+      144
+     ]
+    },
+    {
+     "colour": "Royal Blue",
+     "photos": [
+      229,
+      231
+     ]
+    },
+    {
+     "colour": "Red",
+     "photos": [
+      266
+     ]
+    },
+    {
+     "colour": "Navy",
+     "photos": [
+      267
+     ]
+    },
+    {
+     "colour": "Cream",
+     "photos": [
+      247,
+      246
+     ]
+    }
+   ]
+  },
+  {
+   "key": "l-shape-two-tone-black",
+   "name": "Two-Tone L-Shape Sofa, Black Base",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Black and Blue",
+     "photos": [
+      56,
+      57
+     ]
+    },
+    {
+     "colour": "Black and Turquoise",
+     "photos": [
+      35,
+      594,
+      593,
+      598
+     ]
+    },
+    {
+     "colour": "Black and Cream",
+     "photos": [
+      76,
+      73,
+      79,
+      436,
+      438,
+      467,
+      469,
+      482,
+      484,
+      494,
+      584,
+      586,
+      589
+     ]
+    },
+    {
+     "colour": "Black and Grey",
+     "photos": [
+      91,
+      92,
+      187,
+      188,
+      429,
+      430,
+      352,
+      381,
+      539,
+      540
+     ]
+    },
+    {
+     "colour": "Teal and Black",
+     "photos": [
+      130,
+      566,
+      565,
+      568
+     ]
+    },
+    {
+     "colour": "Red and Black",
+     "photos": [
+      137,
+      431,
+      432
+     ]
+    },
+    {
+     "colour": "Blue and Black",
+     "photos": [
+      184,
+      183,
+      186
+     ]
+    },
+    {
+     "colour": "Black and Mustard",
+     "photos": [
+      216,
+      251,
+      241,
+      409,
+      410,
+      441
+     ]
+    },
+    {
+     "colour": "Black and White",
+     "photos": [
+      219
+     ]
+    },
+    {
+     "colour": "Black and Purple",
+     "photos": [
+      368,
+      370
+     ]
+    },
+    {
+     "colour": "Black and Orange",
+     "photos": [
+      412,
+      411,
+      510,
+      512,
+      552
+     ]
+    },
+    {
+     "colour": "Black with Red Cushions",
+     "photos": [
+      476,
+      478
+     ]
+    },
+    {
+     "colour": "Black and Silver Pattern",
+     "photos": [
+      344,
+      343,
+      560,
+      561
+     ]
+    },
+    {
+     "colour": "Black and Lime",
+     "photos": [
+      548,
+      550
+     ]
+    },
+    {
+     "colour": "Black with Bright Cushions",
+     "photos": [
+      608,
+      607,
+      610
+     ]
+    },
+    {
+     "colour": "Black and Copper",
+     "photos": [
+      570,
+      572
+     ]
+    }
+   ]
+  },
+  {
+   "key": "l-shape-two-tone-brown",
+   "name": "Two-Tone L-Shape Sofa, Brown Base",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Beige and Brown",
+     "photos": [
+      15,
+      9,
+      8,
+      218,
+      377,
+      378,
+      444,
+      464,
+      342,
+      514,
+      612,
+      614,
+      618
+     ]
+    },
+    {
+     "colour": "Brown and Mustard",
+     "photos": [
+      331,
+      333
+     ]
+    },
+    {
+     "colour": "Brown and Rust",
+     "photos": [
+      388,
+      387
+     ]
+    },
+    {
+     "colour": "Brown with Floral Cushions",
+     "photos": [
+      459,
+      460,
+      349
+     ]
+    },
+    {
+     "colour": "Navy and Taupe",
+     "photos": [
+      400,
+      401
+     ]
+    },
+    {
+     "colour": "Brown with Striped Cushions",
+     "photos": [
+      452,
+      454,
+      451
+     ]
+    },
+    {
+     "colour": "Mint and Brown",
+     "photos": [
+      396,
+      395,
+      398
+     ]
+    },
+    {
+     "colour": "Brown and Taupe",
+     "photos": [
+      416,
+      418,
+      427
+     ]
+    },
+    {
+     "colour": "Brown and Gold",
+     "photos": [
+      361,
+      360,
+      363
+     ]
+    }
+   ]
+  },
+  {
+   "key": "l-shape-two-tone",
+   "name": "Two-Tone L-Shape Sofa",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Sky Blue and Navy",
+     "photos": [
+      32,
+      33,
+      34
+     ]
+    },
+    {
+     "colour": "Emerald and White",
+     "photos": [
+      36
+     ]
+    },
+    {
+     "colour": "Maroon and Cream",
+     "photos": [
+      16,
+      10,
+      581
+     ]
+    },
+    {
+     "colour": "Rose and Red",
+     "photos": [
+      70,
+      69,
+      71
+     ]
+    },
+    {
+     "colour": "Navy and Cream",
+     "photos": [
+      68,
+      205
+     ]
+    },
+    {
+     "colour": "Grey and Charcoal",
+     "photos": [
+      125,
+      126,
+      127,
+      486,
+      488
+     ]
+    },
+    {
+     "colour": "Navy and Grey",
+     "photos": [
+      128,
+      129
+     ]
+    },
+    {
+     "colour": "Royal Blue with Light Base",
+     "photos": [
+      263,
+      265
+     ]
+    },
+    {
+     "colour": "Grey and Royal Blue",
+     "photos": [
+      264
+     ]
+    },
+    {
+     "colour": "Turquoise and White",
+     "photos": [
+      364,
+      365,
+      367
+     ]
+    },
+    {
+     "colour": "Ivory with Striped Base",
+     "photos": [
+      448,
+      447,
+      449,
+      562,
+      563
+     ]
+    },
+    {
+     "colour": "Lavender and Teal",
+     "photos": [
+      456
+     ]
+    },
+    {
+     "colour": "Champagne with Patterned Cushions",
+     "photos": [
+      335,
+      337
+     ]
+    },
+    {
+     "colour": "Purple and Grey",
+     "photos": [
+      490,
+      491,
+      558
+     ]
+    },
+    {
+     "colour": "Lime Green with Striped Base",
+     "photos": [
+      523,
+      522,
+      525
+     ]
+    }
+   ]
+  }
+ ],
+ "reviewed_up_to": 618
+}
