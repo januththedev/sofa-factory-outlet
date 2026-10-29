@@ -12,6 +12,7 @@ import {
   Settings,
   Sofa,
   Tags,
+  ShieldCheck,
   Users,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -45,6 +46,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/admin/visitors/', label: 'Visitors', icon: ChartColumn },
   { href: '/admin/invoices/', label: 'Invoices', icon: ReceiptText },
   { href: '/admin/seo/', label: 'SEO', icon: SearchCheck },
+  { href: '/admin/admins/', label: 'Admins', icon: ShieldCheck, ownerOnly: true },
   {
     href: '/admin/settings/',
     label: 'Settings',

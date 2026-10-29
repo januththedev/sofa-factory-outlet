@@ -448,7 +448,7 @@ export const applySeo = (form: ChatSeoForm): SeoSettings => form.seo;
 // Staff accounts
 
 const staffId = z.string(required).trim().transform(Number).pipe(z.number().int().positive());
-const staffRole = z.enum(['owner', 'staff'], { error: 'Choose owner or staff' });
+const staffRole = z.enum(['owner', 'staff'], { error: 'Choose Super admin or Admin' });
 
 export const staffSchema = z.discriminatedUnion('intent', [
   z.object({

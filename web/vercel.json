@@ -5,7 +5,6 @@
   "buildCommand": "node scripts/check-production-env.mjs && npm run db:migrate && npm run build",
   "crons": [
     { "path": "/api/cron/rollup/", "schedule": "45 18 * * *" },
-    { "path": "/api/cron/digest/", "schedule": "30 2 * * *" },
-    { "path": "/api/cron/search-console/", "schedule": "0 22 * * *" }
+    { "path": "/api/cron/digest/", "schedule": "30 2 * * *" }
   ]
 }

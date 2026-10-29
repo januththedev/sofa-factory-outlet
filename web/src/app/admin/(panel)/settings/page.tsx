@@ -1,5 +1,6 @@
 import { OpsFrame } from '@/components/admin/settings/ops-frame';
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import { PageHeader } from '@/components/admin/page-header';
 import { BusinessForm } from '@/components/admin/settings/business-form';
 import { ChatSeoForm } from '@/components/admin/settings/chat-seo-form';
@@ -8,36 +9,27 @@ import { HoursForm } from '@/components/admin/settings/hours-form';
 import { InvoiceForm } from '@/components/admin/settings/invoice-form';
 import { ServicesCard } from '@/components/admin/settings/services-card';
 import { SettingsTabs } from '@/components/admin/settings/settings-tabs';
-import { StaffManager } from '@/components/admin/settings/staff-manager';
-import type { StaffRowView } from '@/components/admin/settings/staff-manager';
 import { bpToPercent } from '@/lib/admin/settings';
 import { readSettings } from '@/lib/admin/settings';
 import { readSlots } from '@/lib/admin/settings';
 import { getServiceStatus } from '@/lib/admin/stats';
 import { requireRole } from '@/lib/auth/session';
 import { getDb } from '@/lib/db';
-import { listStaff } from './staff';
 
 export const metadata: Metadata = { title: 'Settings' };
 export const dynamic = 'force-dynamic';
 
-const TAB_IDS = ['business', 'hours', 'invoice', 'delivery', 'chat', 'staff'] as const;
+const TAB_IDS = ['business', 'hours', 'invoice', 'delivery', 'chat'] as const;
 type TabId = (typeof TAB_IDS)[number];
 
 const isTab = (value: string | undefined): value is TabId => TAB_IDS.some((id) => id === value);
 
-const signInFormat = new Intl.DateTimeFormat('en-GB', {
-  dateStyle: 'medium',
-  timeStyle: 'short',
-  timeZone: 'Asia/Colombo',
-});
-const lastSignIn = (date: Date | null) => (date ? signInFormat.format(date) : 'never');
-
 export default async function SettingsPage({ searchParams }: { searchParams: Promise<{ tab?: string | string[] }> }) {
   // Settings are owner-only: staff are sent back to the dashboard.
-  const session = await requireRole('owner');
+  await requireRole('owner');
   const params = await searchParams;
   const requested = Array.isArray(params.tab) ? params.tab[0] : params.tab;
+  if (requested === 'staff') redirect('/admin/admins/');
   const tab: TabId = isTab(requested) ? requested : 'business';
 
   const db = await getDb();
@@ -75,24 +67,12 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
       </div>
     );
   }
-  if (tab === 'staff') {
-    const members: StaffRowView[] = (await listStaff(db)).map((member) => ({
-      id: member.id,
-      name: member.name,
-      email: member.email,
-      role: member.role,
-      active: member.active,
-      lastLoginLabel: lastSignIn(member.lastLoginAt),
-    }));
-    content = <StaffManager members={members} currentUserId={session.userId} />;
-  }
-
   return (
     <OpsFrame>
       <PageHeader
         title="Settings"
         description={
-          'Business details, hours, invoices and accounts. Details marked as a placeholder come from the old site ' +
+          'Business details, hours, invoices and delivery. Details marked as a placeholder come from the old site ' +
           'and are not shown as fact on the public site until you confirm them.'
         }
       />
@@ -104,7 +84,6 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
           { id: 'invoice', label: 'Invoices', unconfirmed: unconfirmed.invoice },
           { id: 'delivery', label: 'Delivery and proof', unconfirmed: unconfirmed.delivery },
           { id: 'chat', label: 'Chat and SEO' },
-          { id: 'staff', label: 'Staff accounts' },
         ]}
       />
       {content}

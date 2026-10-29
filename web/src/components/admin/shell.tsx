@@ -28,7 +28,7 @@ function FlashNotice() {
       role="status"
       className="mb-6 flex items-start justify-between gap-3 rounded-[var(--radius-card)] border border-warn/40 bg-warn/10 px-4 py-2 text-sm text-ink"
     >
-      <p className="py-2">That page is only open to the owner account.</p>
+      <p className="py-2">That page is only open to super admins.</p>
       <button
         type="button"
         onClick={dismiss}

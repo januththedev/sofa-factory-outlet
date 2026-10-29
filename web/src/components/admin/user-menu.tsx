@@ -1,10 +1,12 @@
 'use client';
 
-import { ChevronDown, LogOut } from 'lucide-react';
+import { ChevronDown, KeyRound, LogOut } from 'lucide-react';
+import Link from 'next/link';
 import { Popover } from 'radix-ui';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { signOutAction } from '@/lib/auth/actions';
+import { roleLabel } from '@/lib/auth/roles';
 import type { AdminRole } from '@/lib/db/schema/types';
 
 export type MenuUser = { name: string; email: string; role: AdminRole };
@@ -46,10 +48,17 @@ export function UserMenu({ user }: { user: MenuUser }) {
         >
           <p className="truncate font-semibold">{user.name}</p>
           <p className="truncate text-sm text-mute">{user.email}</p>
-          <Badge tone={user.role === 'owner' ? 'maroon' : 'neutral'} className="mt-2 capitalize">
-            {user.role}
+          <Badge tone={user.role === 'owner' ? 'maroon' : 'neutral'} className="mt-2">
+            {roleLabel(user.role)}
           </Badge>
-          <form action={signOutAction} className="mt-4 border-t border-line pt-4">
+          <Link
+            href="/admin/account/"
+            className="mt-4 flex min-h-11 items-center gap-2 rounded-xl px-2 text-sm font-medium hover:bg-bone-2"
+          >
+            <KeyRound className="size-4" aria-hidden />
+            My account and password
+          </Link>
+          <form action={signOutAction} className="mt-2 border-t border-line pt-2">
             <Button type="submit" variant="ghost" className="w-full">
               <LogOut className="size-4" aria-hidden />
               Sign out

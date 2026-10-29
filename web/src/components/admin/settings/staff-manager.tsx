@@ -12,6 +12,7 @@ import type { StaffFormState } from '@/app/admin/(panel)/settings/schemas';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/field';
+import { roleLabel } from '@/lib/auth/roles';
 import { Select } from '@/components/ui/field';
 import { FormStatus } from './form-kit';
 import { SectionTitle } from './form-kit';
@@ -83,8 +84,8 @@ function RowActions({ member, isSelf, dispatch, pending }: {
         <label className="text-xs text-mute">
           Role
           <Select name="role" defaultValue={member.role} aria-label={`Role for ${member.name}`} className="mt-1 py-2">
-            <option value="staff">Staff</option>
-            <option value="owner">Owner</option>
+            <option value="staff">Admin</option>
+            <option value="owner">Super admin</option>
           </Select>
         </label>
         <Button type="submit" size="sm" variant="subtle" disabled={pending}>
@@ -144,8 +145,8 @@ export function StaffManager({ members, currentUserId }: { members: StaffRowView
       {password ? <TempPassword password={password} onDone={() => setHiddenAt(state?.at ?? 0)} /> : null}
 
       <section className="rounded-[var(--radius-card)] border border-line bg-paper p-5 sm:p-6">
-        <SectionTitle title="Staff accounts">
-          Staff can handle bookings, products, chat and invoices. Only owners can open Settings or change accounts.
+        <SectionTitle title="Admins">
+          Admins can handle bookings, products, chat and invoices. Only super admins can open Settings or add, change or remove admins.
         </SectionTitle>
         <ul className="grid gap-4">
           {members.map((member) => (
@@ -154,7 +155,7 @@ export function StaffManager({ members, currentUserId }: { members: StaffRowView
                 <p className="font-semibold">{member.name}</p>
                 {member.id === currentUserId ? <Badge tone="neutral">You</Badge> : null}
                 <Badge tone={member.role === 'owner' ? 'maroon' : 'neutral'}>
-                  {member.role === 'owner' ? 'Owner' : 'Staff'}
+                  {roleLabel(member.role)}
                 </Badge>
                 <Badge tone={member.active ? 'good' : 'bad'}>{member.active ? 'Active' : 'Deactivated'}</Badge>
               </div>
@@ -216,8 +217,8 @@ export function StaffManager({ members, currentUserId }: { members: StaffRowView
               Role
             </label>
             <Select id="staff-role" name="role" defaultValue="staff">
-              <option value="staff">Staff</option>
-              <option value="owner">Owner</option>
+              <option value="staff">Admin</option>
+              <option value="owner">Super admin</option>
             </Select>
           </div>
           <div data-sticky-bar className={

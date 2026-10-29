@@ -18,6 +18,15 @@ This section describes the current local implementation; the push/deployment sta
 - Verified: TypeScript, lint and production build pass; full unit/database suite 1,114 passed, focused campaign/proxy suite 10 passed, and production-browser journeys 4 passed. Phone quote form and desktop lead detail were visually reviewed.
 - Full roadmap and remaining work: `docs/FUNCTIONALITY-IMPROVEMENT-PLAN.md`. This release does not implement fulfillment, customer quote acceptance, complete translations or a payment gateway.
 
+## Launch hardening (29 Oct 2026)
+
+- **Red screen fixed.** The page curtain (a maroon panel over every desktop navigation, up to 5 s on a slow response) and the first-visit preloader are removed. `TLink` is now a plain `next/link`; `TransitionProvider` is a pass-through. `data-preloaded` is still set by the boot script (tests read it).
+- **Error pages.** Branded 404 for the site (`app/(site)/not-found.tsx`, header and footer kept) and a bare one for the rest (`app/not-found.tsx`); `app/(site)/error.tsx` with Try again; `app/global-error.tsx` as last resort. Unknown URLs get a real 404 status via the `[...unmatched]` route and a check in `[category]/layout.tsx`. Known gap: an unknown hub such as `/sofas/not-a-hub/` still answers 200 (the 404 raised under `[category]/loading.tsx` is streamed); Next marks it noindex.
+- **Admins tab** (`/admin/admins/`, sidebar, super admins only). The database keeps the roles `owner` and `staff`; people see **Super admin** and **Admin** (`lib/auth/roles.ts`). Only a super admin can add, re-role, reset or deactivate accounts (`requireRole('owner')` in every action; the last active super admin cannot be removed). The old Settings "Staff accounts" tab redirects here.
+- **My account** (`/admin/account/`, user menu): any admin changes their own password (current one required, 10 to 72 characters, 5 wrong attempts per 15 minutes). Temporary passwords from Add account are still not forced to change: a follow-up would need a `must_change_password` column.
+- Search Console cron removed from `vercel.json` (the route stays, inert without keys).
+- Verified: tsc 0, eslint 0, 1,116 vitest tests, Playwright 32 passed + 1 skipped (new `tests/e2e/launch.spec.ts`, `tests/db/change-password.test.ts`).
+
 ## Desktop and admin pass (29 Oct 2026)
 
 Looked at every public page and every admin screen at 1440 px in a real browser (scroll-pinned sections with real scrolling, not full-page screenshots). Phone-sized audits could not see these:

@@ -6,7 +6,6 @@ import { Picture } from '@/components/picture';
 import { Magnetic } from '@/components/site/magnetic';
 import { TLink } from '@/components/site/transition';
 import type { PictureData } from '@/lib/images/urls';
-import { PRELOADER_DONE_EVENT } from '@/lib/motion/boot';
 import { gsap } from '@/lib/motion/gsap';
 import { MOTION_ANY } from '@/lib/motion/gsap';
 import { REDUCED } from '@/lib/motion/gsap';
@@ -40,13 +39,11 @@ export function Hero({ picture, textureUrl }: { picture: PictureData; textureUrl
           duration: 1,
           ease: 'power3.out',
           stagger: 0.12,
-          delay: 0.55,
+          delay: 0.2,
         });
       };
-      if (document.documentElement.dataset.preloaded) play();
-      else window.addEventListener(PRELOADER_DONE_EVENT, play, { once: true });
+      play();
       return () => {
-        window.removeEventListener(PRELOADER_DONE_EVENT, play);
         split?.revert();
       };
     });

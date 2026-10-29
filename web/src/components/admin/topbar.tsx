@@ -18,6 +18,8 @@ const SECTION_TITLES: Array<[string, string]> = [
   ['/admin/invoices', 'Invoices'],
   ['/admin/seo', 'SEO'],
   ['/admin/settings', 'Settings'],
+  ['/admin/admins', 'Admins'],
+  ['/admin/account', 'My account'],
 ];
 
 function pageTitle(pathname: string): string {

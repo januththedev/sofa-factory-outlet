@@ -3,7 +3,6 @@ import { ChatWidget } from '@/components/chat/chat-widget';
 import { Cursor } from '@/components/site/cursor';
 import { Footer } from '@/components/site/footer';
 import { Header } from '@/components/site/header';
-import { Preloader } from '@/components/site/preloader';
 import { SmoothScroll } from '@/components/site/smooth-scroll';
 import { TransitionProvider } from '@/components/site/transition';
 import { CartHydrator } from '@/lib/cart/store';
@@ -15,7 +14,6 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   const whatsapp = business.whatsapp.confirmed ? whatsappLink(business.whatsapp.number) : null;
   return (
     <TransitionProvider>
-      <Preloader />
       <SmoothScroll />
       <Cursor />
       <a href="#main" className="skip-link">
