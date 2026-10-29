@@ -86,3 +86,19 @@ describe('roleLabel', () => {
     expect(roleLabel('staff')).toBe('Admin');
   });
 });
+
+describe('must change password', () => {
+  it('is set by a new account and a reset, and cleared once the user picks their own', async () => {
+    const { createStaff, resetStaffPassword } = await import('@/app/admin/(panel)/settings/staff');
+    const { needsPasswordChange } = await import('@/lib/auth/change-password');
+    const created = await createStaff(db, { name: 'Temp Person', email: 'temp-person@example.lk', role: 'staff' });
+    expect(created.ok).toBe(true);
+    if (!created.ok || !created.tempPassword) return;
+    const [row] = await db.select({ id: s.adminUsers.id }).from(s.adminUsers).where(eq(s.adminUsers.email, 'temp-person@example.lk'));
+    expect(await needsPasswordChange(db, row.id)).toBe(true);
+    expect(await changeOwnPassword(db, row.id, created.tempPassword, 'chosen-by-me-123')).toEqual({ ok: true });
+    expect(await needsPasswordChange(db, row.id)).toBe(false);
+    await resetStaffPassword(db, row.id);
+    expect(await needsPasswordChange(db, row.id)).toBe(true);
+  });
+});

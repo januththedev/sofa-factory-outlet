@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { HUB_CONTENT } from '../../../../content/hubs';
+import { HUB_CONTENT } from '../../../../../content/hubs';
 import { Breadcrumbs } from '@/components/catalogue/breadcrumbs';
 import { HubIntro } from '@/components/catalogue/hub-intro';
 import { Listing } from '@/components/catalogue/listing';

@@ -84,6 +84,7 @@ export async function createStaff(
       email,
       passwordHash: await hashPassword(tempPassword),
       role: input.role,
+      mustChangePassword: true,
     });
   } catch (error) {
     if ((error as { code?: string }).code === '23505') {
@@ -139,7 +140,7 @@ export async function resetStaffPassword(db: Db, id: number): Promise<StaffResul
   const tempPassword = generateTempPassword();
   await db
     .update(s.adminUsers)
-    .set({ passwordHash: await hashPassword(tempPassword) })
+    .set({ passwordHash: await hashPassword(tempPassword), mustChangePassword: true })
     .where(eq(s.adminUsers.id, id));
   return { ok: true, message: `New temporary password set for ${user.name}.`, tempPassword };
 }

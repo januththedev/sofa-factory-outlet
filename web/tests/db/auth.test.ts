@@ -41,7 +41,7 @@ import { authorizeCredentials, verifyCredentials } from '@/lib/auth/credentials'
 import { notificationsGet, notificationsPost, unreadBookingsCount } from '@/lib/auth/notifications';
 import { DUMMY_HASH, verifyPassword } from '@/lib/auth/password';
 import { loginLimiter, resetLoginLimiter } from '@/lib/auth/rate-limit';
-import { type AdminSession, getSession, requireRole } from '@/lib/auth/session';
+import { type AdminSession, getSession, requireRole, requireSignedIn } from '@/lib/auth/session';
 import { createNotification } from '@/lib/notify/bell';
 
 const OWNER_EMAIL = 'owner@test.local';
@@ -320,6 +320,28 @@ describe('getSession and requireRole', () => {
     signedInAs(ownerId);
     const session: AdminSession = await requireRole('owner');
     expect(session.role).toBe('owner');
+    expect(mocks.redirect).not.toHaveBeenCalled();
+  });
+
+  it('keeps an admin with a temporary password on My account until they change it', async () => {
+    const fresh = await addUser('temporary@test.local', 'temporary-password-1', { mustChangePassword: true });
+    signedInAs(fresh.id);
+    mocks.headers.mockResolvedValue(new Headers({ 'x-sfo-admin-path': '/admin/bookings/' }));
+    expect(await redirectTarget(() => requireRole())).toBe('/admin/account/');
+    // The account page itself (as the proxy forwards it, without the trailing slash) and its actions are open.
+    for (const path of ['/admin/account', '/admin/account/', '/admin/account?first=1']) {
+      mocks.headers.mockResolvedValue(new Headers({ 'x-sfo-admin-path': path }));
+      expect(await requireRole()).toMatchObject({ userId: fresh.id });
+    }
+    // API routes carry no path header and answer as usual; the shell's layout only checks the sign-in.
+    mocks.headers.mockResolvedValue(new Headers());
+    expect(await requireRole()).toMatchObject({ userId: fresh.id });
+    mocks.headers.mockResolvedValue(new Headers({ 'x-sfo-admin-path': '/admin/bookings/' }));
+    expect(await requireSignedIn()).toEqual({ userId: fresh.id, email: 'temporary@test.local', name: 'Test user', role: 'staff' });
+
+    await db.update(s.adminUsers).set({ mustChangePassword: false }).where(eq(s.adminUsers.id, fresh.id));
+    mocks.redirect.mockClear();
+    expect(await requireRole()).toMatchObject({ userId: fresh.id });
     expect(mocks.redirect).not.toHaveBeenCalled();
   });
 });
