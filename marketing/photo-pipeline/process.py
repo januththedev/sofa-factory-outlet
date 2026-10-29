@@ -125,16 +125,24 @@ def side_by_side(before, after, height=600):
 def main():
     out = sys.argv[1]
     args = sys.argv[2:]
+    # --root <dir>: the photo paths in the list are relative to this folder (another computer's copy).
+    root = ""
+    if args[:1] == ["--root"]:
+        root, args = args[1], args[2:]
     if args[:1] == ["--list"]:
         with open(args[1], encoding="utf-8") as f:
             args = [line.strip() for line in f if line.strip()]
     for sub in ("studio", "cutout", "review"):
         os.makedirs(os.path.join(out, sub), exist_ok=True)
     sr = upscaler()
-    session = low_memory_session("birefnet-general-lite", threads=4)
+    # SFO_MODEL=birefnet-general gives the best edges on a machine with 8 GB+ free (or a GPU).
+    model = os.environ.get("SFO_MODEL", "birefnet-general-lite")
+    session = low_memory_session(model, threads=int(os.environ.get("SFO_THREADS", "4")))
     for i, entry in enumerate(args, 1):
         # A line may be "path|name" so photos from different folders never share an output name.
         path, _, name = entry.partition("|")
+        if root and not os.path.isabs(path):
+            path = os.path.join(root, path)
         name = name or os.path.splitext(os.path.basename(path))[0].replace(" ", "_")
         if os.path.exists(os.path.join(out, "studio", name + ".jpg")):
             continue
