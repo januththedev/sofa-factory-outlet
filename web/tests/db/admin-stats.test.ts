@@ -469,11 +469,7 @@ describe('loadSetupInput', () => {
   it('reads the settings straight from the database, defaults filled in', async () => {
     const input = await loadSetupInput(db);
     expect(input.settings).toEqual(expect.objectContaining({ business: DEFAULT_SETTINGS.business }));
-    expect(input.services).toEqual({
-      searchConsole: expect.any(Boolean),
-      openRouter: expect.any(Boolean),
-      resend: expect.any(Boolean),
-    });
+    expect(input.services).toEqual({ openRouter: expect.any(Boolean) });
   });
 
   it('counts published products with no price', async () => {
@@ -549,7 +545,7 @@ describe('loadSetupInput', () => {
       expect(JSON.stringify(services)).not.toContain('sk-or-very-secret-value');
       const input = await fresh.loadSetupInput(db);
       expect(JSON.stringify(input)).not.toContain('sk-or-very-secret-value');
-      expect(input.services).toMatchObject({ openRouter: true, resend: false });
+      expect(input.services).toEqual({ openRouter: true });
     } finally {
       vi.unstubAllEnvs();
     }

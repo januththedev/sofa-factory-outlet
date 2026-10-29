@@ -353,9 +353,7 @@ export async function loadSetupInput(handle?: Db): Promise<SetupInput> {
       approvedReviews: toNumber(approved[0]?.n),
     },
     services: {
-      searchConsole: configured.get('search-console') ?? false,
       openRouter: configured.get('openrouter') ?? false,
-      resend: configured.get('resend') ?? false,
     },
   };
 }

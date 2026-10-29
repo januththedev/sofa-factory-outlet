@@ -41,15 +41,17 @@ const noteHelp: Record<string, string> = {
 };
 
 const shortDate = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Colombo' });
-const formatShortDate = (date: Date) => shortDate.format(date);
 
 /** Ticks this product for the bulk panel above the list (see ProductBulkActions). */
 function RowCheck({ id, name }: { id: number; name: string }) {
+  // size-11, not min-w-11: OpsFrame's `[&_label]:min-w-0` outranks a min-width utility.
   return (
-    <label className="grid min-h-11 min-w-11 shrink-0 cursor-pointer place-items-center">
+    <label className="grid size-11 shrink-0 cursor-pointer place-items-center">
       <input
         type="checkbox"
         data-bulk-select
+        // The bulk panel counts ticks from change events, so the browser must not restore them on reload.
+        autoComplete="off"
         value={id}
         aria-label={`Select ${name}`}
         className="size-5 accent-maroon"
@@ -220,11 +222,13 @@ export default async function ProductsPage({ searchParams }: Props) {
                       </Link>
                       <div className="mt-1 flex flex-wrap gap-1">
                         {product.reviewNotes.map((note) => {
-                          const key = note.split(':')[0].trim();
+                          const [head, ...rest] = note.split(':');
+                          const key = head.trim();
+                          const detail = rest.join(':').trim();
                           return (
                             <span
                               key={note}
-                              title={noteHelp[key] ?? note}
+                              title={[noteHelp[key], detail].filter(Boolean).join(' ') || note}
                               className="rounded bg-warn/15 px-2 py-0.5 text-xs"
                             >
                               {key}
@@ -248,7 +252,7 @@ export default async function ProductsPage({ searchParams }: Props) {
                     className={`inline-block size-3 rounded-full ${scoreClass}`}
                   />
                 </TD>
-                <TD className="whitespace-nowrap">{formatShortDate(product.updatedAt)}</TD>
+                <TD className="whitespace-nowrap">{shortDate.format(product.updatedAt)}</TD>
               </TR>
             );
           })}

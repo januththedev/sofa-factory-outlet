@@ -58,6 +58,9 @@ export function ProductBulkActions({ total, owner }: Props) {
     if (operation === 'delete' && !window.confirm(`Delete ${ids.length} product${ids.length === 1 ? '' : 's'}?`)) return;
     setMessage('Applying…');
     setPending(true);
+    // The row boxes are server-rendered, so lock them here: a tick made mid-request would not be applied.
+    const lock = (locked: boolean) => { for (const box of boxes()) box.disabled = locked; };
+    lock(true);
     try {
       const result = await bulkProductsAction({ ids, operation });
       setMessage(result.ok ? 'Products updated.' : result.error);
@@ -68,6 +71,7 @@ export function ProductBulkActions({ total, owner }: Props) {
     } catch {
       setMessage('The products could not be updated. Your selection is kept. Please try again.');
     } finally {
+      lock(false);
       setPending(false);
     }
   }

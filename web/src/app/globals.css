@@ -113,8 +113,11 @@
 /* Bottom-bar convention: every fixed product/filter/booking/cart action bar carries
    data-sticky-bar and safe-area padding. Pages can use pb-[var(--sticky-bar-clearance)]
    or .sticky-bar-padding; the site main also reserves that space automatically. */
-[data-sticky-bar] {
-  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+/* Layered so a bar's own utilities (e.g. the booking bar's lg:pb-0 once it is inline) can override it. */
+@layer components {
+  [data-sticky-bar] {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
 }
 .sticky-bar-padding {
   padding-bottom: var(--sticky-bar-clearance);
