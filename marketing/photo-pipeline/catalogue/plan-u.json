@@ -1,0 +1,50 @@
+{
+  "folder": "sofa-sets-u-sofa",
+  "excluded": { "20": "flyer", "32": "catalogue page", "36": "stock image with another brand's emblem", "40": "stock render", "49": "stock render", "50": "stock render", "53": "stock render", "54": "stock render", "30": "close-up only", "35": "top view, partial", "43": "top view, partial", "60": "unusual one-off, outdoor", "61": "unusual one-off, outdoor" },
+  "products": [
+    {
+      "key": "u-shape-chaise",
+      "name": "U-Shape Sofa with Chaise",
+      "shape": "u-shape",
+      "variants": [
+        { "colour": "Charcoal", "photos": [16, 17, 47, 9, 7] },
+        { "colour": "Silver Grey", "photos": [26, 28, 34, 44, 15] },
+        { "colour": "Terracotta", "photos": [23, 21, 24] },
+        { "colour": "Teal", "photos": [38, 37, 39] },
+        { "colour": "Ivory", "photos": [46, 56, 42] },
+        { "colour": "Stone Beige", "photos": [3, 45, 4] },
+        { "colour": "Caramel", "photos": [5, 55] },
+        { "colour": "White Stripe", "photos": [10, 11] }
+      ]
+    },
+    {
+      "key": "u-shape-two-tone",
+      "name": "Two-Tone U-Shape Sofa",
+      "shape": "u-shape",
+      "variants": [
+        { "colour": "Black and Teal", "photos": [13, 14, 12] },
+        { "colour": "Navy and Cream", "photos": [51, 52] },
+        { "colour": "White and Turquoise", "photos": [48, 19] },
+        { "colour": "Navy and Grey", "photos": [41, 18] },
+        { "colour": "Orange Multicolour", "photos": [0, 1] },
+        { "colour": "Red", "photos": [2] }
+      ]
+    },
+    {
+      "key": "u-shape-tufted",
+      "name": "Tufted U-Shape Sofa with Striped Cushions",
+      "shape": "u-shape",
+      "variants": [
+        { "colour": "Silver Grey", "photos": [57, 58, 6, 8] }
+      ]
+    },
+    {
+      "key": "curved-modular",
+      "name": "Curved Modular Sofa",
+      "shape": "u-shape",
+      "variants": [
+        { "colour": "Grey", "photos": [59, 31] }
+      ]
+    }
+  ]
+}

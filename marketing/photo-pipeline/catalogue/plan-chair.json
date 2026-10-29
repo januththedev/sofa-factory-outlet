@@ -1,0 +1,276 @@
+{
+ "folder": "sofa-sets-chair",
+ "excluded": {
+  "3": "stock, another brand's watermark, wrapped or partial",
+  "4": "stock, another brand's watermark, wrapped or partial",
+  "52": "stock, another brand's watermark, wrapped or partial",
+  "60": "stock, another brand's watermark, wrapped or partial",
+  "67": "stock, another brand's watermark, wrapped or partial",
+  "68": "stock, another brand's watermark, wrapped or partial",
+  "69": "stock, another brand's watermark, wrapped or partial",
+  "75": "stock, another brand's watermark, wrapped or partial",
+  "76": "stock, another brand's watermark, wrapped or partial",
+  "137": "stock, another brand's watermark, wrapped or partial",
+  "152": "stock, another brand's watermark, wrapped or partial",
+  "153": "stock, another brand's watermark, wrapped or partial",
+  "154": "stock, another brand's watermark, wrapped or partial",
+  "155": "stock, another brand's watermark, wrapped or partial",
+  "156": "stock, another brand's watermark, wrapped or partial",
+  "157": "stock, another brand's watermark, wrapped or partial",
+  "158": "stock, another brand's watermark, wrapped or partial",
+  "159": "stock, another brand's watermark, wrapped or partial",
+  "13": "stock, another brand's watermark, wrapped or partial",
+  "15": "stock, another brand's watermark, wrapped or partial",
+  "16": "stock, another brand's watermark, wrapped or partial",
+  "9": "stock, another brand's watermark, wrapped or partial",
+  "10": "stock, another brand's watermark, wrapped or partial",
+  "11": "stock, another brand's watermark, wrapped or partial",
+  "39": "stock, another brand's watermark, wrapped or partial",
+  "40": "stock, another brand's watermark, wrapped or partial",
+  "80": "stock, another brand's watermark, wrapped or partial",
+  "87": "stock, another brand's watermark, wrapped or partial",
+  "103": "stock, another brand's watermark, wrapped or partial",
+  "14": "stock, another brand's watermark, wrapped or partial",
+  "81": "stock, another brand's watermark, wrapped or partial",
+  "86": "stock, another brand's watermark, wrapped or partial"
+ },
+ "products": [
+  {
+   "key": "chair-wingback",
+   "name": "Wingback Accent Chair",
+   "shape": "chair",
+   "category": "chairs",
+   "variants": [
+    {
+     "colour": "Light Grey",
+     "photos": [
+      29,
+      28,
+      30
+     ]
+    },
+    {
+     "colour": "Charcoal",
+     "photos": [
+      48
+     ]
+    },
+    {
+     "colour": "Navy",
+     "photos": [
+      49
+     ]
+    },
+    {
+     "colour": "Teal",
+     "photos": [
+      47
+     ]
+    },
+    {
+     "colour": "Slate Blue",
+     "photos": [
+      59
+     ]
+    },
+    {
+     "colour": "Ivory",
+     "photos": [
+      7,
+      2
+     ]
+    }
+   ]
+  },
+  {
+   "key": "chair-tufted-wingback",
+   "name": "Tufted Wingback Chair",
+   "shape": "chair",
+   "category": "chairs",
+   "variants": [
+    {
+     "colour": "Mustard",
+     "photos": [
+      65,
+      66,
+      17
+     ]
+    },
+    {
+     "colour": "Sunflower Yellow",
+     "photos": [
+      61
+     ]
+    },
+    {
+     "colour": "Royal Blue",
+     "photos": [
+      138
+     ]
+    },
+    {
+     "colour": "Plum",
+     "photos": [
+      106
+     ]
+    },
+    {
+     "colour": "Red",
+     "photos": [
+      83,
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "chair-tub",
+   "name": "Tub Accent Chair",
+   "shape": "chair",
+   "category": "chairs",
+   "variants": [
+    {
+     "colour": "Turquoise",
+     "photos": [
+      123
+     ]
+    },
+    {
+     "colour": "Dove Grey",
+     "photos": [
+      105,
+      19
+     ]
+    },
+    {
+     "colour": "Mustard",
+     "photos": [
+      92
+     ]
+    },
+    {
+     "colour": "Plum",
+     "photos": [
+      124
+     ]
+    }
+   ]
+  },
+  {
+   "key": "chair-midcentury",
+   "name": "Mid-Century Armchair",
+   "shape": "chair",
+   "category": "chairs",
+   "variants": [
+    {
+     "colour": "Lime",
+     "photos": [
+      78,
+      77
+     ]
+    },
+    {
+     "colour": "Sage Green",
+     "photos": [
+      150,
+      149
+     ]
+    },
+    {
+     "colour": "Teal",
+     "photos": [
+      100
+     ]
+    },
+    {
+     "colour": "Grey",
+     "photos": [
+      95
+     ]
+    }
+   ]
+  },
+  {
+   "key": "chair-channel",
+   "name": "Channel-Back Accent Chair",
+   "shape": "chair",
+   "category": "chairs",
+   "variants": [
+    {
+     "colour": "Emerald",
+     "photos": [
+      51
+     ]
+    },
+    {
+     "colour": "Teal",
+     "photos": [
+      98
+     ]
+    },
+    {
+     "colour": "Mustard",
+     "photos": [
+      101
+     ]
+    },
+    {
+     "colour": "Mint",
+     "photos": [
+      147
+     ]
+    },
+    {
+     "colour": "Royal Blue",
+     "photos": [
+      156
+     ]
+    }
+   ]
+  },
+  {
+   "key": "chair-floral-wing",
+   "name": "Floral Wing Chair",
+   "shape": "chair",
+   "category": "chairs",
+   "variants": [
+    {
+     "colour": "Yellow Floral",
+     "photos": [
+      72,
+      73
+     ]
+    },
+    {
+     "colour": "Navy Floral",
+     "photos": [
+      12,
+      26
+     ]
+    },
+    {
+     "colour": "Lilac Floral",
+     "photos": [
+      24
+     ]
+    }
+   ]
+  },
+  {
+   "key": "chair-striped",
+   "name": "Striped Armchair",
+   "shape": "chair",
+   "category": "chairs",
+   "variants": [
+    {
+     "colour": "Brown Stripe",
+     "photos": [
+      36,
+      35
+     ]
+    }
+   ]
+  }
+ ],
+ "reviewed_up_to": 159
+}

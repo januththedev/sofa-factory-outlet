@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sofa Factory Outlet Reel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Inter+Tight:wght@500;600;700&display=block" rel="stylesheet">
+<style>
+  :root {
+    --bone: #f3efe8; --bone-2: #eae3d8; --paper: #fbf9f5; --ink: #141211; --ink-2: #3a3532;
+    --maroon: #842323; --maroon-deep: #5e1717; --clay: #c9a88a; --clay-soft: #e8d9c8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: #0d0b0a; overflow: hidden; }
+  body { display: grid; place-items: center; font-family: 'Inter Tight', system-ui, sans-serif; }
+  .viewport { position: relative; width: 1080px; height: 1920px; transform-origin: center center; }
+  .stage { position: absolute; inset: 0; overflow: hidden; background: var(--bone); color: var(--ink); }
+  .scene { position: absolute; inset: 0; overflow: hidden; opacity: 0; }
+  .fill { position: absolute; inset: 0; }
+  .pan { position: absolute; top: 0; left: 0; height: 1920px; background-size: cover; background-position: center; will-change: transform; }
+  .shade { position: absolute; inset: 0; }
+  .serif { font-family: 'Fraunces', Georgia, serif; font-weight: 300; letter-spacing: -0.03em; }
+  .eyebrow { font-size: 30px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; }
+  .line { display: block; overflow: hidden; padding-bottom: 0.08em; }
+  .line > span { display: inline-block; will-change: transform; }
+  .card { position: absolute; background-size: cover; background-position: center; border-radius: 34px; box-shadow: 0 40px 80px rgba(20,18,17,0.28); }
+  .chip { position: absolute; padding: 18px 30px; border-radius: 999px; font-size: 32px; font-weight: 600; background: var(--paper); color: var(--ink); }
+  .band { position: absolute; left: 0; width: 1080px; height: 480px; overflow: hidden; }
+  .band > div { position: absolute; inset: -40px; background-size: cover; background-position: center; }
+  .dot { position: absolute; width: 74px; height: 74px; border-radius: 50%; border: 6px solid var(--paper); box-shadow: 0 10px 24px rgba(0,0,0,0.25); }
+  .progress { position: absolute; left: 60px; right: 60px; top: 56px; height: 6px; border-radius: 6px; background: rgba(255,255,255,0.25); overflow: hidden; z-index: 50; }
+  .progress > i { position: absolute; inset: 0; background: rgba(255,255,255,0.9); transform-origin: left; }
+  .grain { position: absolute; inset: 0; z-index: 40; pointer-events: none; opacity: 0.06; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  /* Player chrome (hidden while capturing) */
+  .play { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: rgba(13,11,10,0.55); cursor: pointer; border: 0; color: #fff; font: 600 22px 'Inter Tight', sans-serif; }
+  .play span { padding: 22px 40px; border-radius: 999px; background: #842323; }
+  body.capture .play, body.capture .hint { display: none; }
+  .hint { position: fixed; bottom: 14px; left: 0; right: 0; text-align: center; color: rgba(255,255,255,0.55); font-size: 13px; z-index: 90; }
+</style>
+</head>
+<body>
+<div class="viewport" id="viewport">
+  <div class="stage" id="stage">
+    <!-- S1 0-4s: hook, the workshop -->
+    <section class="scene" id="s1">
+      <div class="pan" id="s1-pan" style="width:2560px;background-image:url(img/workshop.jpg)"></div>
+      <div class="shade" style="background:linear-gradient(180deg,rgba(20,18,17,.55) 0%,rgba(20,18,17,0) 28%,rgba(20,18,17,0) 48%,rgba(20,18,17,.88) 100%)"></div>
+      <div style="position:absolute;left:72px;right:72px;bottom:220px;color:var(--bone)">
+        <p class="eyebrow" id="s1-eyebrow" style="color:var(--clay)">Sofa Factory Outlet · Colombo</p>
+        <h1 class="serif" style="font-size:150px;line-height:.98;margin-top:28px">
+          <span class="line"><span data-w="s1">Made in</span></span>
+          <span class="line"><span data-w="s1">our own</span></span>
+          <span class="line"><span data-w="s1">workshop.</span></span>
+        </h1>
+      </div>
+    </section>
+
+    <!-- S2 4-8s: any size -->
+    <section class="scene" id="s2">
+      <div class="pan" id="s2a" style="width:2560px;background-image:url(img/cream-u.jpg)"></div>
+      <div class="pan" id="s2b" style="width:2560px;background-image:url(img/black-u.jpg);opacity:0"></div>
+      <div class="shade" style="background:linear-gradient(180deg,rgba(20,18,17,.7) 0%,rgba(20,18,17,0) 34%,rgba(20,18,17,0) 70%,rgba(20,18,17,.55) 100%)"></div>
+      <div style="position:absolute;left:72px;right:72px;top:150px;color:var(--bone)">
+        <h2 class="serif" style="font-size:190px;line-height:.95">
+          <span class="line"><span data-w="s2">Any</span></span>
+          <span class="line"><span data-w="s2">size.</span></span>
+        </h2>
+        <p id="s2-sub" style="font-size:40px;font-weight:600;margin-top:34px;opacity:0">Built to fit your room.</p>
+      </div>
+    </section>
+
+    <!-- S3 8-14s: any colour, four bands -->
+    <section class="scene" id="s3" style="background:var(--ink)">
+      <div class="band" id="b1" style="top:0"><div style="background-image:url(img/turquoise-l.jpg)"></div></div>
+      <div class="band" id="b2" style="top:480px"><div style="background-image:url(img/black-l-colour.jpg)"></div></div>
+      <div class="band" id="b3" style="top:960px"><div style="background-image:url(img/teal-u.jpg)"></div></div>
+      <div class="band" id="b4" style="top:1440px"><div style="background-image:url(img/beige-l.jpg)"></div></div>
+      <div class="shade" id="s3-shade" style="background:rgba(20,18,17,.0)"></div>
+      <div id="s3-title" style="position:absolute;left:0;right:0;top:700px;text-align:center;color:var(--bone)">
+        <h2 class="serif" style="font-size:200px;line-height:.95;text-shadow:0 10px 50px rgba(0,0,0,.45)">
+          <span class="line"><span data-w="s3">Any</span></span>
+          <span class="line"><span data-w="s3">colour.</span></span>
+        </h2>
+      </div>
+      <div class="dot" data-dot style="left:300px;top:1200px;background:#1aa7c9"></div>
+      <div class="dot" data-dot style="left:400px;top:1200px;background:#1b1a1e"></div>
+      <div class="dot" data-dot style="left:500px;top:1200px;background:#3b6b72"></div>
+      <div class="dot" data-dot style="left:600px;top:1200px;background:#d9c7a6"></div>
+      <div class="dot" data-dot style="left:700px;top:1200px;background:#b55a3c"></div>
+    </section>
+
+    <!-- S4 14-20s: any shape, cards -->
+    <section class="scene" id="s4" style="background:var(--bone)">
+      <div style="position:absolute;left:72px;right:72px;top:150px">
+        <p class="eyebrow" style="color:var(--maroon)">L-shape · U-shape · Sets</p>
+        <h2 class="serif" style="font-size:180px;line-height:.95;margin-top:24px">
+          <span class="line"><span data-w="s4">Any</span></span>
+          <span class="line"><span data-w="s4">shape.</span></span>
+        </h2>
+      </div>
+      <div class="card" id="c1" style="left:60px;top:760px;width:960px;height:720px;background-image:url(img/white-l.jpg)"></div>
+      <div class="card" id="c2" style="left:60px;top:760px;width:960px;height:720px;background-image:url(img/grey-u.jpg)"></div>
+      <div class="card" id="c3" style="left:60px;top:760px;width:960px;height:720px;background-image:url(img/striped-u.jpg)"></div>
+      <div class="chip" id="k1" style="left:100px;top:1540px">L-shape</div>
+      <div class="chip" id="k2" style="left:100px;top:1540px">U-shape</div>
+      <div class="chip" id="k3" style="left:100px;top:1540px">Modular</div>
+    </section>
+
+    <!-- S5 20-24s: factory direct -->
+    <section class="scene" id="s5" style="background:var(--maroon);color:var(--bone)">
+      <div class="pan" id="s5-pan" style="width:2560px;background-image:url(img/workshop2.jpg);opacity:.16;filter:grayscale(1)"></div>
+      <div style="position:absolute;left:72px;right:72px;top:520px">
+        <p class="eyebrow" style="color:var(--clay-soft)">Factory-direct</p>
+        <h2 class="serif" style="font-size:132px;line-height:1.02;margin-top:36px">
+          <span class="line"><span data-l="0">No middleman.</span></span>
+          <span class="line"><span data-l="1">No showroom</span></span>
+          <span class="line"><span data-l="1">markup.</span></span>
+          <span class="line" style="margin-top:40px"><span data-l="2" style="color:var(--clay-soft);font-style:italic">Sit on it first.</span></span>
+        </h2>
+      </div>
+    </section>
+
+    <!-- S6 24-30s: call to action -->
+    <section class="scene" id="s6" style="background:var(--ink);color:var(--bone)">
+      <div class="pan" id="s6-pan" style="width:2560px;background-image:url(img/grey-black-u.jpg)"></div>
+      <div class="shade" style="background:linear-gradient(180deg,rgba(20,18,17,.25) 0%,rgba(20,18,17,.45) 40%,rgba(20,18,17,.94) 70%)"></div>
+      <div id="s6-body" style="position:absolute;left:72px;right:72px;bottom:230px">
+        <img src="img/mark.png" alt="" id="s6-mark" style="width:150px;height:150px;border-radius:50%;background:var(--bone);padding:10px">
+        <h2 class="serif" style="font-size:132px;line-height:1;margin-top:40px">
+          <span class="line"><span data-w="s6">See it.</span></span>
+          <span class="line"><span data-w="s6">Sit on it.</span></span>
+          <span class="line"><span data-w="s6" style="color:var(--clay)">Then decide.</span></span>
+        </h2>
+        <div id="s6-cta" style="margin-top:56px;display:inline-block;padding:30px 56px;border-radius:999px;background:var(--maroon);font-size:44px;font-weight:700">Book a showroom visit</div>
+        <p id="s6-url" style="margin-top:36px;font-size:40px;font-weight:600;letter-spacing:.02em">sofafactoryoutlet.lk</p>
+        <p id="s6-loc" style="margin-top:10px;font-size:32px;color:rgba(243,239,232,.7)">Colombo, Sri Lanka</p>
+      </div>
+    </section>
+
+    <div class="progress"><i id="bar"></i></div>
+    <div class="grain"></div>
+  </div>
+</div>
+<button class="play" id="play" type="button"><span>▶ Play the reel (30s, with sound)</span></button>
+<p class="hint">1080 × 1920 · 30 s · click to replay</p>
+
+<script>
+'use strict';
+const DURATION = 30;
+const BPM = 120, BEAT = 60 / BPM, BAR = BEAT * 4; // 0.5 s and 2 s
+
+// ---------- easing and timing helpers ----------
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const outExpo = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x));
+const inOut = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+const outBack = (x) => { const c1 = 1.4, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const $ = (id) => document.getElementById(id);
+
+// Scene windows, each crossfading over `fade` seconds at its edges.
+const SCENES = [
+  { id: 's1', from: 0, to: 4.0 }, { id: 's2', from: 4.0, to: 8.0 }, { id: 's3', from: 8.0, to: 14.0 },
+  { id: 's4', from: 14.0, to: 20.0 }, { id: 's5', from: 20.0, to: 24.0 }, { id: 's6', from: 24.0, to: 30.2 },
+];
+const FADE = 0.28;
+
+function words(selector, t, start, step = 0.12, dur = 0.9) {
+  document.querySelectorAll(selector).forEach((el, i) => {
+    const p = outExpo(seg(t, start + i * step, start + i * step + dur));
+    el.style.transform = `translateY(${(1 - p) * 112}%)`;
+  });
+}
+
+function render(t) {
+  for (const s of SCENES) {
+    const el = $(s.id);
+    const vis = t >= s.from - FADE && t < s.to + FADE;
+    el.style.display = vis ? 'block' : 'none';
+    if (!vis) continue;
+    const fadeIn = s.from === 0 ? 1 : seg(t, s.from - FADE, s.from + FADE);
+    const fadeOut = 1 - seg(t, s.to - FADE, s.to + FADE);
+    el.style.opacity = Math.min(fadeIn, fadeOut);
+  }
+
+  // S1: slow pan across the workshop, words rise on the beat.
+  {
+    const p = inOut(seg(t, 0, 4.3));
+    $('s1-pan').style.transform = `translate3d(${-160 - p * 900}px,0,0) scale(${1.06 - p * 0.04})`;
+    $('s1-eyebrow').style.opacity = seg(t, 0.15, 0.7);
+    words('[data-w="s1"]', t, 0.35, 0.22);
+  }
+  // S2: two long sofas, cut on the bar.
+  {
+    const pa = seg(t, 3.7, 6.2), pb = seg(t, 5.8, 8.3);
+    $('s2a').style.transform = `translate3d(${-1480 + inOut(pa) * 1100}px,0,0) scale(1.04)`;
+    $('s2b').style.transform = `translate3d(${-200 - inOut(pb) * 1100}px,0,0) scale(1.04)`;
+    $('s2b').style.opacity = seg(t, 5.9, 6.1);
+    words('[data-w="s2"]', t, 4.15, 0.18);
+    $('s2-sub').style.opacity = seg(t, 4.9, 5.4);
+  }
+  // S3: four colour bands slide in on beats, then the title and swatches.
+  {
+    ['b1', 'b2', 'b3', 'b4'].forEach((id, i) => {
+      const p = outExpo(seg(t, 8.0 + i * BEAT, 8.0 + i * BEAT + 0.8));
+      const dir = i % 2 ? 1 : -1;
+      const drift = (t - 8) * 18 * -dir;
+      $(id).style.transform = `translate3d(${(1 - p) * 1080 * dir}px,0,0)`;
+      $(id).firstElementChild.style.transform = `translate3d(${drift}px,0,0) scale(1.08)`;
+    });
+    $('s3-shade').style.background = `rgba(20,18,17,${0.45 * seg(t, 10.0, 10.6)})`;
+    words('[data-w="s3"]', t, 10.1, 0.16);
+    document.querySelectorAll('[data-dot]').forEach((d, i) => {
+      const p = outBack(seg(t, 11.0 + i * 0.12, 11.5 + i * 0.12));
+      d.style.transform = `translateY(${(1 - p) * 60}px) scale(${p})`;
+      d.style.opacity = clamp(p * 1.4);
+    });
+  }
+  // S4: three cards deal in, one per bar, with their labels.
+  {
+    words('[data-w="s4"]', t, 14.2, 0.16);
+    [['c1', 'k1', 14.6], ['c2', 'k2', 16.6], ['c3', 'k3', 18.6]].forEach(([c, k, at], i) => {
+      const pin = outExpo(seg(t, at, at + 0.9));
+      const next = i < 2 ? outExpo(seg(t, at + 2, at + 2.6)) : 0;
+      const rot = (i - 1) * 3 * (1 - pin) + (i - 1) * 1.5;
+      $(c).style.transform = `translate3d(${(1 - pin) * 1100 + next * -60}px,${next * -30}px,0) rotate(${rot - next * 4}deg) scale(${1 - next * 0.06})`;
+      $(c).style.opacity = pin > 0 ? 1 - next * 0.7 : 0;
+      $(c).style.zIndex = String(10 + i);
+      const kp = outBack(seg(t, at + 0.35, at + 0.85));
+      const kout = seg(t, at + 1.85, at + 2.05);
+      $(k).style.transform = `translateY(${(1 - kp) * 40}px)`;
+      $(k).style.opacity = String(kp * (1 - kout));
+      $(k).style.zIndex = '20';
+    });
+  }
+  // S5: maroon, the three promises line by line.
+  {
+    $('s5-pan').style.transform = `translate3d(${-300 - (t - 20) * 120}px,0,0)`;
+    document.querySelectorAll('[data-l]').forEach((el) => {
+      const i = +el.dataset.l;
+      const p = outExpo(seg(t, 20.25 + i * 1.1, 20.25 + i * 1.1 + 0.9));
+      el.style.transform = `translateY(${(1 - p) * 112}%)`;
+    });
+  }
+  // S6: call to action over the last sofa.
+  {
+    const p = seg(t, 23.8, 30);
+    $('s6-pan').style.transform = `translate3d(${-700 + inOut(p) * 500}px,0,0) scale(${1.1 - p * 0.06})`;
+    const m = outBack(seg(t, 24.2, 24.8));
+    $('s6-mark').style.transform = `scale(${m})`;
+    words('[data-w="s6"]', t, 24.5, 0.32);
+    const c = outBack(seg(t, 25.9, 26.5));
+    $('s6-cta').style.transform = `scale(${0.6 + 0.4 * c})`;
+    $('s6-cta').style.opacity = clamp(c * 1.5);
+    const pulse = t > 26.5 ? 1 + Math.sin((t - 26.5) * Math.PI * 2) * 0.025 : 1;
+    if (t > 26.5) $('s6-cta').style.transform = `scale(${pulse})`;
+    $('s6-url').style.opacity = seg(t, 26.6, 27.1);
+    $('s6-loc').style.opacity = seg(t, 26.9, 27.4);
+  }
+  $('bar').style.transform = `scaleX(${clamp(t / DURATION)})`;
+}
+
+// ---------- music: an original 30 s deep-house groove, built note by note ----------
+function rng(seed) { return () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }; }
+const midi = (n) => 440 * Math.pow(2, (n - 69) / 12);
+// Fmaj7, Em7, Dm7, Cmaj7: one per bar, looping.
+const CHORDS = [[53, 57, 60, 64], [52, 55, 59, 62], [50, 53, 57, 60], [48, 52, 55, 59]];
+const ROOTS = [41, 40, 38, 36];
+
+function noiseBuffer(ctx, seconds, seed) {
+  const r = rng(seed), b = ctx.createBuffer(1, Math.ceil(ctx.sampleRate * seconds), ctx.sampleRate);
+  const d = b.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = r() * 2 - 1;
+  return b;
+}
+function impulse(ctx, seconds, decay, seed) {
+  const r = rng(seed), len = Math.ceil(ctx.sampleRate * seconds), b = ctx.createBuffer(2, len, ctx.sampleRate);
+  for (let c = 0; c < 2; c++) {
+    const d = b.getChannelData(c);
+    for (let i = 0; i < len; i++) d[i] = (r() * 2 - 1) * Math.pow(1 - i / len, decay);
+  }
+  return b;
+}
+
+function buildMusic(ctx, out) {
+  const master = ctx.createGain(); master.gain.value = 0.62;
+  const comp = ctx.createDynamicsCompressor();
+  comp.threshold.value = -16; comp.ratio.value = 3; comp.attack.value = 0.01; comp.release.value = 0.2;
+  master.connect(comp).connect(out);
+  const verb = ctx.createConvolver(); verb.buffer = impulse(ctx, 2.6, 2.8, 7);
+  const verbGain = ctx.createGain(); verbGain.gain.value = 0.35; verb.connect(verbGain).connect(master);
+  const noise = noiseBuffer(ctx, 1, 99);
+
+  // Fade the whole mix in at the start and out over the last 1.5 s.
+  master.gain.setValueAtTime(0.0001, 0);
+  master.gain.exponentialRampToValueAtTime(0.62, 0.6);
+  master.gain.setValueAtTime(0.62, 28.4);
+  master.gain.linearRampToValueAtTime(0.0001, 30);
+
+  const env = (g, t, a, peak, d) => { g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + d); };
+
+  const pad = (t, notes, len, level = 0.05) => {
+    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1400; lp.Q.value = 0.4;
+    const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(level, t + 0.25);
+    g.gain.setValueAtTime(level, t + len - 0.2); g.gain.linearRampToValueAtTime(0.0001, t + len + 0.6);
+    lp.connect(g); g.connect(master); g.connect(verb);
+    notes.forEach((n) => [-7, 0, 7].forEach((cents) => {
+      const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = midi(n); o.detune.value = cents;
+      o.connect(lp); o.start(t); o.stop(t + len + 0.8);
+    }));
+  };
+  const pluck = (t, n, level = 0.06) => {
+    const o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.value = midi(n);
+    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.setValueAtTime(3200, t); lp.frequency.exponentialRampToValueAtTime(700, t + 0.25);
+    const g = ctx.createGain(); env(g, t, 0.005, level, 0.32);
+    o.connect(lp).connect(g); g.connect(master); g.connect(verb); o.start(t); o.stop(t + 0.4);
+  };
+  const bass = (t, n, len) => {
+    const o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = midi(n);
+    const o2 = ctx.createOscillator(); o2.type = 'triangle'; o2.frequency.value = midi(n);
+    const g = ctx.createGain(); const g2 = ctx.createGain(); g2.gain.value = 0.25;
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.32, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+    o.connect(g); o2.connect(g2).connect(g); g.connect(master); o.start(t); o2.start(t); o.stop(t + len); o2.stop(t + len);
+  };
+  const kick = (t, level = 0.9) => {
+    const o = ctx.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(44, t + 0.13);
+    const g = ctx.createGain(); g.gain.setValueAtTime(level, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.38);
+    o.connect(g).connect(master); o.start(t); o.stop(t + 0.4);
+  };
+  const hat = (t, level = 0.05, len = 0.05) => {
+    const s = ctx.createBufferSource(); s.buffer = noise;
+    const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 8000;
+    const g = ctx.createGain(); env(g, t, 0.002, level, len);
+    s.connect(hp).connect(g).connect(master); s.start(t, (t * 0.37) % 0.5); s.stop(t + len + 0.02);
+  };
+  const clap = (t, level = 0.12) => {
+    const s = ctx.createBufferSource(); s.buffer = noise;
+    const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1600; bp.Q.value = 0.8;
+    const g = ctx.createGain(); env(g, t, 0.003, level, 0.16);
+    s.connect(bp).connect(g); g.connect(master); g.connect(verb); s.start(t, 0.2); s.stop(t + 0.22);
+  };
+  const riser = (t, len) => {
+    const s = ctx.createBufferSource(); s.buffer = noiseBuffer(ctx, len + 0.1, 3);
+    const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 2;
+    bp.frequency.setValueAtTime(400, t); bp.frequency.exponentialRampToValueAtTime(7000, t + len);
+    const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.09, t + len); g.gain.linearRampToValueAtTime(0.0001, t + len + 0.05);
+    s.connect(bp).connect(g).connect(master); s.start(t); s.stop(t + len + 0.1);
+  };
+
+  const BARS = 15;
+  for (let bar = 0; bar < BARS; bar++) {
+    const t0 = bar * BAR, c = bar % 4;
+    const last = bar === BARS - 1;
+    const full = (bar >= 4 && bar < 10) || (bar >= 12 && bar < 14);
+    const groove = bar >= 2 && !last;
+    const breakdown = bar === 10 || bar === 11;
+    pad(t0, last ? [48, 52, 55, 59, 62] : CHORDS[c], last ? 1.6 : BAR, last ? 0.06 : 0.045);
+    // Arpeggio: chord tones an octave up, eighths, a little denser in the full sections.
+    const arp = CHORDS[c].map((n) => n + 12);
+    const steps = last ? 2 : 8;
+    for (let i = 0; i < steps; i++) pluck(t0 + i * BEAT / 2, arp[(i * 3 + bar) % arp.length], breakdown ? 0.07 : 0.05);
+    if (groove && !breakdown) {
+      for (let b = 0; b < 4; b++) kick(t0 + b * BEAT, full ? 0.9 : 0.6);
+      bass(t0, ROOTS[c], 0.42); bass(t0 + BEAT * 1.5, ROOTS[c], 0.3); bass(t0 + BEAT * 2, ROOTS[c] + 12, 0.3); bass(t0 + BEAT * 3.5, ROOTS[c], 0.4);
+    }
+    if (full) {
+      clap(t0 + BEAT); clap(t0 + BEAT * 3);
+      for (let b = 0; b < 4; b++) hat(t0 + b * BEAT + BEAT / 2, 0.06, 0.06);
+      for (let b = 0; b < 8; b++) hat(t0 + b * BEAT / 2, 0.018, 0.03);
+    } else if (groove && !breakdown) {
+      for (let b = 0; b < 4; b++) hat(t0 + b * BEAT + BEAT / 2, 0.035, 0.05);
+    }
+  }
+  riser(6.0, 2.0);   // into "Any colour" at 8 s
+  riser(22.0, 2.0);  // into the call to action at 24 s
+  kick(24, 1.0); kick(28, 0.8);
+}
+
+// ---------- playback ----------
+const params = new URLSearchParams(location.search);
+const capture = params.has('capture');
+if (capture) document.body.classList.add('capture');
+
+function fit() {
+  if (capture) return;
+  const s = Math.min(innerWidth / 1080, innerHeight / 1920);
+  $('viewport').style.transform = `scale(${s})`;
+}
+addEventListener('resize', fit); fit();
+render(0);
+
+let ctx = null, startAt = 0, raf = 0;
+function loop() {
+  const t = ctx.currentTime - startAt;
+  render(Math.min(t, DURATION));
+  if (t < DURATION + 0.5) raf = requestAnimationFrame(loop);
+  else $('play').style.display = 'grid';
+}
+$('play').addEventListener('click', async () => {
+  if (ctx) await ctx.close();
+  ctx = new AudioContext();
+  await ctx.resume();
+  startAt = ctx.currentTime + 0.1;
+  const bus = ctx.createGain(); bus.connect(ctx.destination);
+  // Every note is scheduled from t=0; a short delay line lines it up with `startAt`.
+  buildMusicAt(ctx, bus, startAt);
+  $('play').style.display = 'none';
+  cancelAnimationFrame(raf); loop();
+});
+// Live playback: the music is built on a context whose t=0 is `startAt`.
+function buildMusicAt(live, out, offset) {
+  const delay = live.createDelay(1); delay.delayTime.value = Math.min(offset, 0.99);
+  delay.connect(out);
+  buildMusic(live, delay);
+}
+
+// ---------- export hooks used by the MP4 render script ----------
+window.renderFrame = (t) => render(t);
+window.renderAudioWav = async () => {
+  const sr = 48000, off = new OfflineAudioContext(2, sr * DURATION, sr);
+  buildMusic(off, off.destination);
+  const buf = await off.startRendering();
+  const n = buf.length, ch = [buf.getChannelData(0), buf.getChannelData(1)];
+  const bytes = new DataView(new ArrayBuffer(44 + n * 4));
+  const w = (o, s) => [...s].forEach((c, i) => bytes.setUint8(o + i, c.charCodeAt(0)));
+  w(0, 'RIFF'); bytes.setUint32(4, 36 + n * 4, true); w(8, 'WAVE'); w(12, 'fmt ');
+  bytes.setUint32(16, 16, true); bytes.setUint16(20, 1, true); bytes.setUint16(22, 2, true);
+  bytes.setUint32(24, sr, true); bytes.setUint32(28, sr * 4, true); bytes.setUint16(32, 4, true); bytes.setUint16(34, 16, true);
+  w(36, 'data'); bytes.setUint32(40, n * 4, true);
+  for (let i = 0, o = 44; i < n; i++) for (let c = 0; c < 2; c++, o += 2) bytes.setInt16(o, Math.max(-1, Math.min(1, ch[c][i])) * 0x7fff, true);
+  let bin = ''; const u8 = new Uint8Array(bytes.buffer);
+  for (let i = 0; i < u8.length; i += 0x8000) bin += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000));
+  return btoa(bin);
+};
+</script>
+</body>
+</html>

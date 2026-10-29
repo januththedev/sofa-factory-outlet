@@ -1,0 +1,13 @@
+# Generated outputs stay out of git: they are large and can be rebuilt from the scripts.
+photo-pipeline/models/
+photo-pipeline/out-*/
+photo-pipeline/catalogue/processed/
+photo-pipeline/catalogue/sheets/
+photo-pipeline/catalogue/unique.json
+photo-pipeline/catalogue/process-list.txt
+photo-pipeline/**/*.log
+photo-pipeline/__pycache__/
+reel-01/*.mp4
+reel-01/*.wav
+reel-01/*.log
+reel-01.zip

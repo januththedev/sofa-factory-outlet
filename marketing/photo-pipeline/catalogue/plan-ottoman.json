@@ -1,0 +1,108 @@
+{
+ "folder": "sofa-sets-humty",
+ "excluded": {
+  "0": "group shot, stock or partial",
+  "3": "group shot, stock or partial",
+  "4": "group shot, stock or partial",
+  "5": "group shot, stock or partial",
+  "6": "group shot, stock or partial",
+  "7": "group shot, stock or partial",
+  "13": "group shot, stock or partial",
+  "14": "group shot, stock or partial",
+  "17": "group shot, stock or partial",
+  "19": "group shot, stock or partial"
+ },
+ "products": [
+  {
+   "key": "pouffe-round",
+   "name": "Round Pouffe",
+   "shape": "ottoman",
+   "category": "ottomans",
+   "variants": [
+    {
+     "colour": "Grey Blue",
+     "photos": [
+      11,
+      1
+     ]
+    },
+    {
+     "colour": "Lilac Grey",
+     "photos": [
+      10
+     ]
+    },
+    {
+     "colour": "Maroon",
+     "photos": [
+      9
+     ]
+    },
+    {
+     "colour": "Teal",
+     "photos": [
+      20
+     ]
+    },
+    {
+     "colour": "Navy",
+     "photos": [
+      16
+     ]
+    }
+   ]
+  },
+  {
+   "key": "ottoman-cube",
+   "name": "Cube Ottoman",
+   "shape": "ottoman",
+   "category": "ottomans",
+   "variants": [
+    {
+     "colour": "Chocolate Brown",
+     "photos": [
+      8
+     ]
+    },
+    {
+     "colour": "Taupe",
+     "photos": [
+      2
+     ]
+    },
+    {
+     "colour": "Mustard",
+     "photos": [
+      21
+     ]
+    }
+   ]
+  },
+  {
+   "key": "ottoman-tufted",
+   "name": "Tufted Ottoman",
+   "shape": "ottoman",
+   "category": "ottomans",
+   "variants": [
+    {
+     "colour": "Emerald",
+     "photos": [
+      12
+     ]
+    },
+    {
+     "colour": "Charcoal",
+     "photos": [
+      15
+     ]
+    },
+    {
+     "colour": "Orange",
+     "photos": [
+      18
+     ]
+    }
+   ]
+  }
+ ]
+}
