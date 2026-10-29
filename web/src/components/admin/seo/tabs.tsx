@@ -8,7 +8,6 @@ export const SEO_TABS = [
   { key: 'redirects', label: 'Redirects' },
   { key: 'reviews', label: 'Reviews' },
   { key: 'requests', label: 'Review requests' },
-  { key: 'report', label: 'Monthly report' },
 ] as const;
 
 export type SeoTab = (typeof SEO_TABS)[number]['key'];

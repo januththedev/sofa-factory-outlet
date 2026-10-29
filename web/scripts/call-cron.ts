@@ -5,7 +5,7 @@ import './_env';
 async function main() {
   const job = process.argv[2];
   if (!job) {
-    console.error('Usage: npm run cron -- <job>   (rollup, digest, search-console, eval-chat)');
+    console.error('Usage: npm run cron -- <job>   (rollup, digest, eval-chat)');
     process.exit(1);
   }
   const base = (process.env.CRON_BASE_URL || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000').replace(/\/+$/, '');
