@@ -35,6 +35,11 @@ export function ConnectCard({ status }: { status: GscStatus }) {
           Ranking numbers from Google Search Console are optional and not connected, so this page shows the
           product checklist, redirects and reviews only. Nothing is sent to Google.
         </p>
+        {status.problem ? (
+          <p role="status" className="rounded-xl bg-warn/15 px-4 py-3 text-ink">
+            {status.problem}
+          </p>
+        ) : null}
       </CardBody>
     </Card>
   );

@@ -24,7 +24,7 @@ function finished(): SetupInput {
   return {
     settings,
     counts: { publishedWithoutPrice: 0, flaggedPhotos: 0, productsNeedingReview: 0, approvedReviews: 4 },
-    services: { searchConsole: true, openRouter: true, resend: true },
+    services: { openRouter: true },
   };
 }
 
@@ -42,7 +42,7 @@ describe('buildSetupChecklist', () => {
     const input = finished();
     input.settings = structuredClone(DEFAULT_SETTINGS);
     input.counts = { publishedWithoutPrice: 15, flaggedPhotos: 22, productsNeedingReview: 15, approvedReviews: 0 };
-    input.services = { searchConsole: false, openRouter: false, resend: false };
+    input.services = { openRouter: false };
     const checklist = buildSetupChecklist(input);
     expect(checklist.remaining).toBe(checklist.total);
     expect(openIds(input)).toEqual([

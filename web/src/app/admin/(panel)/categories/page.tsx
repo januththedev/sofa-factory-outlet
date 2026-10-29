@@ -42,7 +42,9 @@ export default async function CategoriesPage() {
       <div className="space-y-8">
         <section>
           <h2 className="mb-1 font-display text-2xl">Category tree</h2>
-          <p className="mb-4 text-sm text-mute">Open a category to edit its introduction, tips and search text.</p>
+          <p className="mb-4 text-sm text-mute">
+            Open a category to {disabled ? 'see' : 'edit'} its introduction, tips and search text.
+          </p>
           <div className="space-y-4">
             {categories.map((category) => (
               <details
@@ -58,7 +60,7 @@ export default async function CategoriesPage() {
                     <span className="ml-3 text-xs uppercase text-mute">{category.kind} · /{category.path}/</span>
                   </span>
                   <span className="inline-flex shrink-0 items-center gap-1 text-sm text-mute">
-                    <span className="group-open:hidden">Edit</span>
+                    <span className="group-open:hidden">{disabled ? 'View' : 'Edit'}</span>
                     <span className="hidden group-open:inline">Close</span>
                     <ChevronDown aria-hidden className="size-4 transition-transform group-open:rotate-180" />
                   </span>

@@ -44,7 +44,7 @@ export type SetupInput = {
     approvedReviews: number;
   };
   /** Whether each key is configured. Presence only: the values never reach this module. */
-  services: { searchConsole: boolean; openRouter: boolean; resend: boolean };
+  services: { openRouter: boolean };
 };
 
 export type SetupChecklist = {
