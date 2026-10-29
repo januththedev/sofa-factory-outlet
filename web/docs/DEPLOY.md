@@ -86,3 +86,7 @@ Move the project to a Vercel Pro team, buy OpenRouter credits, turn on embedding
 ## 8. Rollback
 
 Vercel keeps every deployment: promote the previous one. Neon keeps point-in-time history for restoring the database. The seed is idempotent, so running it again never duplicates products.
+
+## Preview environment setup
+
+Production-only variables are not supplied to branch previews. Configure `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `BLOB_READ_WRITE_TOKEN`, `BLOB_ACCESS`, `AUTH_SECRET` and `CRON_SECRET` for Preview too, using isolated database/storage resources and separate secrets. Preview deployments use `https://${VERCEL_URL}` when `NEXT_PUBLIC_SITE_URL` is absent; Production still requires an explicit HTTPS site URL. The checker and application use the same fallback. Changes to Vercel settings apply to new deployments. The npm `cache-dir` warning is unrelated to missing application settings.

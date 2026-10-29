@@ -14,7 +14,9 @@ need('DATABASE_URL_UNPOOLED', 'Neon direct connection, used by db:migrate');
 need('BLOB_READ_WRITE_TOKEN', 'Vercel Blob store for product photos');
 need('CRON_SECRET', 'the daily jobs are refused without it');
 if ((process.env.AUTH_SECRET ?? '').length < 32) problems.push('AUTH_SECRET: at least 32 characters (openssl rand -base64 32)');
-if (!(process.env.NEXT_PUBLIC_SITE_URL ?? '').startsWith('https://')) {
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
+  (process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '');
+if (!siteUrl.startsWith('https://')) {
   problems.push('NEXT_PUBLIC_SITE_URL: the https address of the site, e.g. https://sofafactoryoutlet.lk');
 }
 
