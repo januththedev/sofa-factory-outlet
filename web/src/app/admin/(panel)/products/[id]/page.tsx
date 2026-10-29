@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { OpsFrame } from '@/components/admin/settings/ops-frame';
 import { asc } from 'drizzle-orm';
 import { eq } from 'drizzle-orm';
@@ -8,6 +9,8 @@ import * as s from '@/lib/db/schema';
 import { PageHeader } from '@/components/admin/page-header';
 import { ProductEditor } from '@/components/admin/products/product-editor';
 import { mediaBase } from '@/lib/storage';
+
+export const metadata: Metadata = { title: 'Edit product' };
 
 export const dynamic = 'force-dynamic';
 type Props = { params: Promise<{ id: string }> };

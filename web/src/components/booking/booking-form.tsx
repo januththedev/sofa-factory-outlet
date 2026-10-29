@@ -460,7 +460,7 @@ export function BookingForm({ availability: initialAvailability, businessName, w
               type="checkbox"
               aria-describedby={message('consent') ? `${fieldId('consent')}-error` : undefined}
               aria-invalid={message('consent') ? true : undefined}
-              className="size-11 shrink-0 accent-maroon"
+              className="size-11 shrink-0 accent-maroon md:mt-1 md:size-6"
               {...register('consent')}
             />
             <span>
@@ -480,13 +480,14 @@ export function BookingForm({ availability: initialAvailability, businessName, w
         data-sticky-bar
         className={[
           'fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bone px-4 pt-3',
+          'lg:static lg:z-auto lg:border-0 lg:bg-transparent lg:px-0 lg:pb-0 lg:pt-2',
           'pb-[max(0.75rem,env(safe-area-inset-bottom))]',
         ].join(' ')}
       >
         <button
           type="submit"
           disabled={pending}
-          className="btn-primary mx-auto flex min-h-12 w-full max-w-xl items-center justify-center gap-2 px-6"
+          className="btn-primary mx-auto flex min-h-12 w-full max-w-xl items-center justify-center gap-2 px-6 lg:mx-0 lg:w-auto lg:max-w-none"
         >
           {pending ? <LoaderCircle aria-hidden className="size-5 motion-safe:animate-spin" /> : null}
           {pending ? 'Booking...' : 'Book my visit'}

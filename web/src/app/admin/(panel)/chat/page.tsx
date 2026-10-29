@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { OpsFrame } from '@/components/admin/settings/ops-frame';
 import Link from 'next/link';
 import { ConversationDetailView } from '@/components/admin/chat/conversation-detail';
@@ -19,6 +20,8 @@ import { getConversation } from '@/lib/admin/chat';
 import { readLastEval } from '@/lib/admin/knowledge';
 import { toEvalView } from '@/lib/admin/knowledge';
 import { requireRole } from '@/lib/auth/session';
+
+export const metadata: Metadata = { title: 'Chat' };
 
 export const dynamic = 'force-dynamic';
 

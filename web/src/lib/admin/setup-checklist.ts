@@ -20,9 +20,7 @@ export type SetupItemId =
   | 'photos'
   | 'product-review'
   | 'reviews'
-  | 'search-console'
-  | 'openrouter'
-  | 'resend';
+  | 'openrouter';
 
 export type SetupGroup = 'details' | 'terms' | 'catalogue' | 'services';
 
@@ -196,28 +194,12 @@ export function buildSetupChecklist(input: SetupInput): SetupChecklist {
       done: counts.approvedReviews > 0,
     },
     {
-      id: 'search-console',
-      group: 'services',
-      label: 'Connect Search Console',
-      detail: 'Without the key the SEO page cannot show clicks and search positions.',
-      href: `${SETTINGS}?tab=chat#services`,
-      done: services.searchConsole,
-    },
-    {
       id: 'openrouter',
       group: 'services',
       label: 'Add the OpenRouter key',
       detail: 'Without it the chatbot answers only from FAQs and templates.',
       href: `${SETTINGS}?tab=chat#services`,
       done: services.openRouter,
-    },
-    {
-      id: 'resend',
-      group: 'services',
-      label: 'Add the Resend key',
-      detail: 'Without it no alert or digest emails are sent; the bell still works.',
-      href: `${SETTINGS}?tab=chat#services`,
-      done: services.resend,
     },
   ];
 

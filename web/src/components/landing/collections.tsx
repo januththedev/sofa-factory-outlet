@@ -60,7 +60,13 @@ export function Collections({ tiles }: { tiles: CollectionTile[] }) {
             See everything
           </TLink>
         </div>
-        <SwipeRail label="Collections" pinned={pinned} trackRef={track} className="mt-5 lg:mt-12">
+        <SwipeRail
+          label="Collections"
+          pinned={pinned}
+          trackRef={track}
+          trackClassName={pinned ? 'flex gap-5 lg:gap-8' : ''}
+          className="mt-5 lg:mt-12"
+        >
           {tiles.map((tile, index) => (
             <li key={tile.id} className="w-[86%] shrink-0 snap-start sm:w-[46%] lg:w-[27vw] xl:w-[23vw]">
               <TLink href={tile.href} data-cursor="view" className="group block min-h-11 min-w-11">
@@ -98,7 +104,7 @@ export function Collections({ tiles }: { tiles: CollectionTile[] }) {
                       transition-colors duration-300 group-hover:bg-ink group-hover:text-bone
                       group-focus-visible:bg-ink group-focus-visible:text-bone"
                   >
-                    ?
+                    →
                   </span>
                 </div>
               </TLink>
@@ -117,7 +123,7 @@ export function Collections({ tiles }: { tiles: CollectionTile[] }) {
                   More in the showroom, and made to measure.
                 </p>
                 <p className="mt-4 inline-flex items-center gap-2 text-sm font-semibold">
-                  Book a visit <span aria-hidden>?</span>
+                  Book a visit <span aria-hidden>→</span>
                 </p>
               </div>
             </TLink>

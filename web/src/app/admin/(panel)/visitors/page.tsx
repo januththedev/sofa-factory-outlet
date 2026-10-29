@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PageHeader } from '@/components/admin/page-header';
 import { BarList } from '@/components/admin/visitors/bar-list';
@@ -20,6 +21,8 @@ import { THead } from '@/components/ui/table';
 import { TR } from '@/components/ui/table';
 import { getVisitorsOverview } from '@/lib/analytics/queries';
 import { requireRole } from '@/lib/auth/session';
+
+export const metadata: Metadata = { title: 'Visitors' };
 
 export const dynamic = 'force-dynamic';
 

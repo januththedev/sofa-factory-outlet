@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { OpsFrame } from '@/components/admin/settings/ops-frame';
 import { PageHeader } from '@/components/admin/page-header';
 import { DocumentsPanel } from '@/components/admin/knowledge/documents-panel';
@@ -10,6 +11,8 @@ import { KnowledgeTabs } from '@/components/admin/knowledge/tabs';
 import { parseKnowledgeTab } from '@/components/admin/knowledge/tabs';
 import { countOpenGaps } from '@/lib/admin/knowledge';
 import { requireRole } from '@/lib/auth/session';
+
+export const metadata: Metadata = { title: 'Knowledge' };
 
 export const dynamic = 'force-dynamic';
 

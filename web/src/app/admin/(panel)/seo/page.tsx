@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { OpsFrame } from '@/components/admin/settings/ops-frame';
 import { PageHeader } from '@/components/admin/page-header';
 import { OverviewTab } from '@/components/admin/seo/overview-tab';
@@ -10,6 +11,8 @@ import { ReviewsTab } from '@/components/admin/seo/reviews-tab';
 import { parseSeoTab } from '@/components/admin/seo/tabs';
 import { SeoTabs } from '@/components/admin/seo/tabs';
 import { requireRole } from '@/lib/auth/session';
+
+export const metadata: Metadata = { title: 'SEO' };
 
 export const dynamic = 'force-dynamic';
 

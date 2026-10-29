@@ -116,16 +116,23 @@
 [data-sticky-bar] {
   padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
 }
-.sticky-bar-padding,
-body:has([data-sticky-bar]) .site-main {
+.sticky-bar-padding {
   padding-bottom: var(--sticky-bar-clearance);
+}
+/* The bar sticks to the screen bottom on phones and tablets; on desktop it sits inline in the page. */
+@media (max-width: 1023.98px) {
+  body:has([data-sticky-bar]) .site-main {
+    padding-bottom: var(--sticky-bar-clearance);
+  }
 }
 .chat-launcher {
   bottom: calc(1.5rem + env(safe-area-inset-bottom));
   right: calc(0.75rem + env(safe-area-inset-right));
 }
-body:has([data-sticky-bar]) .chat-launcher {
-  bottom: calc(5.5rem + env(safe-area-inset-bottom));
+@media (max-width: 1023.98px) {
+  body:has([data-sticky-bar]) .chat-launcher {
+    bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  }
 }
 
 /* The visual viewport variables are updated on keyboard resize and pan. */

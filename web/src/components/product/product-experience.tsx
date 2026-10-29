@@ -45,7 +45,7 @@ export function ProductExperience({ product }: { product: ProductDetail }) {
         <div className="min-w-0 lg:col-span-7"><Gallery key={variant.id} variant={variant} /></div>
         <div className="min-w-0 lg:col-span-5 lg:pt-8">
           <p className="text-xs font-semibold uppercase tracking-wider">{product.category.name}</p>
-          <h1 className="mt-4 break-words font-display text-[clamp(2.5rem,6vw,5.2rem)] font-light leading-none">
+          <h1 className="mt-4 text-balance break-words font-display text-[clamp(2.25rem,8vw,3.75rem)] font-light leading-none lg:text-[clamp(2.25rem,3.8vw,3.9rem)]">
             {product.name}
           </h1>
           <p className="mt-6 text-xl"><Price product={product} /></p>

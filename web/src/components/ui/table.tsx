@@ -30,7 +30,7 @@ export function TR({ className, ...props }: React.HTMLAttributes<HTMLTableRowEle
 }
 
 export function TH({ className, ...props }: React.ThHTMLAttributes<HTMLTableCellElement>) {
-  return <th className={cn('px-4 py-3 font-semibold', className)} {...props} />;
+  return <th className={cn('whitespace-nowrap px-4 py-3 font-semibold', className)} {...props} />;
 }
 
 export function TD({ className, ...props }: React.TdHTMLAttributes<HTMLTableCellElement>) {

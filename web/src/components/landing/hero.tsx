@@ -60,7 +60,7 @@ export function Hero({ picture, textureUrl }: { picture: PictureData; textureUrl
     <section
       ref={root}
       aria-labelledby="hero-title"
-      className="relative isolate min-h-svh overflow-hidden bg-ink text-bone"
+      className="relative isolate min-h-[calc(100svh-var(--site-header-height))] overflow-hidden bg-ink text-bone"
     >
       <div className="absolute inset-0 -z-10">
         <Picture data={picture} sizes="100vw" priority placeholder={false} imgClassName="h-full w-full object-cover" />
@@ -71,7 +71,7 @@ export function Hero({ picture, textureUrl }: { picture: PictureData; textureUrl
         className="absolute inset-0 -z-10 bg-gradient-to-t from-ink/85 via-ink/50 via-45% to-ink/10"
       />
       <div
-        className="site-container flex min-h-svh flex-col justify-end
+        className="site-container flex min-h-[calc(100svh-var(--site-header-height))] flex-col justify-end
           pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(6.5rem,env(safe-area-inset-top))] lg:pb-14 lg:pt-36"
       >
         <p data-hero-fade className="eyebrow mb-4 text-xs text-bone/90 lg:mb-6">
@@ -90,7 +90,7 @@ export function Hero({ picture, textureUrl }: { picture: PictureData; textureUrl
           </p>
           <div
             data-hero-fade
-            className="flex flex-col gap-3 min-[360px]:flex-row min-[360px]:flex-wrap lg:col-span-7 lg:justify-end"
+            className="flex flex-col gap-3 min-[360px]:flex-row min-[360px]:flex-wrap lg:col-span-7 lg:justify-end lg:pr-16"
           >
             <Magnetic className="w-full min-[360px]:w-auto">
               <TLink

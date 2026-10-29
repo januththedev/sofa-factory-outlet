@@ -61,9 +61,7 @@ describe('buildSetupChecklist', () => {
       'photos',
       'product-review',
       'reviews',
-      'search-console',
       'openrouter',
-      'resend',
     ]);
   });
 
@@ -125,13 +123,7 @@ describe('buildSetupChecklist', () => {
       (i) => void (i.counts.productsNeedingReview = 0),
     ],
     ['reviews', (i) => void (i.counts.approvedReviews = 0), (i) => void (i.counts.approvedReviews = 1)],
-    [
-      'search-console',
-      (i) => void (i.services.searchConsole = false),
-      (i) => void (i.services.searchConsole = true),
-    ],
     ['openrouter', (i) => void (i.services.openRouter = false), (i) => void (i.services.openRouter = true)],
-    ['resend', (i) => void (i.services.resend = false), (i) => void (i.services.resend = true)],
   ];
 
   it.each(cases)('%s appears when broken and clears when fixed', (id, breakIt, fixIt) => {

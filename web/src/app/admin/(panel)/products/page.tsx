@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { OpsFrame } from '@/components/admin/settings/ops-frame';
 import { and } from 'drizzle-orm';
 import { asc } from 'drizzle-orm';
@@ -24,6 +25,8 @@ import * as s from '@/lib/db/schema';
 import { pictureData } from '@/lib/images/urls';
 import { formatLkr } from '@/lib/money';
 
+export const metadata: Metadata = { title: 'Products' };
+
 export const dynamic = 'force-dynamic';
 
 const noteHelp: Record<string, string> = {
@@ -36,6 +39,24 @@ const noteHelp: Record<string, string> = {
   'price-on-request': 'Publishing a from price can improve search visibility.',
   'no-dimensions': 'Measure and add the product dimensions.',
 };
+
+const shortDate = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Colombo' });
+const formatShortDate = (date: Date) => shortDate.format(date);
+
+/** Ticks this product for the bulk panel above the list (see ProductBulkActions). */
+function RowCheck({ id, name }: { id: number; name: string }) {
+  return (
+    <label className="grid min-h-11 min-w-11 shrink-0 cursor-pointer place-items-center">
+      <input
+        type="checkbox"
+        data-bulk-select
+        value={id}
+        aria-label={`Select ${name}`}
+        className="size-5 accent-maroon"
+      />
+    </label>
+  );
+}
 
 type Props = {
   searchParams: Promise<{ q?: string; status?: string; category?: string }>;
@@ -96,7 +117,7 @@ export default async function ProductsPage({ searchParams }: Props) {
         </label>
         <button className="btn btn-ghost min-h-11 self-end" type="submit">Apply filters</button>
       </form>
-      <ProductBulkActions ids={products.map(({ product }) => product.id)} owner={session.role === 'owner'} />
+      <ProductBulkActions total={products.length} owner={session.role === 'owner'} />
       {products.length === 0 ? (
         <p className="rounded-xl border border-dashed border-line p-5">
           No products match. Clear the filters or choose New product to add one.
@@ -119,6 +140,7 @@ export default async function ProductsPage({ searchParams }: Props) {
           return (
             <li key={product.id} className="min-w-0 rounded-xl border border-line bg-paper p-4">
               <div className="flex items-start gap-3">
+                <RowCheck id={product.id} name={product.name} />
                 {photos[0] ? (
                   <Picture
                     data={pictureData(photos[0], 480)}
@@ -154,7 +176,7 @@ export default async function ProductsPage({ searchParams }: Props) {
       <Table>
         <THead>
           <TR>
-            <TH>Product</TH><TH>Category</TH><TH>Status</TH><TH>Price</TH><TH>SEO</TH><TH>Updated</TH>
+            <TH className="w-12"><span className="sr-only">Select</span></TH><TH>Product</TH><TH>Category</TH><TH>Status</TH><TH>Price</TH><TH>SEO</TH><TH>Updated</TH>
           </TR>
         </THead>
         <TBody>
@@ -176,8 +198,9 @@ export default async function ProductsPage({ searchParams }: Props) {
               : seo.score === 'amber' ? 'bg-warn' : 'bg-bad';
             return (
               <TR key={product.id}>
+                <TD className="w-12 pr-0"><RowCheck id={product.id} name={product.name} /></TD>
                 <TD>
-                  <div className="flex min-w-52 items-start gap-3">
+                  <div className="flex min-w-60 items-start gap-3">
                     {images[0] ? (
                       <Picture
                         data={pictureData(images[0], 480)}
@@ -196,22 +219,25 @@ export default async function ProductsPage({ searchParams }: Props) {
                         {product.name}
                       </Link>
                       <div className="mt-1 flex flex-wrap gap-1">
-                        {product.reviewNotes.map((note) => (
-                          <span
-                            key={note}
-                            title={noteHelp[note] ?? note}
-                            className="rounded bg-warn/15 px-2 py-0.5 text-xs"
-                          >
-                            {note}
-                          </span>
-                        ))}
+                        {product.reviewNotes.map((note) => {
+                          const key = note.split(':')[0].trim();
+                          return (
+                            <span
+                              key={note}
+                              title={noteHelp[key] ?? note}
+                              className="rounded bg-warn/15 px-2 py-0.5 text-xs"
+                            >
+                              {key}
+                            </span>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
                 </TD>
-                <TD>{category.name}</TD>
-                <TD><Badge>{product.status}</Badge></TD>
-                <TD>
+                <TD className="whitespace-nowrap">{category.name}</TD>
+                <TD className="whitespace-nowrap"><Badge>{product.status}</Badge></TD>
+                <TD className="whitespace-nowrap">
                   {product.priceMinor === null
                     ? 'On request'
                     : `${product.priceFrom ? 'From ' : ''}${formatLkr(product.priceMinor)}`}
@@ -222,7 +248,7 @@ export default async function ProductsPage({ searchParams }: Props) {
                     className={`inline-block size-3 rounded-full ${scoreClass}`}
                   />
                 </TD>
-                <TD>{product.updatedAt.toLocaleDateString('en-LK')}</TD>
+                <TD className="whitespace-nowrap">{formatShortDate(product.updatedAt)}</TD>
               </TR>
             );
           })}

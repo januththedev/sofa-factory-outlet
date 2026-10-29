@@ -149,7 +149,7 @@ function CalendarPanel({ calendar, prefix }: { calendar: Calendar; prefix: strin
       <div
         className={cn(
           'grid gap-4',
-          view === 'week' ? 'md:grid-cols-2 min-[1400px]:grid-cols-7' : 'max-w-2xl',
+          view === 'week' ? 'md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-7' : 'max-w-2xl',
         )}
       >
         {calendar.days.map((day) => (

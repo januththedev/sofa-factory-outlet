@@ -1,6 +1,8 @@
+import type { Metadata } from 'next';
 import { CatalogueForm } from '@/components/admin/products/catalogue-form';
 import { OpsFrame } from '@/components/admin/settings/ops-frame';
 import { asc } from 'drizzle-orm';
+import { ChevronDown } from 'lucide-react';
 import { PageHeader } from '@/components/admin/page-header';
 import { CategoryImageUpload } from '@/components/admin/products/category-image-upload';
 import { Button } from '@/components/ui/button';
@@ -14,6 +16,8 @@ import { deletePairingAction } from './actions';
 import { saveComplementAction } from './actions';
 import { savePairingAction } from './actions';
 import { updateCategoryAction } from './actions';
+
+export const metadata: Metadata = { title: 'Categories' };
 
 export const dynamic = 'force-dynamic';
 
@@ -37,18 +41,33 @@ export default async function CategoriesPage() {
       />
       <div className="space-y-8">
         <section>
-          <h2 className="mb-4 font-display text-2xl">Category tree</h2>
+          <h2 className="mb-1 font-display text-2xl">Category tree</h2>
+          <p className="mb-4 text-sm text-mute">Open a category to edit its introduction, tips and search text.</p>
           <div className="space-y-4">
             {categories.map((category) => (
-              <CatalogueForm
+              <details
                 key={category.id}
+                className="group rounded-[var(--radius-card)] border border-line bg-paper"
+              >
+                <summary
+                  className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-3 px-5 py-3
+                    [&::-webkit-details-marker]:hidden"
+                >
+                  <span className="min-w-0">
+                    <span className="font-display text-xl">{category.name}</span>
+                    <span className="ml-3 text-xs uppercase text-mute">{category.kind} · /{category.path}/</span>
+                  </span>
+                  <span className="inline-flex shrink-0 items-center gap-1 text-sm text-mute">
+                    <span className="group-open:hidden">Edit</span>
+                    <span className="hidden group-open:inline">Close</span>
+                    <ChevronDown aria-hidden className="size-4 transition-transform group-open:rotate-180" />
+                  </span>
+                </summary>
+              <CatalogueForm
                 action={updateCategoryAction}
-                className="grid gap-3 rounded-[var(--radius-card)] border border-line bg-paper p-5 md:grid-cols-2"
+                className="grid gap-3 border-t border-line p-5 md:grid-cols-2"
               >
                 <input type="hidden" name="id" value={category.id} />
-                <p className="text-xs uppercase text-mute md:col-span-2">
-                  {category.kind} · /{category.path}/
-                </p>
                 <label>
                   <span className="mb-2 block font-medium">Name</span>
                   <Input name="name" defaultValue={category.name} disabled={disabled} />
@@ -88,6 +107,7 @@ export default async function CategoriesPage() {
                 <CategoryImageUpload categoryId={category.id} slug={category.slug} disabled={disabled} />
                 {!disabled ? <Button type="submit" className="md:col-span-2">Save category</Button> : null}
               </CatalogueForm>
+              </details>
             ))}
           </div>
         </section>

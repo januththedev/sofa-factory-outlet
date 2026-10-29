@@ -73,7 +73,7 @@ export function SidebarNav({
   const pathname = usePathname();
   return (
     <nav aria-label="Admin sections" className="px-3 pb-6">
-      <ul className="space-y-2">
+      <ul className="space-y-1">
         {NAV_ITEMS.filter((item) => !item.ownerOnly || role === 'owner').map((item) => {
           const active = isActiveNav(pathname, item.href);
           const Icon = item.icon;
@@ -84,7 +84,7 @@ export function SidebarNav({
                 onClick={onNavigate}
                 aria-current={active ? 'page' : undefined}
                 className={cn(
-                  'flex min-h-14 items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-colors',
+                  'flex min-h-12 items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-colors',
                   active ? 'bg-maroon/10 text-maroon' : 'text-ink-2 hover:bg-bone-2 hover:text-ink',
                 )}
               >

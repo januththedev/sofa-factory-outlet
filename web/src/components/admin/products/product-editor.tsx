@@ -130,7 +130,7 @@ export function ProductEditor({ initial, categories, mediaBaseUrl }: Props) {
   });
 
   return (
-    <form onSubmit={submit} className="min-w-0 space-y-6 pb-28 [&_input[type=checkbox]]:size-11">
+    <form onSubmit={submit} className="min-w-0 space-y-6 pb-28 max-md:[&_input[type=checkbox]]:size-11">
       {Object.keys(form.formState.errors).length > 0 ? (
         <div role="status" aria-live="polite" className="space-y-2 rounded-xl border border-bad p-4">
           <p>Check these fields, then save again:</p>

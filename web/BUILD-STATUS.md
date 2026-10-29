@@ -4,6 +4,20 @@ Spec: `../Plan.md`. Implementation plan: nine phases, one local commit each. Upd
 
 **Last updated:** 29 Oct 2026: the mobile and UX wave below is finished, verified and committed locally (35 commits ahead of `origin/main`, **not pushed**). The sections after it are historical.
 
+## Desktop and admin pass (29 Oct 2026)
+
+Looked at every public page and every admin screen at 1440 px in a real browser (scroll-pinned sections with real scrolling, not full-page screenshots). Phone-sized audits could not see these:
+- **Collections rail** collapsed into one narrow column on desktop (the pinned track lost its `flex` row when `SwipeRail` was introduced). Fixed in `landing/collections.tsx`.
+- **Corrupted glyphs**: arrows and review stars had become `?` in `collections.tsx` and `proof.tsx` (an encoding slip while a package was written). A scan of the whole wave found no others. If a package ever writes non-ASCII text, grep for `>?<` and `'?'` afterwards.
+- **Hero** was one header-height taller than the screen, so its buttons sat on or below the fold on laptops; it is now `100svh` minus the header, and its buttons stay clear of the chat button.
+- **Booking submit bar** was a full-width phone bar on desktop; it is now inline from 1024 px up (`globals.css` sticky-bar padding and chat-button lift are phone/tablet only).
+- **Product title** is capped on desktop and balanced (no "L-" / "Shape" split).
+- **Admin tables**: headers no longer break mid-word (`ui/table.tsx` `TH` is `whitespace-nowrap`); products list shows short note chips, readable dates and per-row checkboxes with "Select all". The old bulk panel listed bare "#7 #1 #8" boxes. `ProductBulkActions` now reads `input[data-bulk-select]` boxes in each card/row.
+- **Admin checkboxes** were forced to 44 px on every screen by `OpsFrame` and the product editor; now phones only (`max-md:`).
+- **Categories** page: each category is a collapsed row (it was 16,000 px of open forms). **Calendar** week grid uses `xl:grid-cols-4 2xl:grid-cols-7` (the old `min-[1400px]` variant lost to `md:` in the CSS order). **Sidebar** rows are 48 px so every item fits on a 720 px-tall laptop. Six admin pages now have tab titles.
+- **Optional partners hidden**: the setup checklist no longer lists Search Console or Resend (only OpenRouter remains), and the SEO card is a one-line note instead of a Google Cloud walkthrough. The code paths stay, switched on only if keys are ever added.
+- Verified: tsc 0, eslint 0, 1,098 vitest tests (one DB test file crashed once from memory and passed alone), Playwright 24 passed + 1 skipped, bulk select exercised in a browser, phone checkboxes still 44 px with no sideways scroll.
+
 ## Mobile and UX wave (29 Oct 2026): read this first
 
 **What changed**

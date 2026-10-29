@@ -19,8 +19,8 @@ const REASONS = [
 function Stars({ rating }: { rating: number }) {
   return (
     <p aria-label={`${rating} out of 5 stars`} className="text-maroon">
-      {'?'.repeat(rating)}
-      <span className="text-ink/20">{'?'.repeat(5 - rating)}</span>
+      {'★'.repeat(rating)}
+      <span className="text-ink/20">{'★'.repeat(5 - rating)}</span>
     </p>
   );
 }
