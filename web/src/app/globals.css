@@ -215,63 +215,6 @@
   transform-origin: left;
 }
 
-/* Preloader: hidden for returning visitors (head script), reduced motion and no-JS. */
-.preloader {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  pointer-events: none;
-  animation: hide-failsafe 0.01s 2s forwards;
-}
-.preloader-panel {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-}
-.preloader-count {
-  position: absolute;
-  left: clamp(1.25rem, 4vw, 3rem);
-  bottom: clamp(0.5rem, 2vw, 2rem);
-  font-family: var(--font-display);
-  font-size: clamp(5rem, 18vw, 14rem);
-  line-height: 1;
-  letter-spacing: -0.05em;
-  font-variant-numeric: tabular-nums;
-  color: var(--color-ink);
-}
-html[data-preloaded] .preloader {
-  display: none;
-}
-@media (prefers-reduced-motion: reduce), (pointer: coarse), (max-width: 767px) {
-  .preloader {
-    display: none;
-  }
-  .page-curtain {
-    display: none;
-  }
-}
-@media (scripting: none) {
-  .preloader {
-    display: none;
-  }
-}
-@keyframes hide-failsafe {
-  to {
-    visibility: hidden;
-    pointer-events: none;
-  }
-}
-
-.page-curtain {
-  position: fixed;
-  inset: 0;
-  z-index: 180;
-  background: var(--color-maroon);
-  transform: translateY(100%);
-  pointer-events: none;
-}
-
 .cursor-ring,
 .cursor-dot {
   position: fixed;
