@@ -34,3 +34,11 @@ Thumbs.db
 # Harness-managed agent worktrees
 .claude/worktrees/
 web/docs/tasks/_fix-*.md
+
+# Marketing renders, photo sets and reels live outside the website repo history
+marketing/*/out/
+marketing/*/assets/
+marketing/photo-pipeline/catalogue/
+marketing/photo-pipeline/models/
+web/.env*
+!web/.env.example

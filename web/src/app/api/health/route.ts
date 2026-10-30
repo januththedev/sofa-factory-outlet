@@ -1,12 +1,19 @@
 import { sql } from 'drizzle-orm';
 import { dbMode, getDb } from '@/lib/db';
 import * as s from '@/lib/db/schema';
+import { env } from '@/lib/env';
+import { bearerMatches } from '@/lib/security/bearer';
 import { storage } from '@/lib/storage';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(request: Request) {
   const db = await getDb();
+  // Visitors and uptime monitors only learn that the site and database answer; counts need the cron secret.
+  if (!bearerMatches(request, env.CRON_SECRET)) {
+    await db.select({ one: sql<number>`1` }).from(s.categories).limit(1);
+    return Response.json({ ok: true });
+  }
   const [products] = await db
     .select({
       total: sql<number>`count(*)::int`,

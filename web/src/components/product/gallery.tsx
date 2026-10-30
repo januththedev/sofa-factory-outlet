@@ -68,7 +68,7 @@ export function Gallery({ variant }: { variant: ProductVariantView }) {
               setLightbox(true);
             }}
             className="aspect-square min-h-11 min-w-11 w-full shrink-0 snap-center"
-            aria-label={`Open image ${index + 1} of ${images.length}`}
+            aria-label={[`Open image ${index + 1} of ${images.length}`, item.alt].filter(Boolean).join(': ')}
           >
             <Picture
               data={item}
@@ -81,7 +81,7 @@ export function Gallery({ variant }: { variant: ProductVariantView }) {
         ))}
       </div>
       <div className="mt-2 flex items-center justify-between gap-2">
-        <div className="flex min-w-0 gap-2 overflow-x-auto" aria-label="Gallery images">
+        <div role="group" className="flex min-w-0 gap-2 overflow-x-auto" aria-label="Gallery images">
           {images.map((item, index) => (
             <button
               key={`${item.src}:${index}`}
@@ -138,7 +138,7 @@ export function Gallery({ variant }: { variant: ProductVariantView }) {
           <div className="flex shrink-0 items-center justify-between gap-2">
             <button type="button" onClick={() => setZoomed((value) => !value)}
               className="min-h-11 rounded-full bg-bone px-4 text-ink" aria-pressed={zoomed}>
-              {zoomed ? 'Fit image' : 'Zoom image'}
+              Zoom
             </button>
             <button type="button" onClick={() => setLightbox(false)}
               className="min-h-11 rounded-full bg-bone px-4 text-ink">

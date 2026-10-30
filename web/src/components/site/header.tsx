@@ -131,8 +131,6 @@ export function Header({ whatsapp }: { whatsapp?: string | null }) {
             <button
               type="button"
               aria-label="Close menu"
-              aria-expanded={open}
-              aria-controls="mobile-menu"
               onClick={close}
               className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-bone/25"
             >

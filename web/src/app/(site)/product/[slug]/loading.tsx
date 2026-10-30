@@ -1,6 +1,6 @@
 export default function Loading() {
   return (
-    <main className="site-container pt-24 pb-48 lg:pt-32" aria-busy="true" aria-label="Loading product">
+    <div className="site-container pt-24 pb-48 lg:pt-32" aria-busy="true" aria-label="Loading product">
       <p role="status" className="sr-only">Loading product…</p>
       <div aria-hidden="true" className="motion-safe:animate-pulse">
         <div className="mb-4 h-11 w-40 rounded bg-paper" />
@@ -23,6 +23,6 @@ export default function Loading() {
         </div>
         <div className="mt-10 h-64 border-y border-line bg-paper" />
       </div>
-    </main>
+    </div>
   );
 }

@@ -64,7 +64,7 @@ export default async function ProductPage({ params }: Props) {
     .map((point) => point.replace(/^-\s*/, '').trim()).filter(Boolean) ?? [];
   const attributes = Object.entries(product.attributes);
   return (
-    <main className="pb-[calc(12rem+env(safe-area-inset-bottom))] lg:pb-0">
+    <div className="pb-[calc(12rem+env(safe-area-inset-bottom))] lg:pb-0">
       <JsonLd data={productJsonLd(product)} />
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
       <div className="site-container pb-16 pt-24 lg:pb-24 lg:pt-32">
@@ -133,6 +133,6 @@ export default async function ProductPage({ params }: Props) {
           </section>
         ) : null}
       </div>
-    </main>
+    </div>
   );
 }

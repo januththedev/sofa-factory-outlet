@@ -28,7 +28,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Search 
   const params = parseShopParams(await searchParams);
   const [result, categories] = await Promise.all([searchListing(params), listingCategories()]);
   return (
-    <main className="site-container pt-24 pb-12 lg:pt-32 lg:pb-20">
+    <div className="site-container pt-24 pb-12 lg:pt-32 lg:pb-20">
       <h1 className="font-display text-[clamp(3rem,8vw,7rem)] font-light leading-none">Shop</h1>
       <form action="/shop/" className="mt-6 mb-6 flex max-w-2xl gap-2">
         <label className="sr-only" htmlFor="shop-search">Search products</label>
@@ -44,6 +44,6 @@ export default async function ShopPage({ searchParams }: { searchParams: Search 
         <button className="btn btn-primary min-h-11 px-4" type="submit">Search</button>
       </form>
       <Listing result={result} params={params} path="/shop/" categories={categories} />
-    </main>
+    </div>
   );
 }

@@ -1,3 +1,4 @@
+import { bearerMatches } from '@/lib/security/bearer';
 import { z } from 'zod';
 import { env } from '@/lib/env';
 import type { TrackEventType } from './client';
@@ -163,7 +164,5 @@ export function contextFromRequest(request: Request): IngestContext {
 
 /** `GET /api/cron/*` guard. A missing CRON_SECRET locks the jobs rather than opening them. */
 export function isCronAuthorized(request: Request): boolean {
-  const secret = env.CRON_SECRET;
-  if (!secret) return false;
-  return request.headers.get('authorization') === `Bearer ${secret}`;
+  return bearerMatches(request, env.CRON_SECRET);
 }

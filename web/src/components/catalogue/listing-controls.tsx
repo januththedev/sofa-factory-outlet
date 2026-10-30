@@ -70,7 +70,7 @@ export function ListingControls(props: Props) {
         </aside>
         <div className="min-w-0" aria-busy={pending}>
           {chips.length ? (
-            <div className="mb-6 flex flex-wrap gap-2" aria-label="Active filters">
+            <div role="group" className="mb-6 flex flex-wrap gap-2" aria-label="Active filters">
               {chips.map((chip) => (
                 <button
                   key={`${chip.key}:${chip.value}`}

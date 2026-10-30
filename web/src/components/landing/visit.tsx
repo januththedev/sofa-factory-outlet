@@ -87,6 +87,7 @@ export function Visit({ picture, address, hoursLines, mapSrc, directionsUrl, wha
               className="btn-ghost min-h-11 min-w-11 px-4"
             >
               Get directions
+              <span className="sr-only"> (opens in a new tab)</span>
             </a>
             {whatsappUrl ? (
               <a
@@ -96,6 +97,7 @@ export function Visit({ picture, address, hoursLines, mapSrc, directionsUrl, wha
                 className="btn-ghost min-h-11 min-w-11 px-4"
               >
                 WhatsApp us
+                <span className="sr-only"> (opens in a new tab)</span>
               </a>
             ) : null}
           </div>
@@ -127,6 +129,7 @@ export function Visit({ picture, address, hoursLines, mapSrc, directionsUrl, wha
                   className="inline-flex min-h-11 min-w-11 items-center px-2 text-sm underline underline-offset-4"
                 >
                   Open in Maps
+                  <span className="sr-only"> (opens in a new tab)</span>
                 </a>
               </div>
             </div>

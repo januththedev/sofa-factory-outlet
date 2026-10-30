@@ -11,6 +11,16 @@ export function JsonLd({ data }: { data: Record<string, unknown> | Array<Record<
 
 export type Crumb = { name: string; path: string };
 
+/** Markdown to one line of plain text, for descriptions in structured data. */
+const plainText = (markdown: string) => markdown
+  .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+  .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+  .replace(/^\s*[-+]\s+/gm, '')
+  .replace(/[#>*_`~|]+/g, ' ')
+  .replace(/\s+/g, ' ')
+  .trim()
+  .slice(0, 500);
+
 const absolutePageUrl = (path: string) => {
   const url = new URL(path, `${siteUrl()}/`);
   if (!url.pathname.endsWith('/')) url.pathname += '/';
@@ -44,7 +54,8 @@ export const furnitureStoreJsonLd: () => Promise<Record<string, unknown>> = asyn
   };
   if (business.address.confirmed) {
     data.address = { '@type': 'PostalAddress', streetAddress: business.address.street, addressLocality: business.address.locality, addressRegion: business.address.city, postalCode: business.address.postalCode ?? undefined, addressCountry: business.address.country };
-    data.priceRange = business.priceRange;
+    // A range such as 'LKR 50,000 – 500,000' or '$$'; a bare currency code is not one.
+    if (business.priceRange && /[\d$]/.test(business.priceRange)) data.priceRange = business.priceRange;
   }
   if (business.phone.confirmed && business.phone.number) data.telephone = business.phone.number;
   if (hours.confirmed) {
@@ -57,16 +68,31 @@ export const productJsonLd: (product: ProductDetail) => Record<string, unknown> 
   const colours = [...new Set(product.variants.map((variant) => variant.colourName))];
   const data: Record<string, unknown> = {
     '@context': 'https://schema.org', '@type': 'Product', name: product.name,
-    description: product.shortDescription ?? product.descriptionMd,
+    description: product.shortDescription ?? plainText(product.descriptionMd),
     url: absolutePageUrl(`/product/${product.slug}/`),
     image: product.variants.flatMap((variant) => variant.images.map((image) => absoluteAssetUrl(image.src))),
     brand: { '@type': 'Brand', name: 'Sofa Factory Outlet' },
   };
   if (colours.length) data.color = colours.join(', ');
   if (product.material) data.material = product.material;
-  if (product.dimensions) data.depth = product.dimensions;
-  if (product.priceMinor !== null) data.offers = { '@type': 'Offer', priceCurrency: 'LKR', price: product.priceMinor / 100, availability: 'https://schema.org/InStock', url: absolutePageUrl(`/product/${product.slug}/`) };
-  if (product.reviews.count > 0 && product.reviews.average !== null) data.aggregateRating = { '@type': 'AggregateRating', ratingValue: product.reviews.average, reviewCount: product.reviews.count };
+  const cm = (value?: number) => (value ? { '@type': 'QuantitativeValue', value, unitCode: 'CMT' } : undefined);
+  if (product.dimensions?.widthCm) data.width = cm(product.dimensions.widthCm);
+  if (product.dimensions?.depthCm) data.depth = cm(product.dimensions.depthCm);
+  if (product.dimensions?.heightCm) data.height = cm(product.dimensions.heightCm);
+  // No Offer for "price on request" or a zero price; a "From" price is the lowest of a range.
+  if (product.priceMinor !== null && product.priceMinor > 0) {
+    const availability = product.variants.length === 0 || product.variants.some((variant) => variant.inStock)
+      ? 'https://schema.org/InStock'
+      : 'https://schema.org/MadeToOrder';
+    const url = absolutePageUrl(`/product/${product.slug}/`);
+    const price = product.priceMinor / 100;
+    data.offers = product.priceFrom
+      ? { '@type': 'AggregateOffer', priceCurrency: 'LKR', lowPrice: price, availability, url }
+      : { '@type': 'Offer', priceCurrency: 'LKR', price, availability, url };
+  }
+  if (product.reviews.count > 0 && product.reviews.average !== null) {
+    data.aggregateRating = { '@type': 'AggregateRating', ratingValue: Math.round(product.reviews.average * 10) / 10, reviewCount: product.reviews.count };
+  }
   return data;
 };
 export const articleJsonLd: (article: { title: string; description: string; path: string; datePublished: string; dateModified?: string; author: string; image?: string }) => Record<string, unknown> = (article) => ({

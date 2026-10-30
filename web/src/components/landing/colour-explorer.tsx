@@ -27,6 +27,7 @@ function SceneLayer({ color, paused }: { color: string; paused: boolean }) {
   const [ready, setReady] = useState(false);
   return (
     <div
+      aria-hidden="true"
       className={`absolute inset-0 touch-pan-y bg-gradient-to-b from-paper to-bone-2
         transition-opacity duration-200 [&_canvas]:touch-pan-y ${ready ? 'opacity-100' : 'opacity-0'}`}
     >

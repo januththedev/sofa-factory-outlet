@@ -17,7 +17,7 @@ export function SortMenu({ value = 'featured' }: { value?: string }) {
       <select
         value={value}
         aria-label="Sort by"
-        disabled={pending}
+        aria-busy={pending}
         className="min-h-11 w-32 rounded-full border border-line bg-bone px-3 text-base sm:w-44"
         onChange={(event) => {
           const query = new URLSearchParams(current.toString());

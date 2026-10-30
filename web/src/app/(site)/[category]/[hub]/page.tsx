@@ -38,13 +38,14 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     query.q || query.category || query.hub || query.colour?.length || query.material?.length || query.shape?.length
     || query.seats?.length || query.minPrice !== undefined || query.maxPrice !== undefined || query.sort,
   );
-  const emptyKnown = row.path === 'sofas/recliners' || row.path === 'tables/coffee';
+  // A hub with nothing published yet is a thin page: keep it out of search until it has pieces.
+  const empty = (await searchListing({ hub: row.path })).total === 0;
   const path = !filtered && query.page && query.page > 1 ? `/${row.path}/?page=${query.page}` : `/${row.path}/`;
   return pageMetadata({
     title: content?.title ?? row.name,
     description: content?.metaDescription ?? `Browse ${row.name}.`,
     path,
-    noindex: filtered || emptyKnown,
+    noindex: filtered || empty,
   });
 }
 
@@ -62,7 +63,7 @@ export default async function HubPage({ params, searchParams }: Props) {
     { name: row.name, href: `/${row.path}/` },
   ];
   return (
-    <main className="site-container pt-24 pb-[calc(6rem+env(safe-area-inset-bottom))] lg:pt-32 lg:pb-20">
+    <div className="site-container pt-24 pb-[calc(6rem+env(safe-area-inset-bottom))] lg:pt-32 lg:pb-20">
       <JsonLd data={breadcrumbJsonLd(crumbs.map((crumb) => ({ name: crumb.name, path: crumb.href })))} />
       <Breadcrumbs items={crumbs} />
       <h1 className="mt-6 mb-6 break-words font-display text-[clamp(2.5rem,7vw,6rem)] font-light leading-none">
@@ -78,6 +79,6 @@ export default async function HubPage({ params, searchParams }: Props) {
       </nav>
       <Listing result={result} params={query} path={`/${row.path}/`} {...scope} />
       <HubIntro content={content} />
-    </main>
+    </div>
   );
 }
