@@ -5,7 +5,8 @@
 //
 //   npx tsx scripts/import-photo-catalogue.ts --dry        show what would be created
 //   npx tsx scripts/import-photo-catalogue.ts              create the drafts (skips slugs that already exist)
-//   npx tsx scripts/import-photo-catalogue.ts --refresh    swap the photos of existing DRAFT products for newer ones
+//   npx tsx scripts/import-photo-catalogue.ts --publish    create them already published (default: drafts to check first)
+//   npx tsx scripts/import-photo-catalogue.ts --refresh    swap the photos of products this importer made (drafts, or tagged owner-photos) for newer ones
 //
 // Photos: the Codex cut-out on the studio background (processed/studio-codex, see marketing/photo-pipeline/
 // codex_studio.py) is used when it exists, otherwise the rembg studio shot (processed/studio).
@@ -24,8 +25,15 @@ import * as s from '../src/lib/db/schema';
 import type { ImageRef } from '../src/lib/db/schema/types';
 import { processImage } from '../src/lib/images/process';
 
+// Many large photos in a row: keep sharp to one thread and no cache so the import fits on a small machine.
+sharp.concurrency(1);
+sharp.cache(false);
+
 const dry = process.argv.includes('--dry');
 const refresh = process.argv.includes('--refresh');
+const publish = process.argv.includes('--publish');
+// Slugs that stay drafts even with --publish (e.g. a cover photo that still needs fixing).
+const hold = new Set((process.env.IMPORT_HOLD ?? '').split(',').map((v) => v.trim()).filter(Boolean));
 const root = path.resolve(process.cwd(), process.env.CATALOGUE_DIR || '../marketing/photo-pipeline/catalogue');
 const studioDir = path.join(root, 'processed', 'studio');
 const codexDir = path.join(root, 'processed', 'studio-codex');
@@ -88,8 +96,8 @@ async function main() {
       const slug = slugify(product.name);
       const category = categories.get(product.category ?? 'sofas');
       if (!category) { console.log(`skip ${product.name}: no category ${product.category}`); continue; }
-      const [exists] = await db.select({ id: s.products.id, status: s.products.status }).from(s.products).where(eq(s.products.slug, slug)).limit(1);
-      if (exists && !(refresh && exists.status === 'draft')) { skipped++; console.log(`exists ${slug}`); continue; }
+      const [exists] = await db.select({ id: s.products.id, status: s.products.status, tags: s.products.tags }).from(s.products).where(eq(s.products.slug, slug)).limit(1);
+      if (exists && !(refresh && (exists.status === 'draft' || exists.tags?.includes('owner-photos')))) { skipped++; console.log(`exists ${slug}`); continue; }
 
       const variants: Array<typeof s.productVariants.$inferInsert & { colourName: string; family: string; images: ImageRef[] }> = [];
       let aiPhotos = false;
@@ -118,7 +126,7 @@ async function main() {
       variants[0].isDefault = true;
 
       if (exists) {
-        // --refresh: only the photos of draft products change; names, notes and edits made in admin stay.
+        // --refresh: only the photos change; names, prices, notes and any other edit made in admin stay.
         const current = await db.select().from(s.productVariants).where(eq(s.productVariants.productId, exists.id));
         let changed = 0;
         for (const v of variants) {
@@ -143,7 +151,7 @@ async function main() {
         const [row] = await tx.insert(s.products).values({
           slug, name: product.name, categoryId: category.id, descriptionMd,
           shortDescription: `Made to order in our Colombo workshop, in ${variants.length} colour${variants.length === 1 ? '' : 's'} and more.`,
-          shape, seats, status: 'draft', priceMinor: null, tags: ['owner-photos'],
+          shape, seats, status: publish && !hold.has(slug) ? 'published' : 'draft', publishedAt: publish && !hold.has(slug) ? new Date() : null, priceMinor: null, tags: ['owner-photos'],
           reviewNotes: ['price-on-request: add a price or a "from" price', 'no-dimensions',
             ...(aiPhotos ? ['ai-edited-photos: the cut-outs were redrawn by an image tool, so check each photo still matches the real piece (legs, cushions, colour)'] : [])],
           searchText: buildSearchText({ name: product.name, categoryName: category.name, shape, seats, colours: variants.map((v) => ({ name: v.colourName, family: v.family })), tags: [], description: descriptionMd }),
