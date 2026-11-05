@@ -5,6 +5,10 @@
 //
 //   npx tsx scripts/import-photo-catalogue.ts --dry        show what would be created
 //   npx tsx scripts/import-photo-catalogue.ts              create the drafts (skips slugs that already exist)
+//   npx tsx scripts/import-photo-catalogue.ts --refresh    swap the photos of existing DRAFT products for newer ones
+//
+// Photos: the Codex cut-out on the studio background (processed/studio-codex, see marketing/photo-pipeline/
+// codex_studio.py) is used when it exists, otherwise the rembg studio shot (processed/studio).
 //
 // Products stay drafts: an admin checks each one, adds prices and sizes, then publishes it. Nothing here is
 // made up: no prices, sizes, warranty or delivery claims.
@@ -21,8 +25,19 @@ import type { ImageRef } from '../src/lib/db/schema/types';
 import { processImage } from '../src/lib/images/process';
 
 const dry = process.argv.includes('--dry');
+const refresh = process.argv.includes('--refresh');
 const root = path.resolve(process.cwd(), process.env.CATALOGUE_DIR || '../marketing/photo-pipeline/catalogue');
 const studioDir = path.join(root, 'processed', 'studio');
+const codexDir = path.join(root, 'processed', 'studio-codex');
+
+/** The best studio shot for a photo: the Codex cut-out when there is one. */
+const studioFile = (name: string): string | null => {
+  for (const dir of [codexDir, studioDir]) {
+    const file = path.join(dir, `${name}.jpg`);
+    if (fs.existsSync(file)) return file;
+  }
+  return null;
+};
 const cutoutDir = path.join(root, 'processed', 'cutout');
 const MAX_PHOTOS = 4;
 
@@ -73,19 +88,23 @@ async function main() {
       const slug = slugify(product.name);
       const category = categories.get(product.category ?? 'sofas');
       if (!category) { console.log(`skip ${product.name}: no category ${product.category}`); continue; }
-      const [exists] = await db.select({ id: s.products.id }).from(s.products).where(eq(s.products.slug, slug)).limit(1);
-      if (exists) { skipped++; console.log(`exists ${slug}`); continue; }
+      const [exists] = await db.select({ id: s.products.id, status: s.products.status }).from(s.products).where(eq(s.products.slug, slug)).limit(1);
+      if (exists && !(refresh && exists.status === 'draft')) { skipped++; console.log(`exists ${slug}`); continue; }
 
       const variants: Array<typeof s.productVariants.$inferInsert & { colourName: string; family: string; images: ImageRef[] }> = [];
+      let aiPhotos = false;
       for (const [order, v] of product.variants.entries()) {
-        const names = v.photos.map((n) => `${plan.folder}-${n}`).filter((n) => fs.existsSync(path.join(studioDir, `${n}.jpg`))).slice(0, MAX_PHOTOS);
+        // Codex cut-outs first (hero shot included), then the remaining studio shots, at most MAX_PHOTOS.
+        const all = v.photos.map((n) => `${plan.folder}-${n}`).filter((n) => studioFile(n));
+        const names = [...all.filter((n) => fs.existsSync(path.join(codexDir, `${n}.jpg`))), ...all.filter((n) => !fs.existsSync(path.join(codexDir, `${n}.jpg`)))].slice(0, MAX_PHOTOS);
         if (!names.length) continue;
+        if (names.some((n) => fs.existsSync(path.join(codexDir, `${n}.jpg`)))) aiPhotos = true;
         const hex = normaliseHex(await sofaHex(names[0]));
         const c = classifyHex(hex);
         const refs: ImageRef[] = [];
         if (!dry) {
           for (const n of names) {
-            refs.push(await processImage(fs.readFileSync(path.join(studioDir, `${n}.jpg`)), {
+            refs.push(await processImage(fs.readFileSync(studioFile(n)!), {
               keyPrefix: `products/${slug}/${slugify(v.colour)}`,
               alt: `${product.name} in ${v.colour}`,
               source: `owner-photos/${n}`,
@@ -97,6 +116,21 @@ async function main() {
       }
       if (!variants.length) { console.log(`no processed photos yet: ${product.name}`); continue; }
       variants[0].isDefault = true;
+
+      if (exists) {
+        // --refresh: only the photos of draft products change; names, notes and edits made in admin stay.
+        const current = await db.select().from(s.productVariants).where(eq(s.productVariants.productId, exists.id));
+        let changed = 0;
+        for (const v of variants) {
+          const row = current.find((c) => c.colourName === v.colourName);
+          if (!row || dry) { changed += row ? 1 : 0; continue; }
+          await db.update(s.productVariants).set({ images: v.images }).where(eq(s.productVariants.id, row.id));
+          changed++;
+        }
+        console.log(`${dry ? 'would refresh' : 'refreshed'} ${slug}: ${changed} colours`);
+        created++;
+        continue;
+      }
 
       const colours = variants.map((v) => v.colourName);
       const shape = SHAPE[product.shape] ?? null;
@@ -110,7 +144,8 @@ async function main() {
           slug, name: product.name, categoryId: category.id, descriptionMd,
           shortDescription: `Made to order in our Colombo workshop, in ${variants.length} colour${variants.length === 1 ? '' : 's'} and more.`,
           shape, seats, status: 'draft', priceMinor: null, tags: ['owner-photos'],
-          reviewNotes: ['price-on-request: add a price or a "from" price', 'no-dimensions'],
+          reviewNotes: ['price-on-request: add a price or a "from" price', 'no-dimensions',
+            ...(aiPhotos ? ['ai-edited-photos: the cut-outs were redrawn by an image tool, so check each photo still matches the real piece (legs, cushions, colour)'] : [])],
           searchText: buildSearchText({ name: product.name, categoryName: category.name, shape, seats, colours: variants.map((v) => ({ name: v.colourName, family: v.family })), tags: [], description: descriptionMd }),
         }).returning({ id: s.products.id });
         await tx.insert(s.productVariants).values(variants.map((v) => ({ ...v, productId: row.id })));
@@ -118,7 +153,7 @@ async function main() {
       created++;
     }
   }
-  console.log(`${dry ? 'would create' : 'created'} ${created} draft products, ${images} photos; ${skipped} already existed`);
+  console.log(`${dry ? 'would create/refresh' : 'created/refreshed'} ${created} draft products, ${images} photos; ${skipped} left alone`);
   await closeDb();
 }
 

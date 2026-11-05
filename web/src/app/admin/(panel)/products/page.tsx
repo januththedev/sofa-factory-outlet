@@ -38,6 +38,7 @@ const noteHelp: Record<string, string> = {
   'size-options': 'Confirm the available size choices.',
   'price-on-request': 'Publishing a from price can improve search visibility.',
   'no-dimensions': 'Measure and add the product dimensions.',
+  'ai-edited-photos': 'Photos were cut out by an image tool: confirm each still matches the real piece before publishing.',
 };
 
 const shortDate = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Colombo' });

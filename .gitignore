@@ -42,3 +42,9 @@ marketing/photo-pipeline/catalogue/
 marketing/photo-pipeline/models/
 web/.env*
 !web/.env.example
+
+# Codex worker output (large, regenerable)
+marketing/photo-pipeline/codex-cutouts/
+marketing/photo-pipeline/codex-queue/*.log
+marketing/photo-pipeline/codex-queue/prompt-*.md
+marketing/photo-pipeline/catalogue/processed/
