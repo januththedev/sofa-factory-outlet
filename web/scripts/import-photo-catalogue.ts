@@ -36,6 +36,8 @@ const publish = process.argv.includes('--publish');
 const codexOnly = process.argv.includes('--codex-only');
 // --unpublish-rembg: afterwards, move every owner-photos product that still has a non-Codex photo back to draft.
 const unpublishRembg = process.argv.includes('--unpublish-rembg');
+// --rewrite-copy: with --refresh, also rewrite the shop text of imported products that still carry the old generic text.
+const rewriteCopy = process.argv.includes('--rewrite-copy');
 // Slugs that stay drafts even with --publish (e.g. a cover photo that still needs fixing).
 const hold = new Set((process.env.IMPORT_HOLD ?? '').split(',').map((v) => v.trim()).filter(Boolean));
 const root = path.resolve(process.cwd(), process.env.CATALOGUE_DIR || '../marketing/photo-pipeline/catalogue');
@@ -78,14 +80,27 @@ async function sofaHex(name: string): Promise<string> {
   return `#${[mid(r), mid(g), mid(b)].map((v) => v.toString(16).padStart(2, '0')).join('')}`;
 }
 
+// What each shape is for, in plain words (no sizes, prices or claims the owner has not confirmed).
+const SHAPE_COPY: Record<string, string> = {
+  'l-shape': 'An L-shape corner sofa fits into the corner of the room and seats more people in the same floor space as a sofa and armchairs. Tell us which side you want the corner or chaise on.',
+  'u-shape': 'A U-shape sectional seats the whole family around one coffee table, and suits open living rooms facing the TV or the garden.',
+  set: 'A sofa set gives you a matching sofa and armchairs that you can arrange around the room, or split between two rooms.',
+  'three-seater': 'A three-seater fits most living rooms and apartments, on its own or with armchairs from the same fabric.',
+  chair: 'An accent chair for a reading corner, a bedroom or beside the sofa, upholstered in the fabric you choose.',
+  chaise: 'A chaise longue for a bedroom, a window or the end of a living room.',
+};
+
+/** The old opening line of imported descriptions; --rewrite-copy replaces descriptions that still start with it. */
+const OLD_OPENER = 'Made to order in our own Colombo workshop and sold factory-direct, with no middleman.';
+
 function description(product: PlanProduct, colours: string[]): string {
   const list = colours.length > 1 ? `${colours.slice(0, -1).join(', ')} and ${colours.at(-1)}` : colours[0];
   return [
-    `Made to order in our own Colombo workshop and sold factory-direct, with no middleman.`,
+    `The ${product.name} is made to order in our own Colombo workshop and sold factory-direct in Sri Lanka, with no middleman. It is shown here in ${list.toLowerCase()}.`,
     ``,
-    `Shown here in ${list}. Every piece is built after you order, so you choose the fabric, colour and size for your room.`,
+    SHAPE_COPY[product.shape] ?? 'Every piece is built after you order, so you choose the fabric, colour and size for your room.',
     ``,
-    `Visit the showroom to sit on it, compare fabrics and confirm the price and delivery.`,
+    `Every piece is built after you order: choose the fabric, colour and size for your room. Visit the showroom to sit on it, compare fabrics and confirm the price and delivery.`,
   ].join('\n');
 }
 
@@ -146,6 +161,19 @@ async function main() {
           if (!row || dry) { changed += row ? 1 : 0; continue; }
           await db.update(s.productVariants).set({ images: v.images }).where(eq(s.productVariants.id, row.id));
           changed++;
+        }
+        if (rewriteCopy && !dry) {
+          const [row] = await db.select({ descriptionMd: s.products.descriptionMd }).from(s.products).where(eq(s.products.id, exists.id)).limit(1);
+          if (row?.descriptionMd.startsWith(OLD_OPENER)) {
+            const category = categories.get(product.category ?? 'sofas')!;
+            const colourList = variants.map((v) => v.colourName);
+            const descriptionMd = description(product, colourList);
+            const shape = SHAPE[product.shape] ?? null;
+            await db.update(s.products).set({
+              descriptionMd,
+              searchText: buildSearchText({ name: product.name, categoryName: category.name, shape, seats: SEATS[product.key] ?? null, colours: variants.map((v) => ({ name: v.colourName, family: v.family })), tags: [], description: descriptionMd }),
+            }).where(eq(s.products.id, exists.id));
+          }
         }
         console.log(`${dry ? 'would refresh' : 'refreshed'} ${slug}: ${changed} colours`);
         created++;

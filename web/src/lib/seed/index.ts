@@ -223,6 +223,9 @@ async function seedOwner(db: Db, log: Log) {
     email: env.OWNER_EMAIL.toLowerCase(),
     passwordHash: await bcrypt.hash(env.OWNER_PASSWORD, 12),
     role: 'owner',
+    // The seeded password is a shared default: the owner chooses their own at the first sign-in
+    // (the end-to-end test server, E2E=1, signs straight in).
+    mustChangePassword: process.env.E2E !== '1',
   });
   log(`seed: owner account created for ${env.OWNER_EMAIL}`);
 }

@@ -1,4 +1,3 @@
-import { randomInt } from 'node:crypto';
 import { and, asc, eq, ne, sql } from 'drizzle-orm';
 import { hashPassword } from '@/lib/auth/password';
 import type { Db, Tx } from '@/lib/db';
@@ -21,13 +20,14 @@ export type StaffResult =
   | { ok: true; message: string; tempPassword?: string }
   | { ok: false; error: string };
 
-// No 0/O, 1/l/I: the password is read off the screen and typed or sent on WhatsApp.
-const PASSWORD_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
-
-export function generateTempPassword(length = 14): string {
-  let out = '';
-  for (let i = 0; i < length; i += 1) out += PASSWORD_ALPHABET[randomInt(PASSWORD_ALPHABET.length)];
-  return out;
+/**
+ * The first password of a new or reset account: the person's first name in lower case, then "@123"
+ * ("Nimal Perera" -> "nimal@123"). It is easy to pass on, and the account must choose its own
+ * password at the first sign-in (mustChangePassword), so it only works until then.
+ */
+export function defaultPasswordFor(name: string): string {
+  const first = name.trim().split(/\s+/)[0]?.toLowerCase().replace(/[^\p{L}\p{N}]/gu, '') || 'admin';
+  return `${first}@123`;
 }
 
 const LAST_OWNER = 'There must always be at least one active owner.';
@@ -77,7 +77,7 @@ export async function createStaff(
     .limit(1);
   if (taken) return { ok: false, error: 'An account with that email address already exists.' };
 
-  const tempPassword = generateTempPassword();
+  const tempPassword = defaultPasswordFor(input.name);
   try {
     await db.insert(s.adminUsers).values({
       name: input.name.trim(),
@@ -137,10 +137,10 @@ export async function setStaffActive(db: Db, actorId: number, id: number, active
 export async function resetStaffPassword(db: Db, id: number): Promise<StaffResult> {
   const user = await findUser(db, id);
   if (!user) return { ok: false, error: 'That account no longer exists.' };
-  const tempPassword = generateTempPassword();
+  const tempPassword = defaultPasswordFor(user.name);
   await db
     .update(s.adminUsers)
     .set({ passwordHash: await hashPassword(tempPassword), mustChangePassword: true })
     .where(eq(s.adminUsers.id, id));
-  return { ok: true, message: `New temporary password set for ${user.name}.`, tempPassword };
+  return { ok: true, message: `${user.name}'s password is back to the default; they set their own at the next sign-in.`, tempPassword };
 }

@@ -61,7 +61,7 @@ function TempPassword({ password, onDone }: { password: string; onDone: () => vo
 }
 
 const resetWarning = (name: string) =>
-  `Set a new temporary password for ${name}? Their old password stops working.`;
+  `Reset ${name}'s password to the default (first name@123)? Their old password stops working, and they choose a new one at the next sign-in.`;
 
 function RowActions({ member, isSelf, dispatch, pending }: {
   member: StaffRowView;
@@ -170,7 +170,7 @@ export function StaffManager({ members, currentUserId }: { members: StaffRowView
 
       <section className="rounded-[var(--radius-card)] border border-line bg-paper p-5 sm:p-6">
         <SectionTitle title="Add an account">
-          A temporary password is made for the new account and shown once, right after you add it.
+          The first password is their first name in lower case and @123 (Nimal Perera: nimal@123). They choose their own password the first time they sign in.
         </SectionTitle>
         <form
           key={created}

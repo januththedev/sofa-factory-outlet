@@ -13,7 +13,7 @@ import * as actions from '@/app/admin/(panel)/settings/actions';
 import {
   changeStaffRole,
   createStaff,
-  generateTempPassword,
+  defaultPasswordFor,
   listStaff,
   resetStaffPassword,
   setStaffActive,
@@ -230,15 +230,12 @@ describe('staff accounts', () => {
     return row;
   };
 
-  describe('generateTempPassword', () => {
-    it('is long enough, readable and different each time', () => {
-      const seen = new Set<string>();
-      for (let i = 0; i < 40; i += 1) {
-        const password = generateTempPassword();
-        expect(password).toMatch(/^[A-HJ-NP-Za-km-z2-9]{14}$/);
-        seen.add(password);
-      }
-      expect(seen.size).toBe(40);
+  describe('defaultPasswordFor', () => {
+    it('is the first name in lower case and @123', () => {
+      expect(defaultPasswordFor('  Nimal Perera ')).toBe('nimal@123');
+      expect(defaultPasswordFor('Chamari')).toBe('chamari@123');
+      expect(defaultPasswordFor("O'Neil Silva")).toBe('oneil@123');
+      expect(defaultPasswordFor('   ')).toBe('admin@123');
     });
   });
 
@@ -247,7 +244,7 @@ describe('staff accounts', () => {
       const result = await createStaff(db, { name: '  Nimal Perera ', email: ' Nimal@Example.LK ', role: 'staff' });
       expect(result.ok).toBe(true);
       if (!result.ok) return;
-      expect(result.tempPassword).toHaveLength(14);
+      expect(result.tempPassword).toBe('nimal@123');
 
       const user = (await listStaff(db)).find((member) => member.email === 'nimal@example.lk');
       expect(user).toMatchObject({ name: 'Nimal Perera', role: 'staff', active: true, lastLoginAt: null });
@@ -380,7 +377,7 @@ describe('staff accounts', () => {
         form({ intent: 'create', name: 'Esha', email: 'esha@example.lk', role: 'staff' }),
       );
       expect(state).toMatchObject({ ok: true, intent: 'create' });
-      expect(state?.tempPassword).toHaveLength(14);
+      expect(state?.tempPassword).toBe('esha@123');
       expect(refresh).toHaveBeenCalled();
       const row = (await listStaff(db)).find((member) => member.email === 'esha@example.lk');
       expect(row).toBeDefined();
@@ -407,7 +404,7 @@ describe('staff accounts', () => {
     it('resets a password', async () => {
       const state = await actions.staffAction(null, form({ intent: 'reset', id: String(staffId) }));
       expect(state).toMatchObject({ ok: true, intent: 'reset' });
-      expect(state?.tempPassword).toHaveLength(14);
+      expect(state?.tempPassword).toMatch(/^[a-z0-9]+@123$/);
     });
 
     it('rejects bad input without touching anything', async () => {

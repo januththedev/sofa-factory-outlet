@@ -16,6 +16,8 @@ const schema = z.object({
   BLOB_READ_WRITE_TOKEN: optional,
   BLOB_ACCESS: z.enum(['public', 'private']).default('public'),
   BLOB_BASE_URL: optional,
+  /** Serve stored photos from this base instead (e.g. `/media`, files shipped in public/media by scripts/export-media.ts). */
+  MEDIA_BASE_URL: optional,
   LOCAL_BLOB_DIR: withDefault('.data/blob'),
 
   AUTH_SECRET: optional,
@@ -41,6 +43,9 @@ const schema = z.object({
   ),
 
   INDEXNOW_KEY: optional,
+  /** Search Console / Bing Webmaster Tools verification codes (the content of their meta tags). */
+  GOOGLE_SITE_VERIFICATION: optional,
+  BING_SITE_VERIFICATION: optional,
   GSC_SERVICE_ACCOUNT_JSON: optional,
   GSC_SITE_URL: optional,
 });

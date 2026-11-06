@@ -14,6 +14,7 @@ import { relatedProducts } from '@/lib/catalogue/product';
 import { JsonLd } from '@/lib/seo/jsonld';
 import { breadcrumbJsonLd } from '@/lib/seo/jsonld';
 import { productJsonLd } from '@/lib/seo/jsonld';
+import { productSearchDescription, productSearchTitle } from '@/lib/seo/product-copy';
 
 const markdown = new MarkdownIt({ html: false, linkify: true, typographer: true });
 type Props = { params: Promise<{ slug: string }> };
@@ -38,14 +39,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const product = await productBySlug(slug);
   if (!product) notFound();
-  const title = product.seoTitle ?? `${product.name} | Sofa Factory Outlet`;
-  const description = product.seoDescription ?? plainSummary(product.descriptionMd);
+  const title = productSearchTitle(product);
+  // A description written in admin wins, then the shop copy when it is the piece's own, then a summary built
+  // from its name, shape and colours (imported listings share one generic paragraph).
+  const description = product.seoDescription
+    ?? (product.tags?.includes('owner-photos') ? productSearchDescription(product) : plainSummary(product.descriptionMd));
   return {
     title: { absolute: title },
     description,
     alternates: { canonical: `/product/${product.slug}/` },
     robots: product.noindex ? { index: false, follow: true } : undefined,
-    openGraph: { title, description, type: 'website', url: `/product/${product.slug}/` },
+    openGraph: { title, description, type: 'website', url: `/product/${product.slug}/`, siteName: 'Sofa Factory Outlet', locale: 'en_LK' },
+    // The preview image comes from ./opengraph-image.tsx.
+    twitter: { card: 'summary_large_image', title, description },
   };
 }
 

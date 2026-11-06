@@ -17,8 +17,8 @@ export async function generateMetadata({ searchParams }: { searchParams: Search 
   );
   const path = !filtered && params.page && params.page > 1 ? buildShopUrl({ page: params.page }) : '/shop/';
   return pageMetadata({
-    title: 'Shop furniture',
-    description: 'Browse sofas and furniture, then book a showroom visit to discuss colours and sizes.',
+    title: 'Shop sofas and furniture in Sri Lanka',
+    description: 'Browse L-shape, U-shape and sofa sets, chairs and more, made in our Colombo workshop and sold factory-direct. Book a showroom visit to choose colours and sizes.',
     path,
     noindex: filtered,
   });
