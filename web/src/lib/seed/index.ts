@@ -214,11 +214,18 @@ async function seedOwner(db: Db, log: Log) {
     log('seed: OWNER_EMAIL / OWNER_PASSWORD not set — no admin account created yet.');
     return;
   }
+  if (/^replace/i.test(env.OWNER_PASSWORD.trim())) {
+    log('seed: OWNER_PASSWORD is still the example value — no admin account created.');
+    return;
+  }
   await db.insert(s.adminUsers).values({
     name: env.OWNER_NAME,
     email: env.OWNER_EMAIL.toLowerCase(),
     passwordHash: await bcrypt.hash(env.OWNER_PASSWORD, 12),
     role: 'owner',
+    // The seeded password is a shared default: the owner chooses their own at the first sign-in
+    // (the end-to-end test server, E2E=1, signs straight in).
+    mustChangePassword: process.env.E2E !== '1',
   });
   log(`seed: owner account created for ${env.OWNER_EMAIL}`);
 }

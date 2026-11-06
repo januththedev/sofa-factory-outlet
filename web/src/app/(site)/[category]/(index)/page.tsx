@@ -57,7 +57,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   const result = await searchListing({ ...query, category: row.path });
   const crumbs = [{ name: 'Home', href: '/' }, { name: row.name, href: `/${row.path}/` }];
   return (
-    <main className="site-container pt-24 pb-[calc(6rem+env(safe-area-inset-bottom))] lg:pt-32 lg:pb-20">
+    <div className="site-container pt-24 pb-[calc(6rem+env(safe-area-inset-bottom))] lg:pt-32 lg:pb-20">
       <JsonLd data={breadcrumbJsonLd(crumbs.map((crumb) => ({ name: crumb.name, path: crumb.href })))} />
       <Breadcrumbs items={crumbs} />
       <h1 className="mt-6 mb-6 break-words font-display text-[clamp(2.5rem,7vw,6rem)] font-light leading-none">
@@ -75,6 +75,6 @@ export default async function CategoryPage({ params, searchParams }: Props) {
       ) : null}
       <Listing result={result} params={query} path={`/${row.path}/`} category={row.path} />
       <HubIntro content={content} />
-    </main>
+    </div>
   );
 }

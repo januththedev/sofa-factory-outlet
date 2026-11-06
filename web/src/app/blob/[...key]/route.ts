@@ -17,7 +17,8 @@ export async function GET(request: Request, context: { params: Promise<{ key: st
   } catch {
     return new Response('Bad request', { status: 400 });
   }
-  if (!/^(products|categories|site)\/[a-z0-9-]+\/[a-f0-9]{8}\/[1-9]\d*\.(avif|webp)$/.test(cleaned)) {
+  // products/<id or slug>[/<colour>]/<hash>/<width>.<ext>: the catalogue importer adds the colour folder.
+  if (!/^(products|categories|site)\/[a-z0-9-]+(?:\/[a-z0-9-]+)?\/[a-f0-9]{8}\/[1-9]\d*\.(avif|webp)$/.test(cleaned)) {
     return new Response('Not found', { status: 404 });
   }
   if (driver.kind === 'blob') {

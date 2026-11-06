@@ -14,6 +14,7 @@ import { relatedProducts } from '@/lib/catalogue/product';
 import { JsonLd } from '@/lib/seo/jsonld';
 import { breadcrumbJsonLd } from '@/lib/seo/jsonld';
 import { productJsonLd } from '@/lib/seo/jsonld';
+import { productSearchDescription, productSearchTitle } from '@/lib/seo/product-copy';
 
 const markdown = new MarkdownIt({ html: false, linkify: true, typographer: true });
 type Props = { params: Promise<{ slug: string }> };
@@ -38,14 +39,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const product = await productBySlug(slug);
   if (!product) notFound();
-  const title = product.seoTitle ?? `${product.name} | Sofa Factory Outlet`;
-  const description = product.seoDescription ?? plainSummary(product.descriptionMd);
+  const title = productSearchTitle(product);
+  // A description written in admin wins, then the shop copy when it is the piece's own, then a summary built
+  // from its name, shape and colours (imported listings share one generic paragraph).
+  const description = product.seoDescription
+    ?? (product.tags?.includes('owner-photos') ? productSearchDescription(product) : plainSummary(product.descriptionMd));
   return {
     title: { absolute: title },
     description,
     alternates: { canonical: `/product/${product.slug}/` },
     robots: product.noindex ? { index: false, follow: true } : undefined,
-    openGraph: { title, description, type: 'website', url: `/product/${product.slug}/` },
+    openGraph: { title, description, type: 'website', url: `/product/${product.slug}/`, siteName: 'Sofa Factory Outlet', locale: 'en_LK' },
+    // The preview image comes from ./opengraph-image.tsx.
+    twitter: { card: 'summary_large_image', title, description },
   };
 }
 
@@ -64,7 +70,7 @@ export default async function ProductPage({ params }: Props) {
     .map((point) => point.replace(/^-\s*/, '').trim()).filter(Boolean) ?? [];
   const attributes = Object.entries(product.attributes);
   return (
-    <main className="pb-[calc(12rem+env(safe-area-inset-bottom))] lg:pb-0">
+    <div className="pb-[calc(12rem+env(safe-area-inset-bottom))] lg:pb-0">
       <JsonLd data={productJsonLd(product)} />
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
       <div className="site-container pb-16 pt-24 lg:pb-24 lg:pt-32">
@@ -133,6 +139,6 @@ export default async function ProductPage({ params }: Props) {
           </section>
         ) : null}
       </div>
-    </main>
+    </div>
   );
 }

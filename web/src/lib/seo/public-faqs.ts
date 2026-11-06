@@ -7,7 +7,7 @@ export type PublicFaq = { question: string; answer: string; tags: string[] };
 
 // Answers that still carry a placeholder (an unconfirmed address, hours, delivery terms) stay in the chatbot,
 // which can hedge in conversation, but are not published as fact on a page search engines quote.
-const UNCONFIRMED = /not (yet )?confirmed|placeholder|old site|reconfirm|to be confirmed/i;
+const UNCONFIRMED = /not (yet )?confirmed|placeholder|old site|old homepage|reconfirm|to be confirmed/i;
 
 export const isPublishable = (faq: { answer: string }): boolean => !UNCONFIRMED.test(faq.answer);
 

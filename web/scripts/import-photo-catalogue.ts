@@ -5,6 +5,11 @@
 //
 //   npx tsx scripts/import-photo-catalogue.ts --dry        show what would be created
 //   npx tsx scripts/import-photo-catalogue.ts              create the drafts (skips slugs that already exist)
+//   npx tsx scripts/import-photo-catalogue.ts --publish    create them already published (default: drafts to check first)
+//   npx tsx scripts/import-photo-catalogue.ts --refresh    swap the photos of products this importer made (drafts, or tagged owner-photos) for newer ones
+//
+// Photos: the Codex cut-out on the studio background (processed/studio-codex, see marketing/photo-pipeline/
+// codex_studio.py) is used when it exists, otherwise the rembg studio shot (processed/studio).
 //
 // Products stay drafts: an admin checks each one, adds prices and sizes, then publishes it. Nothing here is
 // made up: no prices, sizes, warranty or delivery claims.
@@ -20,10 +25,35 @@ import * as s from '../src/lib/db/schema';
 import type { ImageRef } from '../src/lib/db/schema/types';
 import { processImage } from '../src/lib/images/process';
 
+// Many large photos in a row: keep sharp to one thread and no cache so the import fits on a small machine.
+sharp.concurrency(1);
+sharp.cache(false);
+
 const dry = process.argv.includes('--dry');
+const refresh = process.argv.includes('--refresh');
+const publish = process.argv.includes('--publish');
+// --codex-only: use only the Codex cut-outs (studio-codex); a colour with none is skipped, never filled with a rembg shot.
+const codexOnly = process.argv.includes('--codex-only');
+// --unpublish-rembg: afterwards, move every owner-photos product that still has a non-Codex photo back to draft.
+const unpublishRembg = process.argv.includes('--unpublish-rembg');
+// --rewrite-copy: with --refresh, also rewrite the shop text of imported products that still carry the old generic text.
+const rewriteCopy = process.argv.includes('--rewrite-copy');
+// Slugs that stay drafts even with --publish (e.g. a cover photo that still needs fixing).
+const hold = new Set((process.env.IMPORT_HOLD ?? '').split(',').map((v) => v.trim()).filter(Boolean));
 const root = path.resolve(process.cwd(), process.env.CATALOGUE_DIR || '../marketing/photo-pipeline/catalogue');
 const studioDir = path.join(root, 'processed', 'studio');
+const codexDir = path.join(root, 'processed', 'studio-codex');
+
+/** The best studio shot for a photo: the Codex cut-out when there is one. */
+const studioFile = (name: string): string | null => {
+  for (const dir of [codexDir, studioDir]) {
+    const file = path.join(dir, `${name}.jpg`);
+    if (fs.existsSync(file)) return file;
+  }
+  return null;
+};
 const cutoutDir = path.join(root, 'processed', 'cutout');
+const codexCutoutDir = path.join(root, 'processed', 'cutout-codex');
 const MAX_PHOTOS = 4;
 
 type PlanVariant = { colour: string; photos: number[] };
@@ -38,8 +68,8 @@ const slugify = (value: string) => value.toLowerCase().replace(/&/g, 'and').repl
 
 /** Median colour of the cut-out's solid pixels: the sofa's own colour, not the background. */
 async function sofaHex(name: string): Promise<string> {
-  const file = path.join(cutoutDir, `${name}.png`);
-  if (!fs.existsSync(file)) return '#888888';
+  const file = [path.join(codexCutoutDir, `${name}.png`), path.join(cutoutDir, `${name}.png`)].find((f) => fs.existsSync(f));
+  if (!file) return '#888888';
   const { data, info } = await sharp(file).resize(64, 64, { fit: 'inside' }).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   const r: number[] = [], g: number[] = [], b: number[] = [];
   for (let i = 0; i < data.length; i += info.channels) {
@@ -50,14 +80,27 @@ async function sofaHex(name: string): Promise<string> {
   return `#${[mid(r), mid(g), mid(b)].map((v) => v.toString(16).padStart(2, '0')).join('')}`;
 }
 
+// What each shape is for, in plain words (no sizes, prices or claims the owner has not confirmed).
+const SHAPE_COPY: Record<string, string> = {
+  'l-shape': 'An L-shape corner sofa fits into the corner of the room and seats more people in the same floor space as a sofa and armchairs. Tell us which side you want the corner or chaise on.',
+  'u-shape': 'A U-shape sectional seats the whole family around one coffee table, and suits open living rooms facing the TV or the garden.',
+  set: 'A sofa set gives you a matching sofa and armchairs that you can arrange around the room, or split between two rooms.',
+  'three-seater': 'A three-seater fits most living rooms and apartments, on its own or with armchairs from the same fabric.',
+  chair: 'An accent chair for a reading corner, a bedroom or beside the sofa, upholstered in the fabric you choose.',
+  chaise: 'A chaise longue for a bedroom, a window or the end of a living room.',
+};
+
+/** The old opening line of imported descriptions; --rewrite-copy replaces descriptions that still start with it. */
+const OLD_OPENER = 'Made to order in our own Colombo workshop and sold factory-direct, with no middleman.';
+
 function description(product: PlanProduct, colours: string[]): string {
   const list = colours.length > 1 ? `${colours.slice(0, -1).join(', ')} and ${colours.at(-1)}` : colours[0];
   return [
-    `Made to order in our own Colombo workshop and sold factory-direct, with no middleman.`,
+    `The ${product.name} is made to order in our own Colombo workshop and sold factory-direct in Sri Lanka, with no middleman. It is shown here in ${list.toLowerCase()}.`,
     ``,
-    `Shown here in ${list}. Every piece is built after you order, so you choose the fabric, colour and size for your room.`,
+    SHAPE_COPY[product.shape] ?? 'Every piece is built after you order, so you choose the fabric, colour and size for your room.',
     ``,
-    `Visit the showroom to sit on it, compare fabrics and confirm the price and delivery.`,
+    `Every piece is built after you order: choose the fabric, colour and size for your room. Visit the showroom to sit on it, compare fabrics and confirm the price and delivery.`,
   ].join('\n');
 }
 
@@ -73,19 +116,30 @@ async function main() {
       const slug = slugify(product.name);
       const category = categories.get(product.category ?? 'sofas');
       if (!category) { console.log(`skip ${product.name}: no category ${product.category}`); continue; }
-      const [exists] = await db.select({ id: s.products.id }).from(s.products).where(eq(s.products.slug, slug)).limit(1);
-      if (exists) { skipped++; console.log(`exists ${slug}`); continue; }
+      const [exists] = await db.select({ id: s.products.id, status: s.products.status, tags: s.products.tags }).from(s.products).where(eq(s.products.slug, slug)).limit(1);
+      if (exists && !(refresh && (exists.status === 'draft' || exists.tags?.includes('owner-photos')))) { skipped++; console.log(`exists ${slug}`); continue; }
 
+      // --refresh: colours whose photos are already exactly these sources are kept, so a re-run only encodes new photos.
+      const existingRows = exists ? await db.select().from(s.productVariants).where(eq(s.productVariants.productId, exists.id)) : [];
       const variants: Array<typeof s.productVariants.$inferInsert & { colourName: string; family: string; images: ImageRef[] }> = [];
+      let aiPhotos = false;
       for (const [order, v] of product.variants.entries()) {
-        const names = v.photos.map((n) => `${plan.folder}-${n}`).filter((n) => fs.existsSync(path.join(studioDir, `${n}.jpg`))).slice(0, MAX_PHOTOS);
+        // Codex cut-outs first (hero shot included), then the remaining studio shots, at most MAX_PHOTOS.
+        const all = v.photos.map((n) => `${plan.folder}-${n}`).filter((n) => (codexOnly ? fs.existsSync(path.join(codexDir, `${n}.jpg`)) : studioFile(n)));
+        const names = [...all.filter((n) => fs.existsSync(path.join(codexDir, `${n}.jpg`))), ...all.filter((n) => !fs.existsSync(path.join(codexDir, `${n}.jpg`)))].slice(0, MAX_PHOTOS);
         if (!names.length) continue;
+        if (names.some((n) => fs.existsSync(path.join(codexDir, `${n}.jpg`)))) aiPhotos = true;
         const hex = normaliseHex(await sofaHex(names[0]));
         const c = classifyHex(hex);
         const refs: ImageRef[] = [];
-        if (!dry) {
+        const wanted = names.map((n) => `owner-photos/${n}`);
+        const kept = existingRows.find((r) => r.colourName === v.colour)?.images ?? [];
+        const unchanged = kept.length === wanted.length && kept.every((img, i) => img.source === wanted[i]);
+        if (!dry && unchanged) {
+          refs.push(...kept);
+        } else if (!dry) {
           for (const n of names) {
-            refs.push(await processImage(fs.readFileSync(path.join(studioDir, `${n}.jpg`)), {
+            refs.push(await processImage(fs.readFileSync(studioFile(n)!), {
               keyPrefix: `products/${slug}/${slugify(v.colour)}`,
               alt: `${product.name} in ${v.colour}`,
               source: `owner-photos/${n}`,
@@ -98,6 +152,34 @@ async function main() {
       if (!variants.length) { console.log(`no processed photos yet: ${product.name}`); continue; }
       variants[0].isDefault = true;
 
+      if (exists) {
+        // --refresh: only the photos change; names, prices, notes and any other edit made in admin stay.
+        const current = existingRows;
+        let changed = 0;
+        for (const v of variants) {
+          const row = current.find((c) => c.colourName === v.colourName);
+          if (!row || dry) { changed += row ? 1 : 0; continue; }
+          await db.update(s.productVariants).set({ images: v.images }).where(eq(s.productVariants.id, row.id));
+          changed++;
+        }
+        if (rewriteCopy && !dry) {
+          const [row] = await db.select({ descriptionMd: s.products.descriptionMd }).from(s.products).where(eq(s.products.id, exists.id)).limit(1);
+          if (row?.descriptionMd.startsWith(OLD_OPENER)) {
+            const category = categories.get(product.category ?? 'sofas')!;
+            const colourList = variants.map((v) => v.colourName);
+            const descriptionMd = description(product, colourList);
+            const shape = SHAPE[product.shape] ?? null;
+            await db.update(s.products).set({
+              descriptionMd,
+              searchText: buildSearchText({ name: product.name, categoryName: category.name, shape, seats: SEATS[product.key] ?? null, colours: variants.map((v) => ({ name: v.colourName, family: v.family })), tags: [], description: descriptionMd }),
+            }).where(eq(s.products.id, exists.id));
+          }
+        }
+        console.log(`${dry ? 'would refresh' : 'refreshed'} ${slug}: ${changed} colours`);
+        created++;
+        continue;
+      }
+
       const colours = variants.map((v) => v.colourName);
       const shape = SHAPE[product.shape] ?? null;
       const seats = SEATS[product.key] ?? null;
@@ -109,8 +191,9 @@ async function main() {
         const [row] = await tx.insert(s.products).values({
           slug, name: product.name, categoryId: category.id, descriptionMd,
           shortDescription: `Made to order in our Colombo workshop, in ${variants.length} colour${variants.length === 1 ? '' : 's'} and more.`,
-          shape, seats, status: 'draft', priceMinor: null, tags: ['owner-photos'],
-          reviewNotes: ['price-on-request: add a price or a "from" price', 'no-dimensions'],
+          shape, seats, status: publish && !hold.has(slug) ? 'published' : 'draft', publishedAt: publish && !hold.has(slug) ? new Date() : null, priceMinor: null, tags: ['owner-photos'],
+          reviewNotes: ['price-on-request: add a price or a "from" price', 'no-dimensions',
+            ...(aiPhotos ? ['ai-edited-photos: the cut-outs were redrawn by an image tool, so check each photo still matches the real piece (legs, cushions, colour)'] : [])],
           searchText: buildSearchText({ name: product.name, categoryName: category.name, shape, seats, colours: variants.map((v) => ({ name: v.colourName, family: v.family })), tags: [], description: descriptionMd }),
         }).returning({ id: s.products.id });
         await tx.insert(s.productVariants).values(variants.map((v) => ({ ...v, productId: row.id })));
@@ -118,7 +201,24 @@ async function main() {
       created++;
     }
   }
-  console.log(`${dry ? 'would create' : 'created'} ${created} draft products, ${images} photos; ${skipped} already existed`);
+  console.log(`${dry ? 'would create/refresh' : 'created/refreshed'} ${created} draft products, ${images} photos; ${skipped} left alone`);
+
+  if (unpublishRembg && !dry) {
+    // A listing is only shown when every photo on it is a Codex cut-out.
+    const isCodexSource = (src?: string) => !!src && src.startsWith('owner-photos/') && fs.existsSync(path.join(codexDir, `${src.slice('owner-photos/'.length)}.jpg`));
+    const owned = (await db.select({ id: s.products.id, slug: s.products.slug, status: s.products.status, tags: s.products.tags }).from(s.products))
+      .filter((p) => p.tags?.includes('owner-photos') && p.status === 'published');
+    let hidden = 0;
+    for (const p of owned) {
+      const vs = await db.select({ images: s.productVariants.images }).from(s.productVariants).where(eq(s.productVariants.productId, p.id));
+      const photos = vs.flatMap((v) => v.images ?? []);
+      if (photos.length && photos.every((i) => isCodexSource(i.source))) continue;
+      await db.update(s.products).set({ status: 'draft', publishedAt: null }).where(eq(s.products.id, p.id));
+      hidden++;
+      console.log(`back to draft (not all Codex photos): ${p.slug}`);
+    }
+    console.log(`${hidden} owner-photos products moved to draft`);
+  }
   await closeDb();
 }
 

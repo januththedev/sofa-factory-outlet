@@ -136,7 +136,7 @@ export function ShopFilters({
     </div>
   );
   return (
-    <div aria-label="Product filters">
+    <div role="group" aria-label="Product filters">
       {showCategories ? (
         <label className="block pb-5 text-base">
           <span className="mb-2 block font-display text-lg">Category</span>

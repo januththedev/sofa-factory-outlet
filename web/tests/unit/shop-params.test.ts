@@ -6,7 +6,8 @@ describe('shop URL parameters', () => {
     expect(parseShopParams({ colour: ['green,blue', 'green'], seats: '3,2', sort: 'newest' })).toMatchObject({ colour: ['blue', 'green'], seats: [2, 3], sort: 'newest' });
   });
   it('drops unknown values and clamps numbers', () => {
-    expect(parseShopParams({ nope: 'x', sort: 'random', page: '-2', pageSize: '1000', seats: 'x,0,4' })).toEqual({ pageSize: 48, seats: [4] });
+    expect(parseShopParams({ nope: 'x', sort: 'random', page: '-2', pageSize: '1000', seats: 'x,0,4' })).toEqual({ seats: [4] });
+    expect(parseShopParams({ pageSize: '24' })).toEqual({ pageSize: 24 });
   });
   it('builds a stable URL and round trips', () => {
     const params = { colour: ['green', 'blue'], shape: ['l-shape'], page: 2 };

@@ -237,9 +237,12 @@ export function QuoteForm() {
             name="consent"
             type="checkbox"
             required
+            aria-invalid={fields?.consent ? true : undefined}
+            aria-describedby={fields?.consent ? 'quote-consent-error' : undefined}
+            aria-labelledby="quote-consent-text"
             className="mt-1 size-5 shrink-0"
           />
-          <label htmlFor="quote-consent" className="text-sm">
+          <label id="quote-consent-text" htmlFor="quote-consent" className="text-sm">
             I agree that Sofa Factory Outlet may contact me about this request.{' '}
             <TLink href="/privacy/" className="underline">
               Privacy policy

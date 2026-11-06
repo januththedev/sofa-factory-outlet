@@ -19,7 +19,7 @@ const RATING_WORDS = ['Poor', 'Fair', 'Good', 'Very good', 'Excellent'] as const
 function Message({ id, children }: { id: string; children?: string }) {
   if (!children) return null;
   return (
-    <p id={id} className="mt-1.5 text-sm text-bad">
+    <p id={id} role="alert" className="mt-1.5 text-sm text-bad">
       {children}
     </p>
   );

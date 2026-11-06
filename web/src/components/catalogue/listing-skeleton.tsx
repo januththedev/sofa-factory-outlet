@@ -1,6 +1,6 @@
 export function ListingSkeleton({ collection = false }: { collection?: boolean }) {
   return (
-    <main className="site-container pt-24 pb-32 lg:pt-32 lg:pb-20" aria-busy="true" aria-label="Loading pieces">
+    <div className="site-container pt-24 pb-32 lg:pt-32 lg:pb-20" aria-busy="true" aria-label="Loading pieces">
       <p role="status" className="sr-only">Loading pieces…</p>
       <div aria-hidden="true" className="motion-safe:animate-pulse">
         {collection ? <div className="mb-6 h-6 w-36 rounded bg-paper" /> : null}
@@ -20,6 +20,6 @@ export function ListingSkeleton({ collection = false }: { collection?: boolean }
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

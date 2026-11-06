@@ -119,6 +119,7 @@ export function FactoryStory() {
               return (
                 <li
                   key={step.title}
+                  aria-hidden={pinned ? index !== active : undefined}
                   className={pinned ? 'absolute inset-0' : `flex min-h-[400px] w-[92%] shrink-0
                     snap-start flex-col rounded-[var(--radius-card)] border border-bone/15 bg-bone/5 p-3
                     min-[360px]:w-[86%] sm:w-[62%] md:w-[48%]`}

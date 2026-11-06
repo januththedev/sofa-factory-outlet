@@ -1,7 +1,9 @@
 import { expect, test } from '@playwright/test';
 
 test('health reports the seeded catalogue', async ({ request }) => {
-  const res = await request.get('/api/health/');
+  const open = await request.get('/api/health/');
+  expect(await open.json()).toEqual({ ok: true });
+  const res = await request.get('/api/health/', { headers: { authorization: `Bearer ${process.env.CRON_SECRET ?? 'e2e-only-cron-secret-0123456789'}` } });
   expect(res.ok()).toBeTruthy();
   const body = await res.json();
   expect(body.db).toBe('pglite');

@@ -57,6 +57,7 @@ export function Footer({ business }: { business: BusinessSettings }) {
                   className="btn border border-bone/25 text-bone hover:bg-bone hover:text-ink"
                 >
                   Chat on WhatsApp
+                  <span className="sr-only"> (opens in a new tab)</span>
                 </a>
               ) : null}
             </div>
@@ -100,6 +101,7 @@ export function Footer({ business }: { business: BusinessSettings }) {
                     <span>{address.street}</span>
                     <span>{address.locality}, {address.city}</span>
                     <span className="mt-2 underline underline-offset-4">Get directions</span>
+                    <span className="sr-only"> (opens in a new tab)</span>
                   </a>
                 </address>
               ) : (
@@ -121,6 +123,7 @@ export function Footer({ business }: { business: BusinessSettings }) {
                         className="link-underline flex min-h-11 items-center"
                       >
                         {s.label}
+                        <span className="sr-only"> (opens in a new tab)</span>
                       </a>
                     </li>
                   ))}

@@ -51,6 +51,16 @@ describe('private catalogue images', () => {
     expect(mocks.get).toHaveBeenCalledWith(key, { access: 'private', token: 'test-token', ifNoneMatch: undefined });
   });
 
+  it('serves importer photos, which sit one colour folder deeper than admin uploads', async () => {
+    mocks.get.mockResolvedValue({ statusCode: 200, stream: null, blob: { etag: '"photo-v1"', size: 0 } });
+    const imported = 'products/red-and-black-3-1-1-sofa-set/red-and-black/8c989f4a/480.avif';
+    expect((await request(imported)).status).toBe(200);
+    expect(mocks.get.mock.calls[0][0]).toBe(imported);
+    mocks.get.mockClear();
+    expect((await request('products/a/b/c/8c989f4a/480.avif')).status).toBe(404);
+    expect(mocks.get).not.toHaveBeenCalled();
+  });
+
   it('returns 304 without a body for unchanged images', async () => {
     mocks.get.mockResolvedValue({ statusCode: 304, stream: null, blob: { etag: '"photo-v1"' } });
     const response = await request(key, { 'if-none-match': '"photo-v1"' });

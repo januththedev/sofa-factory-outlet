@@ -1,4 +1,6 @@
 import { createHash } from 'node:crypto';
+import fs from 'node:fs';
+import path from 'node:path';
 import sharp from 'sharp';
 import type { ImageRef } from '../db/schema/types';
 import { storage } from '../storage';
@@ -68,7 +70,11 @@ export async function processImage(input: Buffer, options: ProcessOptions): Prom
   const widths = widthsFor(originalWidth);
   const driver = storage();
 
-  for (const width of widths) {
+  // IMAGE_REUSE_LOCAL=1 (local rebuilds only): keys are content hashes, so files already in LOCAL_BLOB_DIR are kept.
+  const localDir = process.env.IMAGE_REUSE_LOCAL === '1' ? process.env.LOCAL_BLOB_DIR : undefined;
+  const reuse = !!localDir && widths.every((w) => ['avif', 'webp'].every((ext) => fs.existsSync(path.join(localDir, `${key}/${w}.${ext}`))));
+
+  for (const width of reuse ? [] : widths) {
     const resized = sharp(input, { failOn: 'none' }).rotate().resize({ width, withoutEnlargement: true });
     const [avif, webp] = await Promise.all([
       resized.clone().avif({ quality: 52, effort: 4 }).toBuffer(),

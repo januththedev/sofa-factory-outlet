@@ -1,0 +1,1621 @@
+{
+ "folder": "7-iphone-sofa-photos",
+ "excluded": {
+  "4": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "5": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "6": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "8": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "11": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "13": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "16": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "17": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "22": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "23": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "25": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "26": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "29": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "30": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "32": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "36": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "48": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "50": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "51": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "52": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "55": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "56": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "57": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "58": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "59": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "60": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "62": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "68": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "69": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "78": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "79": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "80": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "81": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "86": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "87": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "95": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "97": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "104": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "106": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "107": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "108": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "109": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "112": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "114": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "115": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "116": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "117": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "118": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "127": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "128": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "130": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "134": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "146": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "147": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "151": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "152": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "153": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "163": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "165": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "166": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "170": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "178": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "180": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "187": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "198": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "200": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "207": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "209": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "210": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "213": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "214": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "232": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "234": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "235": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "238": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "240": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "251": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "252": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "253": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "254": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "255": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "256": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "257": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "258": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "259": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "260": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "265": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "278": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "280": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "281": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "283": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "298": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "301": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "304": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "311": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "313": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "315": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "316": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "317": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "318": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "319": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "320": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "321": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "322": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "323": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle",
+  "325": "not used: close-up, parts, wrapped, cropped, not a sofa, stock-like or a weak angle"
+ },
+ "products": [
+  {
+   "key": "iphone-orange-and-black-u-shape-sofa",
+   "name": "Orange and Black U-Shape Sofa",
+   "shape": "u-shape",
+   "variants": [
+    {
+     "colour": "Orange and Black",
+     "photos": [
+      0,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-red-and-black-u-shape-sofa",
+   "name": "Red and Black U-Shape Sofa",
+   "shape": "u-shape",
+   "variants": [
+    {
+     "colour": "Red and Black",
+     "photos": [
+      2,
+      3
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-cream-striped-u-shape-sofa",
+   "name": "Cream Striped U-Shape Sofa",
+   "shape": "u-shape",
+   "variants": [
+    {
+     "colour": "Cream",
+     "photos": [
+      7
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-beige-patterned-u-shape-sofa",
+   "name": "Beige Patterned U-Shape Sofa",
+   "shape": "u-shape",
+   "variants": [
+    {
+     "colour": "Beige",
+     "photos": [
+      54,
+      53,
+      18
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-blue-and-cream-u-shape-sofa",
+   "name": "Blue and Cream U-Shape Sofa",
+   "shape": "u-shape",
+   "variants": [
+    {
+     "colour": "Blue and Cream",
+     "photos": [
+      28
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-multicolour-u-shape-floor-sofa",
+   "name": "Multicolour U-Shape Floor Sofa",
+   "shape": "u-shape",
+   "variants": [
+    {
+     "colour": "Multicolour",
+     "photos": [
+      39,
+      37,
+      38
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-black-and-grey-u-shape-sofa-with-chaise",
+   "name": "Black and Grey U-Shape Sofa with Chaise",
+   "shape": "u-shape",
+   "variants": [
+    {
+     "colour": "Black and Grey",
+     "photos": [
+      150,
+      149,
+      279
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-rust-orange-u-shape-sofa",
+   "name": "Rust Orange U-Shape Sofa",
+   "shape": "u-shape",
+   "variants": [
+    {
+     "colour": "Rust Orange",
+     "photos": [
+      168
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-navy-blue-u-shape-sofa-with-chaise",
+   "name": "Navy Blue U-Shape Sofa with Chaise",
+   "shape": "u-shape",
+   "variants": [
+    {
+     "colour": "Navy Blue",
+     "photos": [
+      176,
+      175,
+      177,
+      174
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-charcoal-velvet-u-shape-sofa",
+   "name": "Charcoal Velvet U-Shape Sofa",
+   "shape": "u-shape",
+   "variants": [
+    {
+     "colour": "Charcoal",
+     "photos": [
+      191,
+      199,
+      192
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-navy-velvet-u-shape-sofa",
+   "name": "Navy Velvet U-Shape Sofa",
+   "shape": "u-shape",
+   "variants": [
+    {
+     "colour": "Navy",
+     "photos": [
+      203,
+      202,
+      201
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-turquoise-and-black-u-shape-sofa",
+   "name": "Turquoise and Black U-Shape Sofa",
+   "shape": "u-shape",
+   "variants": [
+    {
+     "colour": "Turquoise and Black",
+     "photos": [
+      183
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-navy-and-tan-u-shape-sofa-with-coffee-table",
+   "name": "Navy and Tan U-Shape Sofa with Coffee Table",
+   "shape": "u-shape",
+   "variants": [
+    {
+     "colour": "Navy and Tan",
+     "photos": [
+      184
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-burgundy-and-cream-l-shape-sofa-with-coffee-table",
+   "name": "Burgundy and Cream L-Shape Sofa with Coffee Table",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Burgundy and Cream",
+     "photos": [
+      19,
+      20,
+      21,
+      24
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-grey-and-navy-l-shape-sofa-with-corner-table",
+   "name": "Grey and Navy L-Shape Sofa with Corner Table",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Grey and Navy",
+     "photos": [
+      14,
+      15,
+      12
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-grey-l-shape-sofa",
+   "name": "Grey L-Shape Sofa",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Grey",
+     "photos": [
+      27
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-light-grey-l-shape-sofa-with-wide-seat",
+   "name": "Light Grey L-Shape Sofa with Wide Seat",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Light Grey",
+     "photos": [
+      47,
+      46
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-brown-and-cream-l-shape-sofa-with-chaise",
+   "name": "Brown and Cream L-Shape Sofa with Chaise",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Brown and Cream",
+     "photos": [
+      91,
+      92,
+      113,
+      167
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-blue-and-black-l-shape-sofa-with-table",
+   "name": "Blue and Black L-Shape Sofa with Table",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Blue and Black",
+     "photos": [
+      120,
+      119,
+      121
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-yellow-and-black-l-shape-sofa",
+   "name": "Yellow and Black L-Shape Sofa",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Yellow and Black",
+     "photos": [
+      72,
+      73,
+      71,
+      162
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-black-and-cream-l-shape-sofa-with-chaise",
+   "name": "Black and Cream L-Shape Sofa with Chaise",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Black and Cream",
+     "photos": [
+      289,
+      288,
+      290,
+      88
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-black-and-cream-l-shape-sofa-with-cushions",
+   "name": "Black and Cream L-Shape Sofa with Cushions",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Black and Cream",
+     "photos": [
+      105,
+      129
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-black-and-cream-l-shape-sofa-with-rainbow-cushions",
+   "name": "Black and Cream L-Shape Sofa with Rainbow Cushions",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Black and Cream",
+     "photos": [
+      245,
+      246,
+      244
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-black-and-grey-l-shape-sofa-with-ottoman",
+   "name": "Black and Grey L-Shape Sofa with Ottoman",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Black and Grey",
+     "photos": [
+      140,
+      145,
+      94
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-black-and-turquoise-l-shape-sofa-with-table",
+   "name": "Black and Turquoise L-Shape Sofa with Table",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Black and Turquoise",
+     "photos": [
+      141
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-black-l-shape-sofa-with-floral-cushions",
+   "name": "Black L-Shape Sofa with Floral Cushions",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Black",
+     "photos": [
+      89,
+      49,
+      148
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-red-and-black-l-shape-sofa-with-floral-cushions",
+   "name": "Red and Black L-Shape Sofa with Floral Cushions",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Red and Black",
+     "photos": [
+      65
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-black-and-cream-l-shape-sofa-with-floral-cushions",
+   "name": "Black and Cream L-Shape Sofa with Floral Cushions",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Black and Cream",
+     "photos": [
+      66
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-brown-and-cream-l-shape-sofa-with-floral-cushions",
+   "name": "Brown and Cream L-Shape Sofa with Floral Cushions",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Brown and Cream",
+     "photos": [
+      67
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-cream-and-brown-l-shape-sofa-with-floral-cushions",
+   "name": "Cream and Brown L-Shape Sofa with Floral Cushions",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Cream and Brown",
+     "photos": [
+      222,
+      223,
+      220,
+      221
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-beige-l-shape-sofa-with-chaise",
+   "name": "Beige L-Shape Sofa with Chaise",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Beige",
+     "photos": [
+      82,
+      83,
+      84,
+      85
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-cream-l-shape-sofa-with-chaise",
+   "name": "Cream L-Shape Sofa with Chaise",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Cream",
+     "photos": [
+      75
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-cream-l-shape-sofa-with-orange-cushions",
+   "name": "Cream L-Shape Sofa with Orange Cushions",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Cream",
+     "photos": [
+      110
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-light-grey-l-shape-sofa-with-long-chaise",
+   "name": "Light Grey L-Shape Sofa with Long Chaise",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Light Grey",
+     "photos": [
+      101
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-light-grey-l-shape-sofa-with-chaise",
+   "name": "Light Grey L-Shape Sofa with Chaise",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Light Grey",
+     "photos": [
+      250,
+      248,
+      249
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-charcoal-grey-l-shape-sofa-with-chaise",
+   "name": "Charcoal Grey L-Shape Sofa with Chaise",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Charcoal Grey",
+     "photos": [
+      205,
+      204,
+      227
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-tan-and-brown-l-shape-sofa-with-chaise",
+   "name": "Tan and Brown L-Shape Sofa with Chaise",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Tan and Brown",
+     "photos": [
+      185,
+      96
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-brown-and-tan-l-shape-sofa-with-ottoman",
+   "name": "Brown and Tan L-Shape Sofa with Ottoman",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Brown and Tan",
+     "photos": [
+      179
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-brown-and-gold-l-shape-sofa-with-table",
+   "name": "Brown and Gold L-Shape Sofa with Table",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Brown and Gold",
+     "photos": [
+      132,
+      131
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-brown-textured-l-shape-sofa-with-coffee-table",
+   "name": "Brown Textured L-Shape Sofa with Coffee Table",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Brown",
+     "photos": [
+      241,
+      242
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-brown-and-beige-corner-sofa-with-ottoman",
+   "name": "Brown and Beige Corner Sofa with Ottoman",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Brown and Beige",
+     "photos": [
+      93
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-brown-and-mustard-l-shape-sofa",
+   "name": "Brown and Mustard L-Shape Sofa",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Brown and Mustard",
+     "photos": [
+      266,
+      267,
+      268
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-rust-red-striped-l-shape-sofa",
+   "name": "Rust Red Striped L-Shape Sofa",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Rust Red",
+     "photos": [
+      157,
+      158
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-brown-and-gold-striped-l-shape-sofa",
+   "name": "Brown and Gold Striped L-Shape Sofa",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Brown and Gold",
+     "photos": [
+      159,
+      160,
+      161,
+      123,
+      124
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-pink-striped-l-shape-sofa",
+   "name": "Pink Striped L-Shape Sofa",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Pink",
+     "photos": [
+      164
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-black-and-tan-l-shape-sofa-with-corner-table",
+   "name": "Black and Tan L-Shape Sofa with Corner Table",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Black and Tan",
+     "photos": [
+      195,
+      196,
+      193,
+      194
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-black-and-silver-l-shape-sofa-with-corner-table",
+   "name": "Black and Silver L-Shape Sofa with Corner Table",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Black and Silver",
+     "photos": [
+      182,
+      181
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-black-and-beige-l-shape-sofa-with-ottoman",
+   "name": "Black and Beige L-Shape Sofa with Ottoman",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Black and Beige",
+     "photos": [
+      171,
+      172,
+      173
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-navy-velvet-l-shape-sofa-with-cream-base",
+   "name": "Navy Velvet L-Shape Sofa with Cream Base",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Navy and Cream",
+     "photos": [
+      273,
+      272
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-emerald-green-velvet-l-shape-sofa-with-chaise",
+   "name": "Emerald Green Velvet L-Shape Sofa with Chaise",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Emerald Green",
+     "photos": [
+      219,
+      218,
+      225
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-plum-velvet-l-shape-sofa-with-chaise",
+   "name": "Plum Velvet L-Shape Sofa with Chaise",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Plum",
+     "photos": [
+      230,
+      229,
+      228
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-lilac-grey-l-shape-sofa-with-ottoman",
+   "name": "Lilac Grey L-Shape Sofa with Ottoman",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Lilac Grey",
+     "photos": [
+      197
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-light-grey-l-shape-sofa-with-turquoise-ottoman",
+   "name": "Light Grey L-Shape Sofa with Turquoise Ottoman",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Light Grey",
+     "photos": [
+      215
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-pink-l-shape-sofa",
+   "name": "Pink L-Shape Sofa",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Pink",
+     "photos": [
+      103
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-burgundy-and-pink-l-shape-sofa",
+   "name": "Burgundy and Pink L-Shape Sofa",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Burgundy and Pink",
+     "photos": [
+      314
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-mauve-and-cream-l-shape-sofa",
+   "name": "Mauve and Cream L-Shape Sofa",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Mauve and Cream",
+     "photos": [
+      287,
+      286
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-beige-and-brown-l-shape-sofa-with-corner-table",
+   "name": "Beige and Brown L-Shape Sofa with Corner Table",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Beige and Brown",
+     "photos": [
+      285
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-cream-and-brown-l-shape-sofa-with-leaf-cushions",
+   "name": "Cream and Brown L-Shape Sofa with Leaf Cushions",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Cream and Brown",
+     "photos": [
+      212
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-cream-and-brown-l-shape-sofa-with-coffee-table",
+   "name": "Cream and Brown L-Shape Sofa with Coffee Table",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Cream and Brown",
+     "photos": [
+      303
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-white-l-shape-sofa-with-chaise",
+   "name": "White L-Shape Sofa with Chaise",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "White",
+     "photos": [
+      305,
+      139
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-beige-l-shape-sofa-with-wide-seat",
+   "name": "Beige L-Shape Sofa with Wide Seat",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Beige",
+     "photos": [
+      295,
+      296,
+      294,
+      297
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-mustard-and-grey-l-shape-sofa",
+   "name": "Mustard and Grey L-Shape Sofa",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Mustard and Grey",
+     "photos": [
+      312
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-pink-tufted-corner-sofa",
+   "name": "Pink Tufted Corner Sofa",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Pink",
+     "photos": [
+      217
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-navy-and-teal-corner-sofa-with-colourful-cushions",
+   "name": "Navy and Teal Corner Sofa with Colourful Cushions",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Navy",
+     "photos": [
+      136
+     ]
+    },
+    {
+     "colour": "Teal",
+     "photos": [
+      135
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-orange-and-black-l-shape-sofa-with-colourful-cushions",
+   "name": "Orange and Black L-Shape Sofa with Colourful Cushions",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Orange and Black",
+     "photos": [
+      186
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-grey-and-black-l-shape-sofa-with-colourful-cushions",
+   "name": "Grey and Black L-Shape Sofa with Colourful Cushions",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Grey and Black",
+     "photos": [
+      169
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-grey-and-black-l-shape-sofa-with-chaise",
+   "name": "Grey and Black L-Shape Sofa with Chaise",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Grey and Black",
+     "photos": [
+      125,
+      126,
+      138,
+      111
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-black-and-grey-corner-sofa-with-patterned-cushions",
+   "name": "Black and Grey Corner Sofa with Patterned Cushions",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Black and Grey",
+     "photos": [
+      247
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-black-and-grey-l-shape-sofa-with-orange-cushions",
+   "name": "Black and Grey L-Shape Sofa with Orange Cushions",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Black and Grey",
+     "photos": [
+      77
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-brown-l-shape-sofa-with-floral-cushions",
+   "name": "Brown L-Shape Sofa with Floral Cushions",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Brown",
+     "photos": [
+      70
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-cream-corner-sofa-with-cushions",
+   "name": "Cream Corner Sofa with Cushions",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Cream",
+     "photos": [
+      137
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-brown-and-light-grey-l-shape-sofa-with-chaise",
+   "name": "Brown and Light Grey L-Shape Sofa with Chaise",
+   "shape": "l-shape",
+   "variants": [
+    {
+     "colour": "Brown and Light Grey",
+     "photos": [
+      190,
+      188,
+      189
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-red-and-black-3-1-1-sofa-set",
+   "name": "Red and Black 3+1+1 Sofa Set",
+   "shape": "set",
+   "variants": [
+    {
+     "colour": "Red and Black",
+     "photos": [
+      9,
+      10,
+      90
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-black-and-turquoise-3-1-1-sofa-set",
+   "name": "Black and Turquoise 3+1+1 Sofa Set",
+   "shape": "set",
+   "variants": [
+    {
+     "colour": "Black and Turquoise",
+     "photos": [
+      40,
+      41
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-brown-3-1-1-sofa-set-with-patterned-seats",
+   "name": "Brown 3+1+1 Sofa Set with Patterned Seats",
+   "shape": "set",
+   "variants": [
+    {
+     "colour": "Brown",
+     "photos": [
+      76,
+      74,
+      156
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-brown-and-cream-3-1-1-sofa-set",
+   "name": "Brown and Cream 3+1+1 Sofa Set",
+   "shape": "set",
+   "variants": [
+    {
+     "colour": "Brown and Cream",
+     "photos": [
+      33,
+      34,
+      35
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-black-3-1-1-sofa-set-with-patterned-seats",
+   "name": "Black 3+1+1 Sofa Set with Patterned Seats",
+   "shape": "set",
+   "variants": [
+    {
+     "colour": "Black and Grey",
+     "photos": [
+      98,
+      99
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-black-and-coral-3-1-1-sofa-set",
+   "name": "Black and Coral 3+1+1 Sofa Set",
+   "shape": "set",
+   "variants": [
+    {
+     "colour": "Black and Coral",
+     "photos": [
+      100
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-lime-green-3-1-1-sofa-set",
+   "name": "Lime Green 3+1+1 Sofa Set",
+   "shape": "set",
+   "variants": [
+    {
+     "colour": "Lime Green",
+     "photos": [
+      102
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-blue-3-1-1-sofa-set",
+   "name": "Blue 3+1+1 Sofa Set",
+   "shape": "set",
+   "variants": [
+    {
+     "colour": "Blue",
+     "photos": [
+      155,
+      154
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-navy-and-cream-3-1-1-sofa-set",
+   "name": "Navy and Cream 3+1+1 Sofa Set",
+   "shape": "set",
+   "variants": [
+    {
+     "colour": "Navy and Cream",
+     "photos": [
+      133
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-black-and-blue-3-1-1-sofa-set",
+   "name": "Black and Blue 3+1+1 Sofa Set",
+   "shape": "set",
+   "variants": [
+    {
+     "colour": "Black and Blue",
+     "photos": [
+      292,
+      293,
+      291
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-aubergine-and-peach-3-1-1-sofa-set",
+   "name": "Aubergine and Peach 3+1+1 Sofa Set",
+   "shape": "set",
+   "variants": [
+    {
+     "colour": "Aubergine and Peach",
+     "photos": [
+      264,
+      262,
+      263,
+      261
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-black-and-orange-3-1-1-sofa-set",
+   "name": "Black and Orange 3+1+1 Sofa Set",
+   "shape": "set",
+   "variants": [
+    {
+     "colour": "Black and Orange",
+     "photos": [
+      231
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-charcoal-and-grey-3-1-1-sofa-set",
+   "name": "Charcoal and Grey 3+1+1 Sofa Set",
+   "shape": "set",
+   "variants": [
+    {
+     "colour": "Charcoal and Grey",
+     "photos": [
+      307,
+      308
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-slate-and-grey-3-1-1-sofa-set",
+   "name": "Slate and Grey 3+1+1 Sofa Set",
+   "shape": "set",
+   "variants": [
+    {
+     "colour": "Slate and Grey",
+     "photos": [
+      310,
+      309
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-white-3-piece-sofa-set-with-chaise",
+   "name": "White 3-Piece Sofa Set with Chaise",
+   "shape": "set",
+   "variants": [
+    {
+     "colour": "White",
+     "photos": [
+      143,
+      142,
+      144
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-white-3-2-sofa-set",
+   "name": "White 3+2 Sofa Set",
+   "shape": "set",
+   "variants": [
+    {
+     "colour": "White",
+     "photos": [
+      233,
+      206
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-beige-sofa-set-with-floral-ottomans",
+   "name": "Beige Sofa Set with Floral Ottomans",
+   "shape": "set",
+   "variants": [
+    {
+     "colour": "Beige",
+     "photos": [
+      237,
+      236,
+      239
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-navy-and-grey-modular-sofa-set",
+   "name": "Navy and Grey Modular Sofa Set",
+   "shape": "set",
+   "variants": [
+    {
+     "colour": "Navy and Grey",
+     "photos": [
+      275,
+      276,
+      277,
+      274
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-grey-and-black-3-seater-sofa-set-with-ottoman",
+   "name": "Grey and Black 3-Seater Sofa Set with Ottoman",
+   "shape": "set",
+   "variants": [
+    {
+     "colour": "Grey and Black",
+     "photos": [
+      324
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-grey-and-black-3-seater-sofa",
+   "name": "Grey and Black 3-Seater Sofa",
+   "shape": "three-seater",
+   "variants": [
+    {
+     "colour": "Grey and Black",
+     "photos": [
+      31,
+      122
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-beige-3-seater-sofa",
+   "name": "Beige 3-Seater Sofa",
+   "shape": "three-seater",
+   "variants": [
+    {
+     "colour": "Beige",
+     "photos": [
+      208
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-light-grey-two-seater-sofa",
+   "name": "Light Grey Two-Seater Sofa",
+   "shape": "three-seater",
+   "variants": [
+    {
+     "colour": "Light Grey",
+     "photos": [
+      243
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-blue-tufted-chaise-sofa",
+   "name": "Blue Tufted Chaise Sofa",
+   "shape": "chaise",
+   "variants": [
+    {
+     "colour": "Blue",
+     "photos": [
+      216
+     ]
+    }
+   ]
+  },
+  {
+   "key": "iphone-yellow-floral-accent-chair",
+   "name": "Yellow Floral Accent Chair",
+   "shape": "chair",
+   "variants": [
+    {
+     "colour": "Yellow Floral",
+     "photos": [
+      43,
+      42
+     ]
+    }
+   ],
+   "category": "chairs"
+  },
+  {
+   "key": "iphone-green-striped-wingback-chair",
+   "name": "Green Striped Wingback Chair",
+   "shape": "chair",
+   "variants": [
+    {
+     "colour": "Green",
+     "photos": [
+      44
+     ]
+    }
+   ],
+   "category": "chairs"
+  },
+  {
+   "key": "iphone-navy-floral-wingback-chair",
+   "name": "Navy Floral Wingback Chair",
+   "shape": "chair",
+   "variants": [
+    {
+     "colour": "Navy Floral",
+     "photos": [
+      45
+     ]
+    }
+   ],
+   "category": "chairs"
+  },
+  {
+   "key": "iphone-blue-damask-wingback-chair",
+   "name": "Blue Damask Wingback Chair",
+   "shape": "chair",
+   "variants": [
+    {
+     "colour": "Blue Damask",
+     "photos": [
+      282
+     ]
+    }
+   ],
+   "category": "chairs"
+  },
+  {
+   "key": "iphone-cream-leaf-pattern-wingback-chair",
+   "name": "Cream Leaf-Pattern Wingback Chair",
+   "shape": "chair",
+   "variants": [
+    {
+     "colour": "Cream",
+     "photos": [
+      211,
+      224
+     ]
+    }
+   ],
+   "category": "chairs"
+  },
+  {
+   "key": "iphone-grey-leaf-pattern-wingback-chair",
+   "name": "Grey Leaf-Pattern Wingback Chair",
+   "shape": "chair",
+   "variants": [
+    {
+     "colour": "Grey",
+     "photos": [
+      299,
+      300
+     ]
+    }
+   ],
+   "category": "chairs"
+  },
+  {
+   "key": "iphone-navy-tufted-armchair-with-studs",
+   "name": "Navy Tufted Armchair with Studs",
+   "shape": "chair",
+   "variants": [
+    {
+     "colour": "Navy",
+     "photos": [
+      63,
+      64,
+      61
+     ]
+    }
+   ],
+   "category": "chairs"
+  },
+  {
+   "key": "iphone-grey-tufted-accent-chair",
+   "name": "Grey Tufted Accent Chair",
+   "shape": "chair",
+   "variants": [
+    {
+     "colour": "Grey",
+     "photos": [
+      302
+     ]
+    }
+   ],
+   "category": "chairs"
+  },
+  {
+   "key": "iphone-grey-accent-chair-with-wooden-legs",
+   "name": "Grey Accent Chair with Wooden Legs",
+   "shape": "chair",
+   "variants": [
+    {
+     "colour": "Grey",
+     "photos": [
+      226
+     ]
+    }
+   ],
+   "category": "chairs"
+  },
+  {
+   "key": "iphone-cream-upholstered-chair",
+   "name": "Cream Upholstered Chair",
+   "shape": "chair",
+   "variants": [
+    {
+     "colour": "Cream",
+     "photos": [
+      306
+     ]
+    }
+   ],
+   "category": "chairs"
+  },
+  {
+   "key": "iphone-rust-armchair-set",
+   "name": "Rust Armchair Set",
+   "shape": "chair",
+   "variants": [
+    {
+     "colour": "Rust",
+     "photos": [
+      270,
+      269,
+      271
+     ]
+    }
+   ],
+   "category": "chairs"
+  }
+ ],
+ "reviewed_up_to": 326
+}

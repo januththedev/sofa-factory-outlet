@@ -79,6 +79,8 @@ export const storage = (): StorageDriver => (env.BLOB_READ_WRITE_TOKEN ? blobDri
 
 /** Public base URL that stored keys are served from. */
 export function mediaBase(): string {
+  // Photos shipped with the site (public/media) win over Blob: they need no storage quota.
+  if (env.MEDIA_BASE_URL) return env.MEDIA_BASE_URL.replace(/\/+$/, '');
   if (env.BLOB_READ_WRITE_TOKEN && env.BLOB_ACCESS === 'private') return '/blob';
   if (env.BLOB_BASE_URL) return env.BLOB_BASE_URL.replace(/\/+$/, '');
   if (env.BLOB_READ_WRITE_TOKEN) {

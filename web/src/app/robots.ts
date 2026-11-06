@@ -3,6 +3,10 @@ import { siteUrl } from '@/lib/env';
 import { getSetting } from '@/lib/settings/get';
 
 export default async function robots(): Promise<MetadataRoute.Robots> {
+  // Preview deployments and local builds must never be indexed.
+  if (process.env.VERCEL_ENV && process.env.VERCEL_ENV !== 'production') {
+    return { rules: [{ userAgent: '*', disallow: '/' }] };
+  }
   const seo = await getSetting('seo');
   const rules: MetadataRoute.Robots['rules'] = [
     {

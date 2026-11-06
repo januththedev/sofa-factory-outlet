@@ -1,6 +1,6 @@
 import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { unstable_cache } from 'next/cache';
 import { getDb } from '@/lib/db';
 import * as s from '@/lib/db/schema';
@@ -23,11 +23,20 @@ export function buildUrlSet(entries: SitemapUrl[]): string {
 
 const catalogueEntries = unstable_cache(async () => {
   const db = await getDb();
-  const products = await db.select({ id: s.products.id, slug: s.products.slug, name: s.products.name, updatedAt: s.products.updatedAt, images: s.productVariants.images }).from(s.products).leftJoin(s.productVariants, eq(s.productVariants.productId, s.products.id)).where(eq(s.products.status, 'published'));
-  const categories = await db.select({ id: s.categories.id, path: s.categories.path, hubFilter: s.categories.hubFilter, updatedAt: s.categories.updatedAt }).from(s.categories);
-  const published = await db.select({ categoryId: s.products.categoryId, shape: s.products.shape, material: s.products.material }).from(s.products).where(eq(s.products.status, 'published'));
-  return { products, categories: categories.filter((category) => published.some((product) => product.categoryId === category.id && (!category.hubFilter?.shape || category.hubFilter.shape === product.shape) && (!category.hubFilter?.material || category.hubFilter.material === product.material))) };
-}, ['seo-sitemap-products-v1'], { tags: ['products'], revalidate: 3600 });
+  const indexable = and(eq(s.products.status, 'published'), eq(s.products.noindex, false));
+  const products = await db.select({ id: s.products.id, slug: s.products.slug, name: s.products.name, updatedAt: s.products.updatedAt, images: s.productVariants.images }).from(s.products).leftJoin(s.productVariants, eq(s.productVariants.productId, s.products.id)).where(indexable);
+  const categories = await db.select({ id: s.categories.id, path: s.categories.path, kind: s.categories.kind, hubFilter: s.categories.hubFilter, updatedAt: s.categories.updatedAt }).from(s.categories);
+  const published = await db.select({ path: s.categories.path, shape: s.products.shape, material: s.products.material }).from(s.products).innerJoin(s.categories, eq(s.categories.id, s.products.categoryId)).where(eq(s.products.status, 'published'));
+  // Same rule as the listing search: a category holds its own and its sub-categories' pieces; a hub
+  // (a filtered view such as sofas/l-shape) holds its parent's pieces that match its filter.
+  const holds = (category: (typeof categories)[number], product: (typeof published)[number]) => {
+    const scope = category.kind === 'hub' ? category.path.split('/')[0] : category.path;
+    const inScope = product.path === category.path || product.path === scope || product.path.startsWith(`${scope}/`);
+    return inScope && (!category.hubFilter?.shape || category.hubFilter.shape === product.shape)
+      && (!category.hubFilter?.material || category.hubFilter.material === product.material);
+  };
+  return { products, categories: categories.filter((category) => published.some((product) => holds(category, product))) };
+}, ['seo-sitemap-products-v2'], { tags: ['products', 'categories'], revalidate: 3600 });
 
 const guideEntries = unstable_cache(async (): Promise<SitemapUrl[]> => {
   const dir = path.join(process.cwd(), 'content', 'guides');
@@ -42,7 +51,7 @@ const guideEntries = unstable_cache(async (): Promise<SitemapUrl[]> => {
 }, ['seo-sitemap-guides-v1'], { tags: ['guides'], revalidate: 3600 });
 
 export async function sitemapByName(name: string): Promise<SitemapUrl[] | null> {
-  if (name === 'pages') return ['/', '/shop/', '/about-us/', '/factory/', '/visit/', '/trade/', '/book-visit/', '/faq/', '/sofa-shop-colombo/', '/custom-sofas-sri-lanka/', '/guides/'].map((loc) => ({ loc: absolutePage(loc) }));
+  if (name === 'pages') return ['/', '/shop/', '/about-us/', '/factory/', '/visit/', '/trade/', '/faq/', '/privacy/', '/sofa-shop-colombo/', '/custom-sofas-sri-lanka/', '/guides/'].map((loc) => ({ loc: absolutePage(loc) }));
   if (name === 'guides') return guideEntries();
   const { products, categories } = await catalogueEntries();
   if (name === 'products') return [...new Map(products.map((p) => [p.id, { loc: absolutePage(`/product/${p.slug}/`), lastmod: date(p.updatedAt) }])).values()];

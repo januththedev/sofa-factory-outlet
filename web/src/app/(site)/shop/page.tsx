@@ -17,8 +17,8 @@ export async function generateMetadata({ searchParams }: { searchParams: Search 
   );
   const path = !filtered && params.page && params.page > 1 ? buildShopUrl({ page: params.page }) : '/shop/';
   return pageMetadata({
-    title: 'Shop furniture',
-    description: 'Browse sofas and furniture, then book a showroom visit to discuss colours and sizes.',
+    title: 'Shop sofas and furniture in Sri Lanka',
+    description: 'Browse L-shape, U-shape and sofa sets, chairs and more, made in our Colombo workshop and sold factory-direct. Book a showroom visit to choose colours and sizes.',
     path,
     noindex: filtered,
   });
@@ -28,7 +28,7 @@ export default async function ShopPage({ searchParams }: { searchParams: Search 
   const params = parseShopParams(await searchParams);
   const [result, categories] = await Promise.all([searchListing(params), listingCategories()]);
   return (
-    <main className="site-container pt-24 pb-12 lg:pt-32 lg:pb-20">
+    <div className="site-container pt-24 pb-12 lg:pt-32 lg:pb-20">
       <h1 className="font-display text-[clamp(3rem,8vw,7rem)] font-light leading-none">Shop</h1>
       <form action="/shop/" className="mt-6 mb-6 flex max-w-2xl gap-2">
         <label className="sr-only" htmlFor="shop-search">Search products</label>
@@ -44,6 +44,6 @@ export default async function ShopPage({ searchParams }: { searchParams: Search 
         <button className="btn btn-primary min-h-11 px-4" type="submit">Search</button>
       </form>
       <Listing result={result} params={params} path="/shop/" categories={categories} />
-    </main>
+    </div>
   );
 }

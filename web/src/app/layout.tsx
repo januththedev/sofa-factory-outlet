@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Fraunces, Inter_Tight } from 'next/font/google';
 import { PageViewTracker } from '@/components/analytics/page-view-tracker';
-import { siteUrl } from '@/lib/env';
+import { env, siteUrl } from '@/lib/env';
 import { bootScript } from '@/lib/motion/boot';
 import './globals.css';
 
@@ -28,6 +28,10 @@ export const metadata: Metadata = {
     'Sofas, sofa sets and furniture made in our own Colombo workshop and sold without a middleman. Visit the showroom to see and sit on every piece.',
   applicationName: 'Sofa Factory Outlet',
   formatDetection: { telephone: false },
+  verification: {
+    google: env.GOOGLE_SITE_VERIFICATION,
+    other: env.BING_SITE_VERIFICATION ? { 'msvalidate.01': env.BING_SITE_VERIFICATION } : undefined,
+  },
 };
 
 export const viewport: Viewport = {

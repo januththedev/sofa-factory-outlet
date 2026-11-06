@@ -15,6 +15,7 @@ import { QuickReplies } from './quick-replies';
 function TypingIndicator() {
   return (
     <div
+      role="group"
       className="inline-flex items-center gap-1.5 rounded-2xl rounded-bl-sm bg-bone-2 px-3.5 py-3"
       aria-label="Assistant is typing"
     >

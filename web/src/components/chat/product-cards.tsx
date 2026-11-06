@@ -65,6 +65,7 @@ export function ChatProductCard({ card }: { card: ProductCard }) {
         <button
           type="button"
           onClick={() => addCardToCart(card)}
+          aria-label={`Add to cart: ${card.name}`}
           className="mt-2 min-h-11 w-full rounded-full border border-ink/20 px-3 py-2 text-sm font-semibold
             text-ink transition-colors hover:border-maroon hover:bg-maroon hover:text-bone"
         >
