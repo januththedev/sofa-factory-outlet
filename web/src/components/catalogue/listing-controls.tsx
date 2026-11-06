@@ -59,7 +59,11 @@ export function ListingControls(props: Props) {
       </div>
       {pending ? <p role="status" className="py-2 text-base">Updating pieces…</p> : null}
       <div className="mt-6 grid min-w-0 gap-8 lg:grid-cols-[14rem_minmax(0,1fr)]">
-        <aside className="hidden lg:block" aria-label="Product filters">
+        <aside
+          className="hidden self-start lg:sticky lg:top-24 lg:block lg:max-h-[calc(100svh-7rem)] lg:overflow-y-auto lg:overscroll-contain lg:pr-2"
+          data-lenis-prevent
+          aria-label="Product filters"
+        >
           <ShopFilters
             facets={props.facets}
             categories={props.categories}

@@ -8,6 +8,9 @@ import { toCard, type ProductCard } from './queries';
 
 export type ShopSort = 'featured' | 'newest' | 'price-asc' | 'price-desc';
 
+/** Products per shop page: enough that the grid outlasts the filter column on desktop. */
+export const DEFAULT_PAGE_SIZE = 48;
+
 /** Filters for /shop/ and category hubs; they live in the URL (`/shop/?colour=green&shape=l-shape`). */
 export type ShopParams = {
   q?: string;
@@ -74,7 +77,7 @@ export const parseShopParams = (input: Record<string, string | string[] | undefi
   const page = integer(first(input.page), 1, 10_000);
   const pageSize = integer(first(input.pageSize), 1, 48);
   if (page && page !== 1) result.page = page;
-  if (pageSize && pageSize !== 12) result.pageSize = pageSize;
+  if (pageSize && pageSize !== DEFAULT_PAGE_SIZE) result.pageSize = pageSize;
   return result;
 };
 
@@ -89,7 +92,7 @@ export const buildShopUrl = (params: ShopParams): string => {
   if (params.maxPrice !== undefined) query.set('maxPrice', String(params.maxPrice));
   if (params.sort && params.sort !== 'featured') query.set('sort', params.sort);
   if (params.page && params.page !== 1) query.set('page', String(params.page));
-  if (params.pageSize && params.pageSize !== 12) query.set('pageSize', String(params.pageSize));
+  if (params.pageSize && params.pageSize !== DEFAULT_PAGE_SIZE) query.set('pageSize', String(params.pageSize));
   query.sort();
   return `/shop/${query.size ? `?${query.toString()}` : ''}`;
 };
@@ -170,7 +173,7 @@ export const searchProducts = async (params: ShopParams): Promise<ShopResult> =>
     if (sort === 'featured' && a.featured !== b.featured) return Number(b.featured) - Number(a.featured);
     return (b.publishedAt ?? b.createdAt).getTime() - (a.publishedAt ?? a.createdAt).getTime() || a.name.localeCompare(b.name);
   });
-  const pageSize = Math.min(48, Math.max(1, params.pageSize ?? 12));
+  const pageSize = Math.min(48, Math.max(1, params.pageSize ?? DEFAULT_PAGE_SIZE));
   const pages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const page = Math.min(pages, Math.max(1, params.page ?? 1));
   return { items: filtered.slice((page - 1) * pageSize, page * pageSize).map(toCard), total: filtered.length, page, pageSize, pages,
