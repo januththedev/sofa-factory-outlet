@@ -32,6 +32,10 @@ sharp.cache(false);
 const dry = process.argv.includes('--dry');
 const refresh = process.argv.includes('--refresh');
 const publish = process.argv.includes('--publish');
+// --codex-only: use only the Codex cut-outs (studio-codex); a colour with none is skipped, never filled with a rembg shot.
+const codexOnly = process.argv.includes('--codex-only');
+// --unpublish-rembg: afterwards, move every owner-photos product that still has a non-Codex photo back to draft.
+const unpublishRembg = process.argv.includes('--unpublish-rembg');
 // Slugs that stay drafts even with --publish (e.g. a cover photo that still needs fixing).
 const hold = new Set((process.env.IMPORT_HOLD ?? '').split(',').map((v) => v.trim()).filter(Boolean));
 const root = path.resolve(process.cwd(), process.env.CATALOGUE_DIR || '../marketing/photo-pipeline/catalogue');
@@ -47,6 +51,7 @@ const studioFile = (name: string): string | null => {
   return null;
 };
 const cutoutDir = path.join(root, 'processed', 'cutout');
+const codexCutoutDir = path.join(root, 'processed', 'cutout-codex');
 const MAX_PHOTOS = 4;
 
 type PlanVariant = { colour: string; photos: number[] };
@@ -61,8 +66,8 @@ const slugify = (value: string) => value.toLowerCase().replace(/&/g, 'and').repl
 
 /** Median colour of the cut-out's solid pixels: the sofa's own colour, not the background. */
 async function sofaHex(name: string): Promise<string> {
-  const file = path.join(cutoutDir, `${name}.png`);
-  if (!fs.existsSync(file)) return '#888888';
+  const file = [path.join(codexCutoutDir, `${name}.png`), path.join(cutoutDir, `${name}.png`)].find((f) => fs.existsSync(f));
+  if (!file) return '#888888';
   const { data, info } = await sharp(file).resize(64, 64, { fit: 'inside' }).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   const r: number[] = [], g: number[] = [], b: number[] = [];
   for (let i = 0; i < data.length; i += info.channels) {
@@ -99,18 +104,25 @@ async function main() {
       const [exists] = await db.select({ id: s.products.id, status: s.products.status, tags: s.products.tags }).from(s.products).where(eq(s.products.slug, slug)).limit(1);
       if (exists && !(refresh && (exists.status === 'draft' || exists.tags?.includes('owner-photos')))) { skipped++; console.log(`exists ${slug}`); continue; }
 
+      // --refresh: colours whose photos are already exactly these sources are kept, so a re-run only encodes new photos.
+      const existingRows = exists ? await db.select().from(s.productVariants).where(eq(s.productVariants.productId, exists.id)) : [];
       const variants: Array<typeof s.productVariants.$inferInsert & { colourName: string; family: string; images: ImageRef[] }> = [];
       let aiPhotos = false;
       for (const [order, v] of product.variants.entries()) {
         // Codex cut-outs first (hero shot included), then the remaining studio shots, at most MAX_PHOTOS.
-        const all = v.photos.map((n) => `${plan.folder}-${n}`).filter((n) => studioFile(n));
+        const all = v.photos.map((n) => `${plan.folder}-${n}`).filter((n) => (codexOnly ? fs.existsSync(path.join(codexDir, `${n}.jpg`)) : studioFile(n)));
         const names = [...all.filter((n) => fs.existsSync(path.join(codexDir, `${n}.jpg`))), ...all.filter((n) => !fs.existsSync(path.join(codexDir, `${n}.jpg`)))].slice(0, MAX_PHOTOS);
         if (!names.length) continue;
         if (names.some((n) => fs.existsSync(path.join(codexDir, `${n}.jpg`)))) aiPhotos = true;
         const hex = normaliseHex(await sofaHex(names[0]));
         const c = classifyHex(hex);
         const refs: ImageRef[] = [];
-        if (!dry) {
+        const wanted = names.map((n) => `owner-photos/${n}`);
+        const kept = existingRows.find((r) => r.colourName === v.colour)?.images ?? [];
+        const unchanged = kept.length === wanted.length && kept.every((img, i) => img.source === wanted[i]);
+        if (!dry && unchanged) {
+          refs.push(...kept);
+        } else if (!dry) {
           for (const n of names) {
             refs.push(await processImage(fs.readFileSync(studioFile(n)!), {
               keyPrefix: `products/${slug}/${slugify(v.colour)}`,
@@ -127,7 +139,7 @@ async function main() {
 
       if (exists) {
         // --refresh: only the photos change; names, prices, notes and any other edit made in admin stay.
-        const current = await db.select().from(s.productVariants).where(eq(s.productVariants.productId, exists.id));
+        const current = existingRows;
         let changed = 0;
         for (const v of variants) {
           const row = current.find((c) => c.colourName === v.colourName);
@@ -162,6 +174,23 @@ async function main() {
     }
   }
   console.log(`${dry ? 'would create/refresh' : 'created/refreshed'} ${created} draft products, ${images} photos; ${skipped} left alone`);
+
+  if (unpublishRembg && !dry) {
+    // A listing is only shown when every photo on it is a Codex cut-out.
+    const isCodexSource = (src?: string) => !!src && src.startsWith('owner-photos/') && fs.existsSync(path.join(codexDir, `${src.slice('owner-photos/'.length)}.jpg`));
+    const owned = (await db.select({ id: s.products.id, slug: s.products.slug, status: s.products.status, tags: s.products.tags }).from(s.products))
+      .filter((p) => p.tags?.includes('owner-photos') && p.status === 'published');
+    let hidden = 0;
+    for (const p of owned) {
+      const vs = await db.select({ images: s.productVariants.images }).from(s.productVariants).where(eq(s.productVariants.productId, p.id));
+      const photos = vs.flatMap((v) => v.images ?? []);
+      if (photos.length && photos.every((i) => isCodexSource(i.source))) continue;
+      await db.update(s.products).set({ status: 'draft', publishedAt: null }).where(eq(s.products.id, p.id));
+      hidden++;
+      console.log(`back to draft (not all Codex photos): ${p.slug}`);
+    }
+    console.log(`${hidden} owner-photos products moved to draft`);
+  }
   await closeDb();
 }
 

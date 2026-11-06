@@ -20,6 +20,7 @@ from PIL import Image
 HERE = os.path.dirname(os.path.abspath(__file__))
 CAT = os.path.join(HERE, "catalogue")
 OUT = os.path.join(CAT, "processed", "studio-codex")
+OUT_CUT = os.path.join(CAT, "processed", "cutout-codex")
 EXTRA = os.path.join(HERE, "codex-cutouts")
 STUDIO_SIZE = (1600, 1200)
 BG_TOP, BG_BOTTOM = (251, 249, 245), (234, 227, 216)
@@ -89,8 +90,18 @@ def main():
                 sources[os.path.splitext(f)[0]] = os.path.join(EXTRA, f)
 
     os.makedirs(OUT, exist_ok=True)
+    os.makedirs(OUT_CUT, exist_ok=True)
     done = skipped = 0
     for name, png in sorted(sources.items()):
+        # A small transparent copy: the importer reads the sofa's own colour from it.
+        thumb = os.path.join(OUT_CUT, name + ".png")
+        if not os.path.exists(thumb) or os.path.getmtime(thumb) < os.path.getmtime(png):
+            try:
+                small = trimmed(png)
+                small.thumbnail((192, 192))
+                small.save(thumb)
+            except Exception as exc:
+                print(f"skip cut-out {name}: {exc}", file=sys.stderr)
         dst = os.path.join(OUT, name + ".jpg")
         if os.path.exists(dst) and not args.force and os.path.getmtime(dst) >= os.path.getmtime(png):
             skipped += 1
