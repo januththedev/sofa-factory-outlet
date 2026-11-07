@@ -48,3 +48,9 @@ marketing/photo-pipeline/codex-cutouts/
 marketing/photo-pipeline/codex-queue/*.log
 marketing/photo-pipeline/codex-queue/prompt-*.md
 marketing/photo-pipeline/catalogue/processed/
+
+# Local tooling and generated marketing output (kept on disk, not in the repo)
+.claude/
+marketing/reels/
+marketing/photo-pipeline/codex-queue/
+marketing/photo-pipeline-bundle.zip
