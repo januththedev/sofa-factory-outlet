@@ -36,7 +36,7 @@ export default async function HomePage() {
   ]);
   const { business, hours, proof } = settings;
   const hero = siteImage('hero',
-    'A bright living room with a cream L-shaped sofa, an armchair and a round wooden coffee table');
+    'A navy velvet 3+1+1 sofa set made in our workshop, with a glass coffee table in a bright living room');
   const heroTexture = siteImageUrl('hero', 1920);
   const showroom = siteImage('showroom');
 
