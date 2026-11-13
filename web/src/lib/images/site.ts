@@ -6,7 +6,7 @@ import { imageUrl, type PictureData, pictureData } from './urls';
 // statically so pages (including ISR re-renders on Vercel) never read files.
 // All of these are stand-ins: the plan's biggest upgrade is original photography.
 const FILES = {
-  hero: '2025/11/shoplook01-scaled.jpg',
+  hero: 'owner/navy-sofa-set-living-room.jpg',
   showroom: '2025/11/shoplook03-scaled.jpg',
   materials: '2025/11/sofa-premium-quality-materials-cover-images.jpg',
 } as const;

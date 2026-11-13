@@ -934,6 +934,23 @@
       "flag": null,
       "source": "2026/07/Emerald-Green-Velvet-L-Shape-Chaise-Sectional-by-Sofa-Factory-Outlet-🛋️💚.jpeg",
       "cutout": false
+    },
+    "owner/navy-sofa-set-living-room.jpg": {
+      "key": "site/hero-navy-set/9fa2e0c7",
+      "w": 1600,
+      "h": 1200,
+      "widths": [
+        480,
+        960,
+        1440,
+        1600
+      ],
+      "alt": "A navy velvet 3+1+1 sofa set with a glass coffee table in a bright living room",
+      "blur": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAABQAgCdASoQAAwAA4BaJYwC7AYtp2tGZwPLKc4A/uev1FAYf+npRCGbP2nftRT7at9PZPkIdRgL07Z1d+tOE2OCfLeGpy68mTU+i6sRxamFzZClIip+iUMDdgAAAA==",
+      "dominant": "#383848",
+      "cutout": false,
+      "flag": null,
+      "source": "owner/navy-sofa-set-living-room.jpg"
     }
   }
 }
